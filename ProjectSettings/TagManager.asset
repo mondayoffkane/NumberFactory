@@ -6,13 +6,10 @@ TagManager:
   tags:
   - MachineTable
   - Reposit
-<<<<<<< HEAD
   - Generator
   - Machine
   - ChargingTable
   - ChargingMachine
-=======
->>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
   layers:
   - Default
   - TransparentFX

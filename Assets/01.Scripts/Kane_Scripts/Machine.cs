@@ -23,7 +23,6 @@ public class Machine : MonoBehaviour
     [SerializeField] MachineTable MachineTable;
     [SerializeField] Transform StartBelt, EndBelt;
 
-<<<<<<< HEAD
 
     public bool isProduce = false;
     public Machine NextNode;
@@ -54,18 +53,6 @@ public class Machine : MonoBehaviour
     public MachineType _machineType;
 
 
-=======
-    /// ////////////////////////////////////
-    [Title("Values")]
-    public float SpawnInterval = 2f;
-    public int Max_Count = 20;
-    public int Current_Count = 0;
-    public Vector3 RailonProduct_interval = Vector3.up * 0.5f;
-    public float Food_Stack_Interval = 0.5f;
-
-
-    //public Stack<Transform> Machine_ProductStack;
->>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
 
     public void SetObj()
     {
@@ -83,7 +70,6 @@ public class Machine : MonoBehaviour
         Child_Machine.sharedMesh = Machine_Meshs[Machine_Num];
         Sample_Product.sharedMesh = Product_Meshes[(int)_productType];
 
-<<<<<<< HEAD
         switch (_machineType)
         {
             case MachineType.Plus:
@@ -100,31 +86,22 @@ public class Machine : MonoBehaviour
         }
         Sample_Product.transform.rotation = Quaternion.Euler(SampleRot);
 
-=======
->>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
     }
 
     private void Start()
     {
         SetObj();
-<<<<<<< HEAD
 
 
         StartCoroutine(Cor_Update());
         Sample_Product.transform.rotation = Quaternion.Euler(SampleRot);
 
 
-=======
-        StartCoroutine(Cor_Update());
-
-        //Machine_ProductStack = new Stack<Transform>();
->>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
     }
 
 
     IEnumerator Cor_Update()
     {
-<<<<<<< HEAD
 
         while (true)
         {
@@ -162,45 +139,6 @@ public class Machine : MonoBehaviour
 
             if (_product != null)
                 MoveNextNode(_product);
-=======
-        while (true)
-        {
-            yield return new WaitForSeconds(SpawnInterval);
-
-
-            Transform _product = Managers.Pool.Pop(Resources.Load<GameObject>("Product"), MachineTable.transform).transform;
-            _product.GetComponent<Product>().Setproduct(Sample_Product.sharedMesh, _productType);
-            //Machine_ProductStack.Push(_food);
-            //int tempNum = Current_Count;
-            //Current_Count++;
-
-            DOTween.Sequence(_product.position = StartBelt.position + RailonProduct_interval)
-                .Append(_product.DOMove(EndBelt.position + RailonProduct_interval, SpawnInterval * 2f))
-                .OnComplete(() =>
-                {
-                    if (MachineTable.ProductStack.Count < MachineTable.Max_Count)
-                    {
-                        if (MachineTable.ProductStack.Count % 2 == 0)
-                        {
-                            _product.DOJump(MachineTable.transform.position + new Vector3(-0.25f * Mathf.Sin(45), 0.15f + (MachineTable.ProductStack.Count / 2) * Food_Stack_Interval, -0.25f * Mathf.Sin(45)) // positon
-                                , 0.5f, 1, 0.5f) // power,jump count,duration
-                            .OnComplete(() => MachineTable.ProductStack.Push(_product));
-                        }
-                        else
-                        {
-                            _product.DOJump(MachineTable.transform.position + new Vector3(0.25f * Mathf.Sin(45), 0.15f + (MachineTable.ProductStack.Count / 2) * Food_Stack_Interval, +0.25f * Mathf.Sin(45)) // positon
-                                , 0.5f, 1, 0.5f) // power,jump count,duration
-                            .OnComplete(() => MachineTable.ProductStack.Push(_product));
-                        }
-                    }
-                    else
-                    {
-                        Managers.Pool.Push(_product.GetComponent<Poolable>());
-                    }
-                });
-
-
->>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
         }
     }
 
@@ -208,7 +146,6 @@ public class Machine : MonoBehaviour
     public void UpgradeMachine()
     {
         SpawnInterval *= 0.5f;
-<<<<<<< HEAD
         Max_Count += 20;
         //MachineTable.SetChange(MachineTable.Max_Count + 6);
 
@@ -297,10 +234,4 @@ public class Machine : MonoBehaviour
         }
     }
 
-=======
-        MachineTable.SetChange(MachineTable.Max_Count + 6);
-
-    }
-
->>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
 }

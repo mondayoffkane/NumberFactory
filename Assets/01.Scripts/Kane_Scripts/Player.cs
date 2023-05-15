@@ -9,18 +9,12 @@ public class Player : MonoBehaviour
     public int Max_Count = 10;
 
 
-<<<<<<< HEAD
     public Stack<Product> ProductStack = new Stack<Product>();
     public float Stack_Interval = 1f;
-=======
-    public Stack<Transform> ProductStack = new Stack<Transform>();
-
->>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
 
     [SerializeField] Transform PickPos;
 
     public float Pickup_Interval = 0.5f;
-<<<<<<< HEAD
 
     [SerializeField] bool isReady = true;
 
@@ -41,35 +35,18 @@ public class Player : MonoBehaviour
 
 
 
-=======
-    [SerializeField] bool canPick = true;
-
-    // ////////////////////////////////////////////////////////////////////////////////
-
-    MachineTable _machineTable;
-
-    private void Start()
-    {
-        PickPos = transform.GetChild(0);
-    }
-
->>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("MachineTable"))
         {
             _machineTable = other.GetComponent<MachineTable>();
         }
-<<<<<<< HEAD
 
 
-=======
->>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
     }
 
     private void OnTriggerStay(Collider other)
     {
-<<<<<<< HEAD
 
         switch (other.tag)
         {
@@ -158,21 +135,6 @@ public class Player : MonoBehaviour
                     DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
                 }
                 break;
-=======
-        if (other.CompareTag("MachineTable"))
-        {
-            if (_machineTable.ProductStack.Count > 0 && ProductStack.Count < Max_Count && canPick)
-            {
-                Transform _product = other.GetComponent<MachineTable>().ProductStack.Pop();
-                ProductStack.Push(_product);
-                _product.SetParent(transform);
-                canPick = false;
-                _product.DOLocalJump(PickPos.localPosition + Vector3.up * ProductStack.Count * 0.5f, 1f, 1, Pickup_Interval)
-                    .OnComplete(() => canPick = true);
-
-            }
-
->>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
         }
 
     }
@@ -186,18 +148,8 @@ public class Player : MonoBehaviour
     }
 
 
-<<<<<<< HEAD
 
 
-=======
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.transform.CompareTag("Reposit"))
-        {
-            collision.transform.GetComponent<Repository>().PushProduct(ProductStack.Pop());
-        }
-    }
->>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
 
 
 }

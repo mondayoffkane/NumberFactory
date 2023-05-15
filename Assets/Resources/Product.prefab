@@ -27,22 +27,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4309271004432481045}
-<<<<<<< HEAD
   m_LocalRotation: {x: -0.5, y: 0.5, z: -0.5, w: 0.5}
-=======
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
->>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
   m_LocalPosition: {x: -2.76, y: 0, z: -6.19}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-<<<<<<< HEAD
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: -90}
-=======
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
->>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
 --- !u!33 &7228605062661995405
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -71,11 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-<<<<<<< HEAD
   - {fileID: -876546973899608171, guid: 719cea90b94ab4b228c623c30182af8d, type: 3}
-=======
-  - {fileID: 2100000, guid: d3b644d9f6a19455a9403356b6da668a, type: 2}
->>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -109,7 +97,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f78d6ffe27f847bba296b0cf34c85ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< HEAD
   _productType: 0
   Number: 0
   NumberMeshes:
@@ -123,9 +110,6 @@ MonoBehaviour:
   - {fileID: 4263200284095796809, guid: 0a137e7415e17429fb53a0f69f53b101, type: 3}
   - {fileID: -4302519729519055898, guid: f7577bfa4f6ee44ffaf13e3c1c77bd30, type: 3}
   - {fileID: -5855096299426047427, guid: cc00b4171f6ea42fd8fb214e073a80f8, type: 3}
-=======
-  FoodNum: 0
->>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
 --- !u!114 &2413287864959003135
 MonoBehaviour:
   m_ObjectHideFlags: 0
