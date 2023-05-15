@@ -13,6 +13,7 @@ public class Product : MonoBehaviour
 
     public enum ProductType
     {
+<<<<<<< HEAD
         Stone,
         Number,
         Battery
@@ -29,10 +30,25 @@ public class Product : MonoBehaviour
     //}
 
     public void Setproduct(Mesh _mesh, ProductType _type, int _num = 1)
+=======
+        Burger,
+        Coke,
+        Hotdog,
+        Nugget
+
+    }
+    public ProductType _productType;
+
+
+
+
+    public void Setproduct(Mesh _mesh, ProductType _type)
+>>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
     {
         _meshfilter = transform.GetComponent<MeshFilter>();
         _meshfilter.sharedMesh = _mesh;
         _productType = _type;
+<<<<<<< HEAD
         Number = _num;
 
     }
@@ -44,4 +60,8 @@ public class Product : MonoBehaviour
         _productType = ProductType.Number;
     }
 
+=======
+
+    }
+>>>>>>> c4d44bd848e11b411eb88f4cca107d57fada4928
 }
