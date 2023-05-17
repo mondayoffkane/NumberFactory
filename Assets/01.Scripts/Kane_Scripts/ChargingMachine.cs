@@ -37,15 +37,16 @@ public class ChargingMachine : MonoBehaviour
 
     public void PushBattery(Product _product, float _interval)
     {
-        _offsetCount = BatteryStack.Count;
+        BatteryStack.Push(_product);
+        _offsetCount = BatteryStack.Count - 1;
         _product.transform.SetParent(StackPoint);
-        
+        DOTween.Kill(_product);
         _product.transform.DOLocalJump(
                 new Vector3(0f, _offsetCount / 4 * Stack_Interval
                                      , (StartX + OffsetX * (_offsetCount % 4)))
             , 1, 1, _interval).SetEase(Ease.Linear)
-                                         .Join(_product.transform.DORotate(Vector3.up * 45f, _interval).SetEase(Ease.Linear))
-                                         .OnComplete(() => BatteryStack.Push(_product));
+                                         .Join(_product.transform.DORotate(Vector3.up * 45f, _interval).SetEase(Ease.Linear));
+        //.OnComplete(() => BatteryStack.Push(_product));
     }
 
 

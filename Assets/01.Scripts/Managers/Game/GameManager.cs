@@ -16,8 +16,12 @@ public class GameManager : MonoBehaviour
         JoyStickController?.AddMoveEvent(action);
     }
 
+
     public void Init()
     {
+        Money = Managers.Data.GetDouble("Money");
+        if (Money < 100) Money = 100;
+
     }
     public void Clear()
     {
@@ -28,4 +32,8 @@ public class GameManager : MonoBehaviour
             JoyStickController.JoystickMoveAction = null;
         }
     }
+
+    // ===========================
+
+    public double Money;
 }

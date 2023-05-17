@@ -44,6 +44,7 @@ public class Generator : MonoBehaviour
     public float BaseUp_Interval = 0.5f;
     public float BaseSide_Interval = 0.09f;
     // ====================================
+    public bool isSpawn = true;
 
     private void Start()
     {
@@ -52,29 +53,36 @@ public class Generator : MonoBehaviour
         StartCoroutine(Cor_Update());
     }
 
+
+
     IEnumerator Cor_Update()
     {
-        WaitForSeconds _interval = new WaitForSeconds(Spawn_Interval);
+        //WaitForSeconds _interval = new WaitForSeconds(Spawn_Interval);
         while (true)
         {
-            yield return _interval;
-            if (Num > 100 && StackPoint.ProductStack.Count < Max_Count)
+            yield return new WaitForSeconds(Spawn_Interval); //_interval;
+            if (isSpawn && Num > 100 && StackPoint.ProductStack.Count < Max_Count)
             {
                 Transform _battery = Managers.Pool.Pop(Battery, StackPoint.transform).transform;
-                if (StackPoint.ProductStack.Count % 2 == 0)
+                _battery.transform.position = transform.position;
+                DOTween.Kill(_battery);
+                int _count = StackPoint.ProductStack.Count - 1;
+                if (_count % 2 == 0)
                 {
-                    _battery.DOJump(StackPoint.transform.position + new Vector3(-BaseSide_Interval * Mathf.Sin(45), BaseUp_Interval + Stack_Interval * (StackPoint.ProductStack.Count / 2), -BaseSide_Interval * Mathf.Sin(45)), 1, 1, Stack_MoveInterval).SetEase(Ease.Linear)
+                    StackPoint.ProductStack.Push(_battery.GetComponent<Product>());
+                    _battery.DOJump(StackPoint.transform.position + new Vector3(-BaseSide_Interval * Mathf.Sin(45), BaseUp_Interval + Stack_Interval * (_count / 2), -BaseSide_Interval * Mathf.Sin(45)), 1, 1, Stack_MoveInterval).SetEase(Ease.Linear)
                         .OnComplete(() =>
                         {
-                            StackPoint.ProductStack.Push(_battery.GetComponent<Product>());
+                            _battery.position = StackPoint.transform.position + new Vector3(-BaseSide_Interval * Mathf.Sin(45), BaseUp_Interval + Stack_Interval * (_count / 2), -BaseSide_Interval * Mathf.Sin(45));
                         });
                 }
                 else
                 {
-                    _battery.DOJump(StackPoint.transform.position + new Vector3(BaseSide_Interval * Mathf.Sin(45), BaseUp_Interval + Stack_Interval * (StackPoint.ProductStack.Count / 2), BaseSide_Interval * Mathf.Sin(45)), 1, 1, Stack_MoveInterval).SetEase(Ease.Linear)
+                    StackPoint.ProductStack.Push(_battery.GetComponent<Product>());
+                    _battery.DOJump(StackPoint.transform.position + new Vector3(BaseSide_Interval * Mathf.Sin(45), BaseUp_Interval + Stack_Interval * (_count / 2), BaseSide_Interval * Mathf.Sin(45)), 1, 1, Stack_MoveInterval).SetEase(Ease.Linear)
                     .OnComplete(() =>
                     {
-                        StackPoint.ProductStack.Push(_battery.GetComponent<Product>());
+                        _battery.position = StackPoint.transform.position + new Vector3(BaseSide_Interval * Mathf.Sin(45), BaseUp_Interval + Stack_Interval * (_count / 2), BaseSide_Interval * Mathf.Sin(45));
                     });
                 }
             }
@@ -156,12 +164,12 @@ public class Generator : MonoBehaviour
         {
             case 0:
                 Dot_Obj.gameObject.SetActive(true);
-                Dot_Obj.transform.position = Digit_MeshFilter[0].transform.position + Vector3.right * 0.6f;
+                Dot_Obj.transform.position = Digit_MeshFilter[0].transform.position + Vector3.right * 0.85f;
                 break;
 
             case 1:
                 Dot_Obj.gameObject.SetActive(true);
-                Dot_Obj.transform.position = Digit_MeshFilter[1].transform.position + Vector3.right * 0.6f;
+                Dot_Obj.transform.position = Digit_MeshFilter[1].transform.position + Vector3.right * 0.85f;
                 break;
 
             case 2:
