@@ -230,7 +230,17 @@ public class Generator : MonoBehaviour
         }
     }
 
-
+    public void PushNum(Product _product)
+    {
+        DOTween.Kill(_product);
+        _product.transform.SetParent(transform);
+        _product.transform.DOLocalJump(Vector3.zero, 1f, 1, 0.5f)
+            .OnComplete(() =>
+            {
+                AddNum(_product.Number);
+                Managers.Pool.Push(_product.GetComponent<Poolable>());
+            });
+    }
 
 
 }

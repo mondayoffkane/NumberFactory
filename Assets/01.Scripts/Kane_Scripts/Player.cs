@@ -7,8 +7,15 @@ using Unity.VisualScripting;
 
 public class Player : MonoBehaviour
 {
+
+    public int Speed_Level = 0;
+    public int Capacity_Level = 0;
+    public int Income_Level = 0;
+
     public int Max_Count = 10;
 
+    public double baseMoneyPrice = 3f;
+    public double AddMoneyPrice = 3f;
 
 
     public Stack<Product> ProductStack = new Stack<Product>();
@@ -24,6 +31,16 @@ public class Player : MonoBehaviour
 
     public Material Rail_Mat;
     public float RailMat_Speed = 1f;
+
+    public void InitPlayer(int _speedLevel, int _capacityLevel, int _incomLevel)
+    {
+        Speed_Level = _speedLevel;
+        Capacity_Level = _capacityLevel;
+        Income_Level = _incomLevel;
+
+    }
+
+
     private void Start()
     {
         PickPos = transform.GetChild(0);
@@ -80,14 +97,15 @@ public class Player : MonoBehaviour
                 {
                     Product _product = ProductStack.Pop().GetComponent<Product>();
                     isReady = false;
-                    DOTween.Kill(_product);
-                    _product.transform.DOLocalJump(other.transform.position, 1f, 1, Move_Interval)
-                        .OnComplete(() =>
-                        {
-                            //isReady = true;
-                            other.GetComponent<Generator>().AddNum(_product.Number);
-                            Managers.Pool.Push(_product.GetComponent<Poolable>());
-                        });
+                    other.GetComponent<Generator>().PushNum(_product);
+                    //DOTween.Kill(_product);
+                    //_product.transform.DOLocalJump(other.transform.position, 1f, 1, Move_Interval)
+                    //    .OnComplete(() =>
+                    //    {
+                    //        //isReady = true;
+                    //        other.GetComponent<Generator>().AddNum(_product.Number);
+                    //        Managers.Pool.Push(_product.GetComponent<Poolable>());
+                    //    });
                     DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
                 }
 
@@ -111,14 +129,38 @@ public class Player : MonoBehaviour
                     other.GetComponent<ChargingMachine>().PushBattery(ProductStack.Pop(), Move_Interval);
                     DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
                 }
+
+                ChargingMachine _chargingmachine = other.GetComponent<ChargingMachine>();
+                int _count = _chargingmachine.MoneyStack.Count / 10;
+                _count = _count < 1 ? 1 : _count;
+                _count = _count > 10 ? 10 : _count;
+                for (int i = 0; i < _count; i++)
+                {
+
+                    Transform _money = _chargingmachine.PopMoney();
+                    if (_money != null)
+                    {
+                        _money.SetParent(transform);
+                        DOTween.Kill(_money);
+                        _money.DOLocalJump(Vector3.zero, 2, 1, Move_Interval * 0.5f).SetEase(Ease.Linear)
+                            .OnComplete(() =>
+                            {
+                                Managers.Game.Money += baseMoneyPrice + Income_Level * AddMoneyPrice;
+                                Managers.Pool.Push(_money.GetComponent<Poolable>());
+                                _money.gameObject.SetActive(false);
+                            });
+                    }
+                }
+
+
                 break;
             case "ChargingTable":
 
                 ChargingTable _chargingtable = other.GetComponent<ChargingTable>();
-                int _count = _chargingtable.MoneyStack.Count / 10;
-                _count = _count < 1 ? 1 : _count;
-                _count = _count > 10 ? 10 : _count;
-                for (int i = 0; i < _count; i++)
+                int _count2 = _chargingtable.MoneyStack.Count / 10;
+                _count2 = _count2 < 1 ? 1 : _count2;
+                _count2 = _count2 > 10 ? 10 : _count2;
+                for (int i = 0; i < _count2; i++)
                 {
 
                     Transform _money = _chargingtable.PopMoney();
@@ -126,10 +168,10 @@ public class Player : MonoBehaviour
                     {
                         _money.SetParent(transform);
                         DOTween.Kill(_money);
-                        _money.DOLocalJump(Vector3.zero, 2, 1, Move_Interval).SetEase(Ease.Linear)
+                        _money.DOLocalJump(Vector3.zero, 2, 1, Move_Interval * 0.5f).SetEase(Ease.Linear)
                             .OnComplete(() =>
                             {
-                                Managers.Game.Money += 20d;
+                                Managers.Game.Money += baseMoneyPrice + Income_Level * AddMoneyPrice;
                                 Managers.Pool.Push(_money.GetComponent<Poolable>());
                                 _money.gameObject.SetActive(false);
                             });
@@ -137,6 +179,9 @@ public class Player : MonoBehaviour
                 }
 
                 break;
+
+
+
         }
 
     }

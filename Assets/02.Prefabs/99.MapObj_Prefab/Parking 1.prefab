@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6987015555881917176}
   - component: {fileID: 3588014786211168148}
   m_Layer: 0
-  m_Name: Parking
+  m_Name: Parking 1
   m_TagString: ChargingPark
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

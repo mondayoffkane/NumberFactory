@@ -7,7 +7,7 @@ public class ChargingPark : MonoBehaviour
 
     public bool isEmpty = true;
 
-    
+    public Transform ParkPos;
 
 
 

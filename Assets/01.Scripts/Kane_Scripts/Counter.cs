@@ -17,7 +17,7 @@ public class Counter : MonoBehaviour
     public Stack<Product> BatteryStack = new Stack<Product>();
     // ============================
 
-    public void PushBattery(Product _product, float _interval)
+    public void PushBattery(Product _product, float _interval=0.5f)
     {
         DOTween.Kill(_product);
         _product.transform.SetParent(transform);

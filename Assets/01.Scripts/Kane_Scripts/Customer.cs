@@ -6,20 +6,15 @@ using UnityEngine.AI;
 
 public class Customer : MonoBehaviour
 {
-    public bool isHuman = true;
-
     public StageManager StageManager;
 
     public bool isArrive = false;
 
     public NavMeshAgent _agent;
-    public float Total_ChargingTime = 10f;
+    //public float Total_ChargingTime = 10f;
     public float Current_ChargingTime = 0f;
 
     public ChargingTable _chargingTable;
-
-
-
 
     public int OrderCount = 5;
 
@@ -27,7 +22,7 @@ public class Customer : MonoBehaviour
 
     // ==== values
     public float Stack_Interval = 0.2f;
-    public float Update_Interval = 1f;
+   
     public float BaseUp_Interval = 0.5f;
 
 
@@ -83,9 +78,6 @@ public class Customer : MonoBehaviour
                     break;
 
                 case State.Wait:
-                    //isArrive = true;
-                    //StackPoint.position = _chargingTable.StackPoint.position;
-                    // => for(int ~~~ ) pos = stackpoint.x, _y, stackpoint.z ..
                     int _count = StackPoint.childCount;
                     for (int i = 0; i < _count; i++)
                     {
@@ -110,7 +102,7 @@ public class Customer : MonoBehaviour
                     }
                     else
                     {
-                        SetDest(StageManager.MovePos[0].position);
+                        SetDest(StageManager.HumanMovePos[0].position);
                         _chargingTable.isEmpty = true;
                         CustomerState = State.Exit;
                     }

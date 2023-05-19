@@ -14,6 +14,7 @@ TagManager:
   - MachineArea
   - ChargingPark
   - Counter
+  - GarbageCan
   layers:
   - Default
   - TransparentFX

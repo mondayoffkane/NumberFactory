@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+using Sirenix.OdinInspector;
 
 [System.Serializable]
 public class DataManager
@@ -35,9 +37,6 @@ public class DataManager
     private bool _useSound;
 
 
-    public void SaveData()
-    {
-    }
     public void GetData()
     {
         UseHaptic = ES3.Load<bool>("Haptic", true);
@@ -86,18 +85,47 @@ public class DataManager
         ES3.Save<bool>(_str, _default);
     }
 
+    [ShowInInspector]
+    public List<StageData> _stageData = new List<StageData>();
+
+    public void SaveData(StageData _tempdata, int _stagenum)
+    {
+        SetDouble("Money", Managers.Game.Money);
+        _stageData[_stagenum] = _tempdata;
+        ES3.Save<StageData>("StageData" + _stagenum.ToString(), _stageData[_stagenum]);
+    }
+
+
+    public StageData LoadData(int _stagenum)
+    {
+        if (_stageData.Count == 0)
+        {
+            _stageData.Add(new StageData());
+        }
+
+        Managers.Game.Money = GetDouble("Money");
+        _stageData[_stagenum] = ES3.Load<StageData>("StageData" + _stagenum.ToString(), new StageData());
+
+        return _stageData[_stagenum];
+
+    }
 
 }
 
 
-//public class StageData
-//{
-//    public int PlayerSpeed_Level;
-//    public int PlayerCapacity_Level;
-//    public int PlayerIncome_Level;
+public class StageData
+{
+    public int PlayerSpeed_Level = 0;
+    public int PlayerCapacity_Level = 0;
+    public int PlayerIncome_Level = 0;
 
-//    public int StaffSpeed_Level;
-//    public int StaffCapacity_Level;
-//    public int StaffCount_Level;
+    public int StaffSpeed_Level = 0;
+    public int StaffCapacity_Level = 0;
+    public int StaffCount_Level = 0;
 
-//}
+}
+
+
+
+
+

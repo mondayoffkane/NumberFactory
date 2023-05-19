@@ -9,30 +9,50 @@ using DG.Tweening;
 
 public class StageManager : MonoBehaviour
 {
+    public int Stage_Num = 0;
 
+    public MachineTable[] _numberTables;
 
     public List<ChargingTable> Tables;
     public List<ChargingPark> Parks;
 
+    public Generator _generator;
     public GameObject Customer_Human;
     public GameObject Customer_Car;
+    public GameObject Staff_Pref;
 
 
-    public Transform[] MovePos;
+    public Transform[] HumanMovePos;
+    public Transform[] CarMovePos;
+    public Transform StaffPos;
 
     public List<Customer> List_Humans = new List<Customer>();
-    public List<Customer> List_Cars = new List<Customer>();
+    public List<CustomerCar> List_Cars = new List<CustomerCar>();
 
     public float Customer_Inteval = 3f;
-    public float Pos_Interval = 1f;
+    public float HumanPos_Interval = 1f;
+    public float CarPos_Interval = 2f;
 
     public Counter _counter;
+    public ChargingMachine _chargingMachine;
     public int Min_Count = 2;
     public int Max_Count = 10;
+
+    public Player _player;
+
+
+    //public List<MachineTable> _machineTables = new List<MachineTable>();
+
+
     // =============================
+
+    [SerializeField] StageData _stageData;
 
     private void Start()
     {
+        _stageData = Managers.Data.LoadData(Stage_Num); // Load Data
+
+
         GameObject[] _list1 = GameObject.FindGameObjectsWithTag("ChargingTable");
         for (int i = 0; i < _list1.Length; i++)
         {
@@ -47,10 +67,13 @@ public class StageManager : MonoBehaviour
 
         Customer_Human = Resources.Load<GameObject>("Customer_Human");
         Customer_Car = Resources.Load<GameObject>("Customer_Car");
+        Staff_Pref = Resources.Load<GameObject>("Staff");
         _counter = GameObject.FindGameObjectWithTag("Counter").GetComponent<Counter>();
+        _chargingMachine = GameObject.FindGameObjectWithTag("ChargingMachine").GetComponent<ChargingMachine>();
+        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        _generator = GameObject.FindGameObjectWithTag("Generator").GetComponent<Generator>();
 
-
-
+        StageSetting();
         StartCoroutine(Cor_Update());
         StartCoroutine(Cor_Order());
     }
@@ -61,6 +84,7 @@ public class StageManager : MonoBehaviour
         {
             yield return new WaitForSeconds(Customer_Inteval);
             AddCustomer_Human();
+            AddCustomer_Car();
             //FindTable();
         }
     }
@@ -70,7 +94,7 @@ public class StageManager : MonoBehaviour
         if (List_Humans.Count < 10)
         {
             Transform _human = Managers.Pool.Pop(Customer_Human, transform).transform;
-            _human.position = MovePos[0].position;
+            _human.position = HumanMovePos[0].position;
             Customer _customerHuman = _human.GetComponent<Customer>();
             _customerHuman.SetInit(this, Random.Range(Min_Count, Max_Count));
 
@@ -78,10 +102,33 @@ public class StageManager : MonoBehaviour
 
             for (int i = 0; i < List_Humans.Count; i++)
             {
-                List_Humans[i].SetDest(MovePos[1].position + new Vector3(Pos_Interval * Mathf.Sin(45), 0f, -Pos_Interval * Mathf.Sin(45)) * i);
+                List_Humans[i].SetDest(HumanMovePos[1].position + new Vector3(HumanPos_Interval * Mathf.Sin(45), 0f, -HumanPos_Interval * Mathf.Sin(45)) * i);
             }
         }
     }
+    public void AddCustomer_Car()
+    {
+        if (List_Cars.Count < 10)
+        {
+            Transform _car = Managers.Pool.Pop(Customer_Car, transform).transform;
+            _car.position = CarMovePos[0].position;
+            CustomerCar _customerCar = _car.GetComponent<CustomerCar>();
+            _customerCar.SetInit(this, _chargingMachine, Random.Range(Min_Count, Max_Count));
+
+            List_Cars.Add(_customerCar);
+
+            for (int i = 0; i < List_Cars.Count; i++)
+            {
+
+                int num = i > 7 ? 7 : i;
+
+                List_Cars[i].SetDest(CarMovePos[1].position
+                    + new Vector3((CarPos_Interval * Mathf.Sin(45)) * num, 0f, (CarPos_Interval * Mathf.Sin(45)) * num));
+
+            }
+        }
+    }
+
 
     IEnumerator Cor_Order()
     {
@@ -114,16 +161,38 @@ public class StageManager : MonoBehaviour
                             _customer.CustomerState = Customer.State.Wait;
                         }
                         break;
-
-                        //case Customer.State.Wait:
-                        //    {
-                        //    }
-
-                        //    break;
                 }
-
-
             }
+
+            if (List_Cars.Count > 0)
+            {
+                CustomerCar _customercar = List_Cars[0];
+                switch (_customercar.CustomerCarState)
+                {
+                    case CustomerCar.State.Wait:
+                        if (_customercar.OrderCount > 0 && _chargingMachine.BatteryStack.Count > 0)
+                        {
+                            _chargingMachine.BatteryStack.Pop().gameObject.SetActive(false);
+                            _customercar.OrderCount--;
+                            _customercar.CurrentCount++;
+                        }
+                        if (_customercar.OrderCount <= 0)
+                        {
+                            ChargingPark _park = FindPark();
+                            if (_park != null)
+                            {
+                                _park.isEmpty = false;
+                                _customercar.SetDest(_park.ParkPos.position);
+                                _customercar._chargingPark = _park;
+                                List_Cars.Remove(_customercar);
+                            }
+                            _customercar.CustomerCarState = CustomerCar.State.Move;
+                        }
+                        break;
+                }
+            }
+
+
         }
     }
 
@@ -139,54 +208,47 @@ public class StageManager : MonoBehaviour
         return null;
     }
 
+    public ChargingPark FindPark()
+    {
+        for (int i = 0; i < Parks.Count; i++)
+        {
+            if (Parks[i].isEmpty == true)
+            {
+                return Parks[i];
+            }
+        }
+        return null;
+    }
 
+    public void StageSetting()
+    {
+        // User Setting
+        _player.InitPlayer(_stageData.PlayerSpeed_Level, _stageData.PlayerCapacity_Level, _stageData.PlayerIncome_Level);
+
+
+        // Staff Setting
+        for (int i = 0; i < _stageData.StaffCount_Level; i++)
+        {
+            AddStaff();
+        }
+    }
+
+    [Button]
+    public void AddStaff()
+    {
+        Staff _staff = Managers.Pool.Pop(Staff_Pref, transform).GetComponent<Staff>();
+        _staff._stageManager = this;
+        _staff.SetStaffLevel(_stageData.StaffSpeed_Level, _stageData.StaffCapacity_Level);
+        _staff.transform.position = StaffPos.position;
+
+    }
 
 
     [Button]
-    public void FindTable2()
+    public void SaveData()
     {
-        if (List_Humans.Count > 0)
-        {
-            for (int i = 0; i < List_Humans.Count; i++)
-            {
-                if (List_Humans[i].CustomerState == Customer.State.Order)
-                {
-                    List_Humans[i].SetDest(MovePos[1].position + new Vector3(Pos_Interval * Mathf.Sin(45), 0f, -Pos_Interval * Mathf.Sin(45)) * i);
-                }
-            }
-
-            for (int i = 0; i < Tables.Count; i++)
-            {
-                if (Tables[i].isEmpty == true)
-                {
-                    Customer _customer = List_Humans[0];
-
-                    if (_customer.CustomerState == Customer.State.Order)
-                    {
-                        Tables[i].isEmpty = false;
-                        _customer.SetDest(Tables[i].transform.position);
-                        _customer._chargingTable = Tables[i];
-                        _customer.CustomerState = Customer.State.Wait;
-                        List_Humans.Remove(_customer);
-                    }
-
-                    break;
-                }
-            }
-        }
-
+        Managers.Data.SaveData(_stageData, Stage_Num); // SaveData;
     }
-
-    public void FIndPark()
-    {
-
-    }
-
-
-
-
-
-
 
 
 
