@@ -14,11 +14,13 @@ public class Counter : MonoBehaviour
     public float BaseUp_Interval = 0.5f;
 
 
+
     public Stack<Product> BatteryStack = new Stack<Product>();
     // ============================
 
-    public void PushBattery(Product _product, float _interval=0.5f)
+    public void PushBattery(Product _product, float _interval = 0.5f)
     {
+        Stack_Interval = _product.GetComponent<MeshFilter>().sharedMesh.bounds.size.y;
         DOTween.Kill(_product);
         _product.transform.SetParent(transform);
         BatteryStack.Push(_product);

@@ -55,6 +55,9 @@ public class JoyStickController : MonoBehaviour
     public System.Action DownAction;
     public System.Action<Vector2> JoystickMoveAction;
     public System.Action UpAction;
+
+    public Animator _playeranimator;
+
     public void Awake()
     {
         _curSpeed = 0;
@@ -66,8 +69,18 @@ public class JoyStickController : MonoBehaviour
         _joystickImage.enabled = false;
         _joystickHandleImage.enabled = false;
 
-        AddDownEvent(() => isMouseDown = true);
-        AddUpEvent(() => isMouseDown = false);
+        _playeranimator = MoveObjectRig.transform.GetComponent<Animator>();
+
+        AddDownEvent(() =>
+        {
+            isMouseDown = true;
+            _playeranimator.SetBool("Walk", true);
+        });
+        AddUpEvent(() =>
+        {
+            isMouseDown = false;
+            _playeranimator.SetBool("Walk", false);
+        });
 
         switch (joyStickMethod)
         {

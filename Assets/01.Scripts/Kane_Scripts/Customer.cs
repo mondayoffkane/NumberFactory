@@ -22,7 +22,7 @@ public class Customer : MonoBehaviour
 
     // ==== values
     public float Stack_Interval = 0.2f;
-   
+
     public float BaseUp_Interval = 0.5f;
 
 
@@ -39,7 +39,8 @@ public class Customer : MonoBehaviour
         Exit
     }
     public State CustomerState;
-
+    public Animator _animator;
+    // ===============================
     private void Start()
     {
         Init_StackPointPos = StackPoint.transform.localPosition;
@@ -53,7 +54,9 @@ public class Customer : MonoBehaviour
         CustomerState = State.Init;
         OrderCount = _setbatterycount;
 
-
+        if (_animator == null) _animator = GetComponent<Animator>();
+        _animator.SetBool("Walk", true);
+        _animator.SetBool("Pick", false);
     }
 
     public void SetDest(Vector3 _destiny)
@@ -70,6 +73,8 @@ public class Customer : MonoBehaviour
             {
                 case State.Init:
                     isArrive = true;
+                    _animator.SetBool("Walk", false);
+                    _animator.SetBool("Pick", true);
                     CustomerState = State.Order;
                     break;
 
@@ -86,6 +91,9 @@ public class Customer : MonoBehaviour
                         _obj.localPosition = new Vector3(0f, _obj.localPosition.y, 0f);
                         _obj.localEulerAngles = new Vector3(0f, 45f, 0f);
                     }
+                    _animator.SetBool("Walk", false);
+                    _animator.SetBool("Pick", false);
+                    _animator.SetBool("Charge", true);
                     CustomerState = State.Charging;
                     break;
 
@@ -104,6 +112,8 @@ public class Customer : MonoBehaviour
                     {
                         SetDest(StageManager.HumanMovePos[0].position);
                         _chargingTable.isEmpty = true;
+                        _animator.SetBool("Walk", true);
+                        _animator.SetBool("Charge", false);
                         CustomerState = State.Exit;
                     }
                     break;
@@ -123,15 +133,15 @@ public class Customer : MonoBehaviour
     public void PushBattery(Product _product, float _interval = 0.5f)
     {
         DOTween.Kill(_product);
-
+        Stack_Interval = _product.GetComponent<MeshFilter>().sharedMesh.bounds.size.y;
         _product.transform.SetParent(StackPoint);
-        _product.transform.DOLocalJump(Vector3.up * (BaseUp_Interval + BatteryStack.Count * Stack_Interval), 1, 1, _interval).SetEase(Ease.Linear)
+        _product.transform.DOLocalJump(Vector3.up * (BatteryStack.Count * Stack_Interval), 1, 1, _interval).SetEase(Ease.Linear)
                                          .Join(_product.transform.DOLocalRotate(new Vector3(-90f, 0f, 0f), _interval).SetEase(Ease.Linear))
                                          .OnComplete(() =>
                                          {
                                              BatteryStack.Push(_product);
                                              OrderCount--;
-                                             _product.transform.localEulerAngles = new Vector3(-90f, 0f, 0f);
+                                             _product.transform.localEulerAngles = Vector3.zero; // new Vector3(-90f, 0f, 0f);
                                              // if (OrderCount <= 0) CustomerState = State.Wait;
 
                                          });

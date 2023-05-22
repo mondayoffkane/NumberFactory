@@ -131,7 +131,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2414123696550003148}
-  m_Mesh: {fileID: 347691512308428452, guid: 34004c7f5761f47fa9fe12b202cca5f0, type: 3}
+  m_Mesh: {fileID: 347691512308428452, guid: 3ca58f943bcc1411e9c8bc81ed3c7182, type: 3}
 --- !u!23 &2414123696550003150
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -202,7 +202,7 @@ MonoBehaviour:
   StackPoint: {fileID: 0}
   isEmpty: 1
   BasePrice: 20
-  Money_Pref: {fileID: 1844723689555679029, guid: 9f9badb67a51b4208b52f87c9f6f2bfa,
+  Money_Pref: {fileID: 1844723689555679029, guid: ed2c74215353649d687cef36cf71603f,
     type: 3}
   MoneyStackPoint: {fileID: 5114472014685730392}
   Stack_Interval: 0.2

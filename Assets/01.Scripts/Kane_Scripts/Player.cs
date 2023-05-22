@@ -32,6 +32,9 @@ public class Player : MonoBehaviour
     public Material Rail_Mat;
     public float RailMat_Speed = 1f;
 
+    Animator _animator;
+
+    // ==========================
     public void InitPlayer(int _speedLevel, int _capacityLevel, int _incomLevel)
     {
         Speed_Level = _speedLevel;
@@ -45,7 +48,7 @@ public class Player : MonoBehaviour
     {
         PickPos = transform.GetChild(0);
 
-
+        if (_animator == null) _animator = GetComponent<Animator>();
 
         Rail_Mat.SetTextureOffset("_BaseMap", Vector2.zero);
         Rail_Mat.DOOffset(Vector2.down, RailMat_Speed).SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
@@ -59,6 +62,7 @@ public class Player : MonoBehaviour
         switch (other.tag)
         {
             case "MachineTable":
+                _animator.SetBool("Pick", true);
                 if (other.GetComponent<MachineTable>().ProductStack.Count > 0 && ProductStack.Count < Max_Count && isReady)
                 {
                     if (ProductStack.Count == 0 || ProductStack.Peek().GetComponent<Product>()._productType
@@ -69,9 +73,11 @@ public class Player : MonoBehaviour
                         ProductStack.Push(_product);
                         _product.transform.SetParent(transform);
 
+                        Stack_Interval = _product.GetComponent<MeshFilter>().sharedMesh.bounds.size.y;
+
                         isReady = false;
 
-                        _product.transform.DOLocalJump(PickPos.localPosition + Vector3.up * ProductStack.Count * 0.2f, 1f, 1, Move_Interval)
+                        _product.transform.DOLocalJump(PickPos.localPosition + Vector3.up * ProductStack.Count * Stack_Interval, 1f, 1, Move_Interval)
                         .OnComplete(() =>
                         {
                             //isReady = true;
@@ -82,7 +88,8 @@ public class Player : MonoBehaviour
                                     break;
 
                                 case Product.ProductType.Battery:
-                                    _product.transform.localEulerAngles = new Vector3(-90f, 0f, 0f);
+                                    //_product.transform.localEulerAngles = new Vector3(-90f, 0f, 0f);
+                                    _product.transform.localEulerAngles = Vector3.zero;
                                     break;
                             }
                         });
@@ -108,6 +115,7 @@ public class Player : MonoBehaviour
                     //    });
                     DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
                 }
+                else if (ProductStack.Count <= 0) _animator.SetBool("Pick", false);
 
                 break;
 
@@ -119,6 +127,7 @@ public class Player : MonoBehaviour
                     other.GetComponent<Counter>().PushBattery(ProductStack.Pop(), Move_Interval);
                     DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
                 }
+                else if (ProductStack.Count <= 0) _animator.SetBool("Pick", false);
 
                 break;
 
@@ -129,6 +138,7 @@ public class Player : MonoBehaviour
                     other.GetComponent<ChargingMachine>().PushBattery(ProductStack.Pop(), Move_Interval);
                     DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
                 }
+                else if (ProductStack.Count <= 0) _animator.SetBool("Pick", false);
 
                 ChargingMachine _chargingmachine = other.GetComponent<ChargingMachine>();
                 int _count = _chargingmachine.MoneyStack.Count / 10;

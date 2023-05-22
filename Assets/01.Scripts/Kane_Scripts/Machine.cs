@@ -186,7 +186,6 @@ public class Machine : MonoBehaviour
 
                         case MachineType.Plus:
                             _product.SetNum(_product.Number += Base_Value);
-
                             break;
 
                         case MachineType.Multiple:

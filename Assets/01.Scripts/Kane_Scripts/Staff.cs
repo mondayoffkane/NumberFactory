@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using System.Linq;
 
 public class Staff : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class Staff : MonoBehaviour
 
     public Stack<Product> _productStack = new Stack<Product>();
 
+    Animator _animator;
 
     public enum StaffState
     {
@@ -45,6 +47,11 @@ public class Staff : MonoBehaviour
 
     public Object _targetPlace;
     [SerializeField] int _targetNum = 0;
+
+    [SerializeField] int _rand;
+
+    public List<MachineTable> _list;
+    float Stack_Interval = 0.2f;
     // =========================================
 
 
@@ -55,22 +62,29 @@ public class Staff : MonoBehaviour
 
         currentSpeed = base_Speed * (Speed_Level + 1);
         currentCapacity = base_Capacity * (Capacity_Level + 1);
+        if (_animator == null) _animator = GetComponent<Animator>();
     }
 
     private void Start()
     {
         _agent = GetComponent<NavMeshAgent>();
         FindWork();
+
     }
 
 
     private void Update()
     {
-        if (Vector3.Distance(transform.position, _agent.destination) < 1f)
+        //if (Vector3.Distance(transform.position, _agent.destination) < 1f)
+        if (_agent.remainingDistance < 1f)
         {
+            _agent.isStopped = true;
+            _agent.velocity = Vector3.zero;
             switch (_staffState)
             {
                 case StaffState.Move1:
+                    _animator.SetBool("Walk", false);
+                    _animator.SetBool("Pick", true);
                     _staffState = StaffState.PickUp;
 
                     break;
@@ -107,6 +121,9 @@ public class Staff : MonoBehaviour
                                     _targetPlace = _stageManager._generator;
                                     break;
                             }
+                            _agent.isStopped = false;
+                            _animator.SetBool("Walk", true);
+                            _animator.SetBool("Pick", true);
                             _staffState = StaffState.Move2;
                         }
 
@@ -114,6 +131,8 @@ public class Staff : MonoBehaviour
                     break;
 
                 case StaffState.Move2:
+                    _animator.SetBool("Walk", false);
+                    _animator.SetBool("Pick", true);
                     _staffState = StaffState.PickDowm;
                     break;
 
@@ -142,6 +161,9 @@ public class Staff : MonoBehaviour
                         }
                         if (_productStack.Count <= 0)
                         {
+                            _agent.isStopped = false;
+                            _animator.SetBool("Walk", false);
+                            _animator.SetBool("Pick", false);
                             _staffState = StaffState.Idle;
                             FindWork();
                         }
@@ -165,6 +187,77 @@ public class Staff : MonoBehaviour
 
     public void FindWork()
     {
+        _rand = Random.Range(0, 3);
+
+        switch (_rand)
+        {
+            case 0:
+                if (_stageManager._chargingMachine.BatteryStack.Count < 5)
+                {
+                    _agent.destination = _stageManager._generator.StackPoint.transform.position;
+                    _targetPlace = _stageManager._generator.StackPoint;
+                    _animator.SetBool("Walk", true);
+                    _animator.SetBool("Pick", false);
+                    _staffState = StaffState.Move1;
+                    _targetNum = 1;
+                }
+                else
+                {
+                    _agent.destination = _stageManager._generator.StackPoint.transform.position;
+                    _targetPlace = (MachineTable)(_stageManager._generator.StackPoint);
+                    _animator.SetBool("Walk", true);
+                    _animator.SetBool("Pick", false);
+                    _staffState = StaffState.Move1;
+                    _targetNum = 0;
+                }
+
+                break;
+
+            case 1:
+                if (_stageManager._counter.BatteryStack.Count < 5)
+                {
+                    _agent.destination = _stageManager._generator.StackPoint.transform.position;
+                    _targetPlace = (MachineTable)(_stageManager._generator.StackPoint);
+                    _animator.SetBool("Walk", true);
+                    _animator.SetBool("Pick", false);
+                    _staffState = StaffState.Move1;
+                    _targetNum = 0;
+                }
+                else
+                {
+                    _agent.destination = _stageManager._generator.StackPoint.transform.position;
+                    _targetPlace = _stageManager._generator.StackPoint;
+                    _animator.SetBool("Walk", true);
+                    _animator.SetBool("Pick", false);
+                    _staffState = StaffState.Move1;
+                    _targetNum = 1;
+                }
+
+                break;
+
+            case 2:
+                /*List<MachineTable>*/
+                _list = _stageManager._numberTables.OrderBy(x => Random.value).ToList();
+
+                for (int i = 0; i < _list.Count; i++)
+                {
+                    if (_list[i].ProductStack.Count > 0)
+                    {
+                        _agent.destination = _list[i].transform.position;
+                        _targetPlace = _list[i];
+                        _animator.SetBool("Walk", true);
+                        _animator.SetBool("Pick", false);
+                        _staffState = StaffState.Move1;
+                        _targetNum = 2;
+                        //break;
+                        return;
+                    }
+                }
+                FindWork();
+                break;
+        }
+
+        /*
         if (_stageManager._counter.BatteryStack.Count < 10)
         {
             _agent.destination = _stageManager._generator.StackPoint.transform.position;
@@ -192,16 +285,17 @@ public class Staff : MonoBehaviour
                     break;
                 }
             }
-        }
+        }*/
     }
 
 
     public void PushProduct(Product _product)
     {
         DOTween.Kill(_product);
+        Stack_Interval = _product.GetComponent<MeshFilter>().sharedMesh.bounds.size.y;
         _productStack.Push(_product);
         _product.transform.SetParent(transform);
-        _product.transform.DOLocalJump(StackPos.localPosition + Vector3.up * _productStack.Count * 0.2f, 1f, 1, 0.5f)
+        _product.transform.DOLocalJump(StackPos.localPosition + Vector3.up * _productStack.Count * Stack_Interval, 1f, 1, 0.5f)
             .OnComplete(() =>
             {
                 switch (_product._productType)
@@ -211,10 +305,13 @@ public class Staff : MonoBehaviour
                         break;
 
                     case Product.ProductType.Battery:
-                        _product.transform.localEulerAngles = new Vector3(-90f, 0f, 0f);
+                        //_product.transform.localEulerAngles = new Vector3(-90f, 0f, 0f);
+                        _product.transform.localEulerAngles = Vector3.zero;
+
                         break;
                 }
             });
     }
+
 
 }

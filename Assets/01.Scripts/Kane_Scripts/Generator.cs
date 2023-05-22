@@ -38,11 +38,12 @@ public class Generator : MonoBehaviour
     public float Third_Pos_interval = 1.5f;
     public float Spawn_Interval = 1f;
     public float Stack_Interval = 0.5f;
-    public int Max_StackCount = 40;
     public float Stack_MoveInterval = 0.5f;
     public int Max_Count = 40;
     public float BaseUp_Interval = 0.5f;
     public float BaseSide_Interval = 0.09f;
+
+
     // ====================================
     public bool isSpawn = true;
 
@@ -51,6 +52,8 @@ public class Generator : MonoBehaviour
         transform.DOScaleY(1.2f, 0.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
         Battery = Resources.Load<GameObject>("Battery");
         StartCoroutine(Cor_Update());
+        Stack_Interval = Battery.GetComponent<MeshFilter>().sharedMesh.bounds.size.y;
+        BaseSide_Interval = Battery.GetComponent<MeshFilter>().sharedMesh.bounds.size.x * 0.5f;
     }
 
 
@@ -136,50 +139,72 @@ public class Generator : MonoBehaviour
         }
         Unit_Obj.sharedMesh = Unit_Meshs[suffixIndex];
 
-
-        switch (digit_count)
+        if (Num < 1000)
         {
-            case 0:
-                Digit_MeshFilter[0].transform.localPosition = Vector3.zero;
-                Unit_Obj.transform.position = Digit_MeshFilter[0].transform.position + Vector3.right * 1.5f;
-                break;
+            switch (digit_count)
+            {
+                case 0:
+                    Digit_MeshFilter[0].transform.localPosition = Vector3.zero;
+                    //Unit_Obj.transform.position = Digit_MeshFilter[0].transform.position + Vector3.right * 1.5;
+                    break;
 
-            case 1:
-                Digit_MeshFilter[0].transform.localPosition = Vector3.left * Double_Pos_interval;
-                Digit_MeshFilter[1].transform.localPosition = Vector3.right * Double_Pos_interval;
-                //Unit_Obj.transform.position = Digit_MeshFilter[1].transform.position + Vector3.right * Double_Pos_interval * 2f;
+                case 1:
+                    Digit_MeshFilter[0].transform.localPosition = Vector3.left * Double_Pos_interval;
+                    Digit_MeshFilter[1].transform.localPosition = Vector3.right * Double_Pos_interval;
+                    break;
 
-                break;
-            case 2:
-                Digit_MeshFilter[0].transform.localPosition = Vector3.left * Third_Pos_interval;
-                Digit_MeshFilter[1].transform.localPosition = Vector3.zero;
-                Digit_MeshFilter[2].transform.localPosition = Vector3.right * Third_Pos_interval;
-                Unit_Obj.transform.position = Digit_MeshFilter[2].transform.position + Vector3.right * (Third_Pos_interval + 0.25f);
+                case 2:
+                    Digit_MeshFilter[0].transform.localPosition = Vector3.left * Third_Pos_interval;
+                    Digit_MeshFilter[1].transform.localPosition = Vector3.zero;
+                    Digit_MeshFilter[2].transform.localPosition = Vector3.right * Third_Pos_interval;
+                    //Unit_Obj.transform.position = Digit_MeshFilter[2].transform.position + Vector3.right * (Third_Pos_interval + 0.25f);
+                    break;
+            }
 
-                break;
-        }
-
-
-        switch (Dot_num)
-        {
-            case 0:
-                Dot_Obj.gameObject.SetActive(true);
-                Dot_Obj.transform.position = Digit_MeshFilter[0].transform.position + Vector3.right * 0.85f;
-                break;
-
-            case 1:
-                Dot_Obj.gameObject.SetActive(true);
-                Dot_Obj.transform.position = Digit_MeshFilter[1].transform.position + Vector3.right * 0.85f;
-                break;
-
-            case 2:
-                Dot_Obj.gameObject.SetActive(false);
-                break;
-
+            Dot_Obj.gameObject.SetActive(false);
 
         }
+        else if (Num > 1000)
+        {
+            switch (digit_count)
+            {
+                case 0:
+                    Digit_MeshFilter[0].transform.localPosition = Vector3.left * Double_Pos_interval;
+                    Unit_Obj.transform.localPosition = Vector3.right * Double_Pos_interval;
+                    break;
 
+                case 1:
+                    Digit_MeshFilter[0].transform.localPosition = Vector3.left * Third_Pos_interval;
+                    Digit_MeshFilter[1].transform.localPosition = Vector3.zero;
+                    Unit_Obj.transform.localPosition = Vector3.right * Third_Pos_interval;
+                    break;
 
+                case 2:
+                    Digit_MeshFilter[0].transform.localPosition = Vector3.left * Double_Pos_interval * 3;
+                    Digit_MeshFilter[1].transform.localPosition = Vector3.left * Double_Pos_interval;
+                    Digit_MeshFilter[2].transform.localPosition = Vector3.right * Double_Pos_interval;
+                    Unit_Obj.transform.localPosition = Vector3.right * Double_Pos_interval * 3;
+                    break;
+            }
+
+            switch (Dot_num)
+            {
+                case 0:
+                    Dot_Obj.gameObject.SetActive(true);
+                    Dot_Obj.transform.position = Digit_MeshFilter[0].transform.position + Vector3.right * 0.85f;
+                    break;
+
+                case 1:
+                    Dot_Obj.gameObject.SetActive(true);
+                    Dot_Obj.transform.position = Digit_MeshFilter[1].transform.position + Vector3.right * 0.85f;
+                    break;
+
+                case 2:
+                    Dot_Obj.gameObject.SetActive(false);
+                    break;
+            }
+
+        }
 
     }
 

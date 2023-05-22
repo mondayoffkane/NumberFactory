@@ -45,7 +45,7 @@ public class StageManager : MonoBehaviour
 
 
     // =============================
-
+    //[ShowInInspector]
     [SerializeField] StageData _stageData;
 
     private void Start()
@@ -158,6 +158,7 @@ public class StageManager : MonoBehaviour
                                 _customer._chargingTable = _table;
                                 List_Humans.Remove(_customer);
                             }
+                            _customer._animator.SetBool("Walk", true);
                             _customer.CustomerState = Customer.State.Wait;
                         }
                         break;
