@@ -175,6 +175,8 @@ public class Machine : MonoBehaviour
                 if (isProduce)
                 {
                     _product = Managers.Pool.Pop(Resources.Load<GameObject>("Product"), transform).transform.GetComponent<Product>();
+                    _product.transform.localScale = Vector3.one;
+                    _product.transform.eulerAngles = new Vector3(0f, 90f, 0f);
                     _product.GetComponent<Product>().Setproduct(Sample_Product.sharedMesh, _productType, Base_Value);
                 }
                 else if (resource_Stack.Count > 0)

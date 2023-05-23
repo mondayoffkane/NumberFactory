@@ -70,6 +70,7 @@ public class JoyStickController : MonoBehaviour
         _joystickHandleImage.enabled = false;
 
         _playeranimator = MoveObjectRig.transform.GetComponent<Animator>();
+        MoveObjectRig.GetComponent<Player>()._joystick = this;
 
         AddDownEvent(() =>
         {

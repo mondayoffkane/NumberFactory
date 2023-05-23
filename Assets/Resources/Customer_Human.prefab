@@ -364,7 +364,7 @@ GameObject:
   - component: {fileID: 8138350541662186160}
   - component: {fileID: 4170554278048965984}
   m_Layer: 0
-  m_Name: StackPoint
+  m_Name: StackPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -378,7 +378,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2350055811823952839}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0.953, z: 0.435}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1177,7 +1177,7 @@ MonoBehaviour:
   Current_ChargingTime: 0
   _chargingTable: {fileID: 0}
   OrderCount: 5
-  StackPoint: {fileID: 957633923183952273}
+  StackPos: {fileID: 957633923183952273}
   Stack_Interval: 1.2
   BaseUp_Interval: 0.5
   Init_StackPointPos: {x: 0, y: 0, z: 0}
@@ -1196,7 +1196,7 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 360
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1

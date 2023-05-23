@@ -403,7 +403,7 @@ MonoBehaviour:
   NextNode: {fileID: 0}
   SampleRot: {x: 0, y: 45, z: -90}
   SpawnInterval: 1
-  Rail_Speed: 10
+  Rail_Speed: 3
   Max_Count: 60
   Current_Count: 0
   RailonProduct_interval: {x: 0, y: 0.5, z: 0}

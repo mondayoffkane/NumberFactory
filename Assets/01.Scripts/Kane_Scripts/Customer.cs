@@ -6,6 +6,8 @@ using UnityEngine.AI;
 
 public class Customer : MonoBehaviour
 {
+    public float _minDist = 2f;
+
     public StageManager StageManager;
 
     public bool isArrive = false;
@@ -18,7 +20,7 @@ public class Customer : MonoBehaviour
 
     public int OrderCount = 5;
 
-    public Transform StackPoint;
+    public Transform StackPos;
 
     // ==== values
     public float Stack_Interval = 0.2f;
@@ -30,11 +32,13 @@ public class Customer : MonoBehaviour
 
     [SerializeField] Vector3 Init_StackPointPos;
 
+    
     public enum State
     {
         Init,
-        Order,
         Wait,
+        Order,
+        Move,
         Charging,
         Exit
     }
@@ -43,7 +47,7 @@ public class Customer : MonoBehaviour
     // ===============================
     private void Start()
     {
-        Init_StackPointPos = StackPoint.transform.localPosition;
+        Init_StackPointPos = StackPos.transform.localPosition;
     }
 
 
@@ -61,32 +65,37 @@ public class Customer : MonoBehaviour
 
     public void SetDest(Vector3 _destiny)
     {
+        _animator.SetBool("Walk", true);
         _agent.destination = _destiny;
         isArrive = false;
     }
 
     private void Update()
     {
-        if ((Vector3.Distance(transform.position, _agent.destination)) < 1.5f && isArrive == false)
+        if ((_agent.remainingDistance < _minDist) && isArrive == false)
         {
             switch (CustomerState)
             {
                 case State.Init:
                     isArrive = true;
                     _animator.SetBool("Walk", false);
-                    _animator.SetBool("Pick", true);
-                    CustomerState = State.Order;
-                    break;
 
-                case State.Order:
-
+                    CustomerState = State.Wait;
                     break;
 
                 case State.Wait:
-                    int _count = StackPoint.childCount;
+                    _animator.SetBool("Walk", false);
+                    break;
+
+                case State.Order:
+                    _animator.SetBool("Walk", false);
+                    break;
+
+                case State.Move:
+                    int _count = StackPos.childCount;
                     for (int i = 0; i < _count; i++)
                     {
-                        Transform _obj = StackPoint.GetChild(0);
+                        Transform _obj = StackPos.GetChild(0);
                         _obj.SetParent(_chargingTable.StackPoint);
                         _obj.localPosition = new Vector3(0f, _obj.localPosition.y, 0f);
                         _obj.localEulerAngles = new Vector3(0f, 45f, 0f);
@@ -119,7 +128,7 @@ public class Customer : MonoBehaviour
                     break;
 
                 case State.Exit:
-                    StackPoint.localPosition = Init_StackPointPos;
+                    StackPos.localPosition = Init_StackPointPos;
                     StageManager.List_Humans.Remove(this);
                     Managers.Pool.Push(this.GetComponent<Poolable>());
                     break;
@@ -132,9 +141,10 @@ public class Customer : MonoBehaviour
 
     public void PushBattery(Product _product, float _interval = 0.5f)
     {
+        _animator.SetBool("Pick", true);
         DOTween.Kill(_product);
         Stack_Interval = _product.GetComponent<MeshFilter>().sharedMesh.bounds.size.y;
-        _product.transform.SetParent(StackPoint);
+        _product.transform.SetParent(StackPos);
         _product.transform.DOLocalJump(Vector3.up * (BatteryStack.Count * Stack_Interval), 1, 1, _interval).SetEase(Ease.Linear)
                                          .Join(_product.transform.DOLocalRotate(new Vector3(-90f, 0f, 0f), _interval).SetEase(Ease.Linear))
                                          .OnComplete(() =>

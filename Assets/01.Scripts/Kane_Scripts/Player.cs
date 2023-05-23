@@ -8,14 +8,22 @@ using Unity.VisualScripting;
 public class Player : MonoBehaviour
 {
 
+    public float base_Speed = 5f;
+    public int base_Capacity = 4;
+    public double base_MoneyPrice = 3f;
+
+    public float add_Speed = 2f;
+    public int add_Capacity = 4;
+    public double add_MoneyPrice = 3f;
+
+    public double total_MoneyPrice;
+
     public int Speed_Level = 0;
     public int Capacity_Level = 0;
     public int Income_Level = 0;
 
     public int Max_Count = 10;
 
-    public double baseMoneyPrice = 3f;
-    public double AddMoneyPrice = 3f;
 
 
     public Stack<Product> ProductStack = new Stack<Product>();
@@ -34,13 +42,19 @@ public class Player : MonoBehaviour
 
     Animator _animator;
 
+    public AnimationCurve _curveLine;
+    public JoyStickController _joystick;
     // ==========================
-    public void InitPlayer(int _speedLevel, int _capacityLevel, int _incomLevel)
+
+    public void UpdateStat(int _speedLevel, int _capacityLevel, int _incomeLevel)
     {
         Speed_Level = _speedLevel;
         Capacity_Level = _capacityLevel;
-        Income_Level = _incomLevel;
+        Income_Level = _incomeLevel;
 
+        _joystick.Speed = base_Speed + (add_Speed * Speed_Level);
+        Max_Count = base_Capacity + (add_Capacity * Capacity_Level);
+        total_MoneyPrice = base_MoneyPrice + (add_MoneyPrice * Income_Level);
     }
 
 
@@ -52,6 +66,56 @@ public class Player : MonoBehaviour
 
         Rail_Mat.SetTextureOffset("_BaseMap", Vector2.zero);
         Rail_Mat.DOOffset(Vector2.down, RailMat_Speed).SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
+
+    }
+
+    private void Update()
+    {
+        //StackCurve();
+
+    }
+
+
+    public void StackCurve()
+    {
+        if (ProductStack.Count > 0)
+        {
+            for (int i = 0; i < ProductStack.Count; i++)
+            {
+                Transform _trans = PickPos.GetChild(i);
+                _trans.localPosition = Vector3.Lerp(_trans.localPosition, _trans.localPosition + new Vector3(0f, 0f, -1f * _curveLine.Evaluate((float)i / (float)Max_Count)), Time.deltaTime);
+            }
+
+
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        switch (other.tag)
+        {
+            case "PlayerHR":
+                Managers.GameUI.PlayerHR_Panel.SetActive(true);
+                break;
+
+            case "StaffHR":
+
+                break;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        switch (other.tag)
+        {
+            case "PlayerHR":
+                Managers.GameUI.PlayerHR_Panel.SetActive(false);
+                break;
+
+            case "StaffHR":
+
+                break;
+        }
     }
 
 
@@ -71,28 +135,24 @@ public class Player : MonoBehaviour
                         Product _product = other.GetComponent<MachineTable>().ProductStack.Pop();
                         DOTween.Kill(_product);
                         ProductStack.Push(_product);
-                        _product.transform.SetParent(transform);
+                        _product.transform.SetParent(PickPos);
 
                         Stack_Interval = _product.GetComponent<MeshFilter>().sharedMesh.bounds.size.y;
 
                         isReady = false;
 
-                        _product.transform.DOLocalJump(PickPos.localPosition + Vector3.up * ProductStack.Count * Stack_Interval, 1f, 1, Move_Interval)
-                        .OnComplete(() =>
+                        switch (_product._productType)
                         {
-                            //isReady = true;
-                            switch (_product._productType)
-                            {
-                                case Product.ProductType.Number:
-                                    _product.transform.localEulerAngles = new Vector3(-180f, 90f, -180f);
-                                    break;
+                            case Product.ProductType.Number:
+                                _product.transform.DOLocalJump(new Vector3(0f, 0f, 0.4f) + Vector3.up * (ProductStack.Count - 1) * Stack_Interval, 1f, 1, Move_Interval).OnComplete(() => _product.transform.localEulerAngles = new Vector3(-180f, 90f, -180f));
+                                break;
 
-                                case Product.ProductType.Battery:
-                                    //_product.transform.localEulerAngles = new Vector3(-90f, 0f, 0f);
-                                    _product.transform.localEulerAngles = Vector3.zero;
-                                    break;
-                            }
-                        });
+                            case Product.ProductType.Battery:
+                                _product.transform.DOLocalJump(Vector3.up * (ProductStack.Count - 1) * Stack_Interval, 1f, 1, Move_Interval).OnComplete(() => _product.transform.localEulerAngles = Vector3.zero);
+                                break;
+                        }
+
+
                         DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
 
                     }
@@ -105,14 +165,7 @@ public class Player : MonoBehaviour
                     Product _product = ProductStack.Pop().GetComponent<Product>();
                     isReady = false;
                     other.GetComponent<Generator>().PushNum(_product);
-                    //DOTween.Kill(_product);
-                    //_product.transform.DOLocalJump(other.transform.position, 1f, 1, Move_Interval)
-                    //    .OnComplete(() =>
-                    //    {
-                    //        //isReady = true;
-                    //        other.GetComponent<Generator>().AddNum(_product.Number);
-                    //        Managers.Pool.Push(_product.GetComponent<Poolable>());
-                    //    });
+
                     DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
                 }
                 else if (ProductStack.Count <= 0) _animator.SetBool("Pick", false);
@@ -146,20 +199,7 @@ public class Player : MonoBehaviour
                 _count = _count > 10 ? 10 : _count;
                 for (int i = 0; i < _count; i++)
                 {
-
-                    Transform _money = _chargingmachine.PopMoney();
-                    if (_money != null)
-                    {
-                        _money.SetParent(transform);
-                        DOTween.Kill(_money);
-                        _money.DOLocalJump(Vector3.zero, 2, 1, Move_Interval * 0.5f).SetEase(Ease.Linear)
-                            .OnComplete(() =>
-                            {
-                                Managers.Game.Money += baseMoneyPrice + Income_Level * AddMoneyPrice;
-                                Managers.Pool.Push(_money.GetComponent<Poolable>());
-                                _money.gameObject.SetActive(false);
-                            });
-                    }
+                    GetMoney(_chargingmachine.PopMoney());
                 }
 
 
@@ -172,29 +212,52 @@ public class Player : MonoBehaviour
                 _count2 = _count2 > 10 ? 10 : _count2;
                 for (int i = 0; i < _count2; i++)
                 {
-
-                    Transform _money = _chargingtable.PopMoney();
-                    if (_money != null)
-                    {
-                        _money.SetParent(transform);
-                        DOTween.Kill(_money);
-                        _money.DOLocalJump(Vector3.zero, 2, 1, Move_Interval * 0.5f).SetEase(Ease.Linear)
-                            .OnComplete(() =>
-                            {
-                                Managers.Game.Money += baseMoneyPrice + Income_Level * AddMoneyPrice;
-                                Managers.Pool.Push(_money.GetComponent<Poolable>());
-                                _money.gameObject.SetActive(false);
-                            });
-                    }
+                    GetMoney(_chargingtable.PopMoney());
                 }
 
                 break;
 
+            case "GarbageCan":
+                if (isReady && ProductStack.Count > 0)
+                {
+                    Transform _trans = ProductStack.Pop().transform;
+                    _trans.SetParent(other.transform);
+                    _trans.DOLocalJump(Vector3.zero, 2f, 1, Move_Interval)
+                        .Join(_trans.DOScale(Vector3.zero, Move_Interval))
+                        .Join(_trans.DOLocalRotate(Vector3.zero, Move_Interval))
+                        .OnComplete(() => Managers.Pool.Push(_trans.GetComponent<Poolable>()));
+                    DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
+                }
+                else if (ProductStack.Count <= 0) _animator.SetBool("Pick", false);
+
+                break;
 
 
         }
 
     }
+
+    public void GetMoney(Transform _money)
+    {
+        if (_money != null)
+        {
+            _money.SetParent(transform);
+            DOTween.Kill(_money);
+            _money.DOLocalJump(Vector3.zero, 2, 1, Move_Interval * 0.5f).SetEase(Ease.Linear)
+                .OnComplete(() =>
+                {
+                    Managers.Game.Money += total_MoneyPrice;
+                    Managers.Pool.Push(_money.GetComponent<Poolable>());
+                    _money.gameObject.SetActive(false);
+
+                    Managers.GameUI.Money_Text.text = $"{Managers.ToCurrencyString(Managers.Game.Money)}";
+
+
+                });
+        }
+    }
+
+
 
 
 

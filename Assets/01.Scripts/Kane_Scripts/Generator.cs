@@ -54,6 +54,7 @@ public class Generator : MonoBehaviour
         StartCoroutine(Cor_Update());
         Stack_Interval = Battery.GetComponent<MeshFilter>().sharedMesh.bounds.size.y;
         BaseSide_Interval = Battery.GetComponent<MeshFilter>().sharedMesh.bounds.size.x * 0.5f;
+        //MoneyUi_Update();
     }
 
 
@@ -67,6 +68,9 @@ public class Generator : MonoBehaviour
             if (isSpawn && Num > 100 && StackPoint.ProductStack.Count < Max_Count)
             {
                 Transform _battery = Managers.Pool.Pop(Battery, StackPoint.transform).transform;
+
+                _battery.localScale = Vector3.one;
+                _battery.eulerAngles = new Vector3(0f, 45f, 0f);
                 _battery.transform.position = transform.position;
                 DOTween.Kill(_battery);
                 int _count = StackPoint.ProductStack.Count - 1;
@@ -265,7 +269,16 @@ public class Generator : MonoBehaviour
                 AddNum(_product.Number);
                 Managers.Pool.Push(_product.GetComponent<Poolable>());
             });
+
+        MoneyUi_Update();
+
     }
 
+    public void MoneyUi_Update()
+    {
+        Managers.GameUI.StageGuage_Text.text = $"{Managers.ToCurrencyString(Managers.Game._stagemanager._generator.Num)} / {Managers.ToCurrencyString(Managers.Game._stagemanager.Clear_Money)}";
 
+        Managers.GameUI.Stage_Slider.DOFillAmount((float)(Managers.Game._stagemanager._generator.Num / Managers.Game._stagemanager.Clear_Money), 0.2f).SetEase(Ease.Linear);
+
+    }
 }

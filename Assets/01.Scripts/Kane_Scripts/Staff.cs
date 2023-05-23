@@ -8,6 +8,7 @@ using System.Linq;
 
 public class Staff : MonoBehaviour
 {
+    public float _minDist = 2f;
     public Transform StackPos;
     public NavMeshAgent _agent;
 
@@ -17,11 +18,13 @@ public class Staff : MonoBehaviour
 
 
     public float base_Speed = 2f;
-    public float base_Capacity = 4;
+    public int base_Capacity = 4;
 
+    public float add_Speed = 3.5f;
+    public int add_Capacity = 2;
 
-    public float currentSpeed;
-    public float currentCapacity;
+    //public float currentSpeed;
+    public float max_Capacity;
 
 
 
@@ -57,17 +60,27 @@ public class Staff : MonoBehaviour
 
     public void SetStaffLevel(int _speed_Level, int _capacity_Level)
     {
-        Speed_Level = _speed_Level;
-        Capacity_Level = _capacity_Level;
-
-        currentSpeed = base_Speed * (Speed_Level + 1);
-        currentCapacity = base_Capacity * (Capacity_Level + 1);
+       if(_agent==null) _agent = GetComponent<NavMeshAgent>();
         if (_animator == null) _animator = GetComponent<Animator>();
+
+
+        UpdateStat(_speed_Level, _capacity_Level);
     }
+
+    public void UpdateStat(int _speedLevel , int _capacityLevel)
+    {
+        Speed_Level = _speedLevel;
+        Capacity_Level = _capacityLevel;
+
+        _agent.speed = base_Speed +  (add_Speed* Speed_Level);
+        max_Capacity = base_Capacity + (add_Capacity* Capacity_Level);
+
+    }
+
+
 
     private void Start()
     {
-        _agent = GetComponent<NavMeshAgent>();
         FindWork();
 
     }
@@ -76,7 +89,7 @@ public class Staff : MonoBehaviour
     private void Update()
     {
         //if (Vector3.Distance(transform.position, _agent.destination) < 1f)
-        if (_agent.remainingDistance < 1f)
+        if (_agent.remainingDistance < _minDist)
         {
             _agent.isStopped = true;
             _agent.velocity = Vector3.zero;
@@ -101,7 +114,7 @@ public class Staff : MonoBehaviour
                             PushProduct(_table.ProductStack.Pop());
                         }
 
-                        if (_productStack.Count >= currentCapacity)
+                        if (_productStack.Count >= max_Capacity)
                         {
                             switch (_targetNum)
                             {
@@ -168,16 +181,6 @@ public class Staff : MonoBehaviour
                             FindWork();
                         }
 
-                        //MachineTable _table = (MachineTable)_targetPlace;
-                        //if (_table.ProductStack.Count > 0)
-                        //{
-                        //    _productStack.Push(_table.ProductStack.Pop());
-                        //}
-
-                        //if (_productStack.Count >= currentCapacity)
-                        //{
-                        //    _staffState = StaffState.Move2;
-                        //}
 
                     }
                     break;
@@ -257,35 +260,7 @@ public class Staff : MonoBehaviour
                 break;
         }
 
-        /*
-        if (_stageManager._counter.BatteryStack.Count < 10)
-        {
-            _agent.destination = _stageManager._generator.StackPoint.transform.position;
-            _targetPlace = (MachineTable)(_stageManager._generator.StackPoint);
-            _staffState = StaffState.Move1;
-            _targetNum = 0;
-        }
-        else if (_stageManager._chargingMachine.BatteryStack.Count < 10)
-        {
-            _agent.destination = _stageManager._generator.StackPoint.transform.position;
-            _targetPlace = _stageManager._generator.StackPoint;
-            _staffState = StaffState.Move1;
-            _targetNum = 1;
-        }
-        else
-        {
-            for (int i = 0; i < _stageManager._numberTables.Length; i++)
-            {
-                if (_stageManager._numberTables[i].ProductStack.Count > 0)
-                {
-                    _agent.destination = _stageManager._numberTables[i].transform.position;
-                    _targetPlace = _stageManager._numberTables[i];
-                    _staffState = StaffState.Move1;
-                    _targetNum = 2;
-                    break;
-                }
-            }
-        }*/
+
     }
 
 
@@ -294,23 +269,24 @@ public class Staff : MonoBehaviour
         DOTween.Kill(_product);
         Stack_Interval = _product.GetComponent<MeshFilter>().sharedMesh.bounds.size.y;
         _productStack.Push(_product);
-        _product.transform.SetParent(transform);
-        _product.transform.DOLocalJump(StackPos.localPosition + Vector3.up * _productStack.Count * Stack_Interval, 1f, 1, 0.5f)
-            .OnComplete(() =>
-            {
-                switch (_product._productType)
-                {
-                    case Product.ProductType.Number:
-                        _product.transform.localEulerAngles = new Vector3(-180f, 90f, -180f);
-                        break;
+        _product.transform.SetParent(StackPos);
 
-                    case Product.ProductType.Battery:
-                        //_product.transform.localEulerAngles = new Vector3(-90f, 0f, 0f);
-                        _product.transform.localEulerAngles = Vector3.zero;
+        switch (_product._productType)
+        {
+            case Product.ProductType.Number:
+                _product.transform.DOLocalJump(new Vector3(0f, 0f, 0.4f) + Vector3.up * (_productStack.Count - 1) * Stack_Interval, 1f, 1, 0.5f)
+              .OnComplete(() => _product.transform.localEulerAngles = new Vector3(-180f, 90f, -180f));
+                break;
 
-                        break;
-                }
-            });
+            case Product.ProductType.Battery:
+
+                _product.transform.DOLocalJump(Vector3.up * (_productStack.Count - 1) * Stack_Interval, 1f, 1, 0.5f)
+            .OnComplete(() => _product.transform.localEulerAngles = Vector3.zero);
+
+                break;
+        }
+
+
     }
 
 
