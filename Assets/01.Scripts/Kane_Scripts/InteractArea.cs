@@ -11,9 +11,6 @@ public class InteractArea : MonoBehaviour
     public GameObject TargetObj;
     [SerializeField] Object _target;
 
-    public double[] Max_Money_List = new double[3] { 10d, 100d, 1000d };
-    public double Max_Money;
-    public double Current_Money;
 
     public enum TargetType
     {
@@ -23,42 +20,79 @@ public class InteractArea : MonoBehaviour
     }
     public TargetType _targetType;
 
-    public Text MoneyText;
+    //public Text MoneyText;
 
-    [SerializeField] Player _player;
+    [SerializeField] Machine _machine;
+    [SerializeField] ChargingTable _table;
+    [SerializeField] ChargingPark _park;
 
 
-    private void Start()
+
+    public void SetTarget(Object _obj, TargetType _type)
     {
+        _target = _obj;
+        _targetType = _type;
+
         switch (_targetType)
         {
             case TargetType.Machine:
-                _target = TargetObj.GetComponent<Machine>();
+                _machine = (Machine)_target;
                 break;
 
             case TargetType.Table:
-                _target = TargetObj.GetComponent<ChargingTable>();
+                _table = (ChargingTable)_target;
                 break;
 
             case TargetType.Park:
-                _target = TargetObj.GetComponent<ChargingPark>();
+                _park = (ChargingPark)_target;
                 break;
         }
 
-        MoneyText = transform.Find("MoneyText").GetComponent<Text>();
-        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+
+        //MoneyText = transform.Find("MoneyText").GetComponent<Text>();
     }
 
-    public void PayMoney()
-    {
 
-    }
-
-    public void OnTriggerStay(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+            switch (_targetType)
+            {
+                case TargetType.Machine:
+                    _machine.isPlayerIn = true;
+                    break;
 
+                case TargetType.Table:
+
+                    break;
+
+                case TargetType.Park:
+
+                    break;
+            }
+        }
+    }
+
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            switch (_targetType)
+            {
+                case TargetType.Machine:
+                    _machine.isPlayerIn = false;
+                    break;
+
+                case TargetType.Table:
+
+                    break;
+
+                case TargetType.Park:
+
+                    break;
+            }
         }
     }
 

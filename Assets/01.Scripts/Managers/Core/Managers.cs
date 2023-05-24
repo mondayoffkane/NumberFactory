@@ -16,7 +16,7 @@ public class Managers : MonoBehaviour
 
     [HideInInspector]
     GameManager _game;
-
+      
     public static DataManager Data => Instance._data;
     public static PoolManager Pool => Instance._pool;
     public static ResourceManager Resource => Instance._resource;

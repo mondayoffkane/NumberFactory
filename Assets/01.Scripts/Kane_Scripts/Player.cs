@@ -99,7 +99,7 @@ public class Player : MonoBehaviour
                 break;
 
             case "StaffHR":
-
+                Managers.GameUI.StaffHR_Panel.SetActive(true);
                 break;
         }
     }
@@ -113,7 +113,7 @@ public class Player : MonoBehaviour
                 break;
 
             case "StaffHR":
-
+                Managers.GameUI.StaffHR_Panel.SetActive(false);
                 break;
         }
     }

@@ -32,7 +32,8 @@ public class Customer : MonoBehaviour
 
     [SerializeField] Vector3 Init_StackPointPos;
 
-    
+
+
     public enum State
     {
         Init,
@@ -78,12 +79,19 @@ public class Customer : MonoBehaviour
             {
                 case State.Init:
                     isArrive = true;
+
+
                     _animator.SetBool("Walk", false);
 
+                    //if (isFirstCustomer == true)
+                    //{
+                    //    Managers.Game._stagemanager.isHumanOrderReady = true;
+                    //}
                     CustomerState = State.Wait;
                     break;
 
                 case State.Wait:
+                    isArrive = true;
                     _animator.SetBool("Walk", false);
                     break;
 

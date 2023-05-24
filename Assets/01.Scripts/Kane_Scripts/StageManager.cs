@@ -14,6 +14,7 @@ public class StageManager : MonoBehaviour
 
     public MachineTable[] _numberTables;
 
+    public List<Machine> Machines = new List<Machine>();
     public List<ChargingTable> Tables;
     public List<ChargingPark> Parks;
 
@@ -43,20 +44,55 @@ public class StageManager : MonoBehaviour
     public Player _player;
 
 
-    //public List<MachineTable> _machineTables = new List<MachineTable>();
+    public double[] _playerSpeedPrice = new double[] { 100, 200, 500, 1000, 2000 };
+    public double[] _playerCapacityPrice = new double[] { 100, 200, 500, 1000, 2000 };
+    public double[] _playerIncomePrice = new double[] { 100, 200, 500, 1000, 2000 };
+
+    public double[] _staffSpeedPrice = new double[] { 100, 200, 500, 1000, 2000 };
+    public double[] _staffCapacityPrice = new double[] { 100, 200, 500, 1000, 2000 };
+    public double[] _staffCountPrice = new double[] { 100, 200, 500, 1000, 2000 };
+
+
 
 
     // =============================
     [ShowInInspector]
     [SerializeField] StageData _stageData;
 
-    private void Start()
+    [SerializeField] GameManager _gameManager;
+    [SerializeField] UI_GameScene _gameUi;
+
+    [Button]
+    public void SaveData()
+    {
+        _stageData.MachineLevels = new int[Machines.Count];
+        for (int i = 0; i < Machines.Count; i++)
+        {
+            _stageData.MachineLevels[i] = Machines[i].Upgrade_Level;
+        }
+        Managers.Data.SaveData(_stageData, Stage_Num);
+
+    }
+
+
+    [Button]
+    public void LoadData()
     {
         _stageData = Managers.Data.LoadData(Stage_Num); // Load Data
+        for (int i = 0; i < Machines.Count; i++)
+        {
+            Machines[i].Upgrade_Level = _stageData.MachineLevels[i];
+            Machines[i].SetStart();
+        }
+    }
 
+    //public bool isHumanOrderReady = false;
+    private void Start()
+    {
+        _gameManager = Managers.Game;
+        _gameUi = Managers.GameUI;
 
-
-
+        LoadData();
 
         GameObject[] _list1 = GameObject.FindGameObjectsWithTag("ChargingTable");
         for (int i = 0; i < _list1.Length; i++)
@@ -104,13 +140,9 @@ public class StageManager : MonoBehaviour
             Customer _customerHuman = _human.GetComponent<Customer>();
             _customerHuman.SetInit(this, Random.Range(Min_Count, Max_Count));
 
+            _customerHuman.SetDest(HumanMovePos[1].position + new Vector3(HumanPos_Interval * Mathf.Sin(45), 0f, -HumanPos_Interval * Mathf.Sin(45)) * List_Humans.Count);
             List_Humans.Add(_customerHuman);
 
-            for (int i = 0; i < List_Humans.Count; i++)
-            {
-
-                List_Humans[i].SetDest(HumanMovePos[1].position + new Vector3(HumanPos_Interval * Mathf.Sin(45), 0f, -HumanPos_Interval * Mathf.Sin(45)) * i);
-            }
         }
     }
     public void AddCustomer_Car()
@@ -123,15 +155,7 @@ public class StageManager : MonoBehaviour
             _customerCar.SetInit(this, _chargingMachine, Random.Range(Min_Count, Max_Count));
 
             List_Cars.Add(_customerCar);
-
-            for (int i = 0; i < List_Cars.Count; i++)
-            {
-                int num = i > 7 ? 7 : i;
-
-                List_Cars[i].SetDest(CarMovePos[1].position
-                    + new Vector3((CarPos_Interval * Mathf.Sin(45)) * num, 0f, (CarPos_Interval * Mathf.Sin(45)) * num));
-
-            }
+            MoveCustomerCar();
         }
     }
 
@@ -147,7 +171,7 @@ public class StageManager : MonoBehaviour
             {
                 Customer _customer = List_Humans[0];
 
-                if (_customer.CustomerState == Customer.State.Wait)
+                if (_customer.CustomerState == Customer.State.Wait && _customer.isArrive)
                     _customer.CustomerState = Customer.State.Order;
 
                 if (_customer.CustomerState == Customer.State.Order)
@@ -167,9 +191,10 @@ public class StageManager : MonoBehaviour
                             _customer.SetDest(_table.transform.position);
                             _customer._chargingTable = _table;
                             List_Humans.Remove(_customer);
+                            MoveCustomerHuman();
+                            _customer._animator.SetBool("Walk", true);
+                            _customer.CustomerState = Customer.State.Move;
                         }
-                        _customer._animator.SetBool("Walk", true);
-                        _customer.CustomerState = Customer.State.Move;
                     }
                 }
             }
@@ -201,7 +226,28 @@ public class StageManager : MonoBehaviour
                         break;
                 }
             }
+            MoveCustomerCar();
+        }
+    }
 
+
+    public void MoveCustomerHuman()
+    {
+        //isHumanOrderReady = false;
+        for (int i = 0; i < List_Humans.Count; i++)
+        {
+            List_Humans[i].SetDest(HumanMovePos[1].position + new Vector3(HumanPos_Interval * Mathf.Sin(45), 0f, -HumanPos_Interval * Mathf.Sin(45)) * i);
+        }
+    }
+
+    public void MoveCustomerCar()
+    {
+        for (int i = 0; i < List_Cars.Count; i++)
+        {
+            int num = i > 7 ? 7 : i;
+
+            List_Cars[i].SetDest(CarMovePos[1].position
+                + new Vector3((CarPos_Interval * Mathf.Sin(45)) * num, 0f, (CarPos_Interval * Mathf.Sin(45)) * num));
 
         }
     }
@@ -230,6 +276,10 @@ public class StageManager : MonoBehaviour
         return null;
     }
 
+
+
+
+
     public void StageSetting()
     {
         // User Setting
@@ -237,7 +287,7 @@ public class StageManager : MonoBehaviour
 
 
         // Staff Setting
-        for (int i = 0; i < _stageData.StaffCount_Level; i++)
+        for (int i = 0; i < _stageData.StaffHire_Level; i++)
         {
             AddStaff();
         }
@@ -255,11 +305,7 @@ public class StageManager : MonoBehaviour
     }
 
 
-    [Button]
-    public void SaveData()
-    {
-        Managers.Data.SaveData(_stageData, Stage_Num); // SaveData;
-    }
+
 
 
     public void LevelUpgrade(int _num)
@@ -267,35 +313,70 @@ public class StageManager : MonoBehaviour
         switch (_num)
         {
             case 0:
-                // if ( money >= levelup price ) ?
+
+                for (int i = 0; i < _stageData.PlayerSpeed_Level + 1; i++)
+                {
+                    _gameUi.Player_Speed_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
+                }
+
+                _gameManager.Money -= _playerSpeedPrice[_stageData.PlayerSpeed_Level];
                 _stageData.PlayerSpeed_Level++;
                 _player.UpdateStat(_stageData.PlayerSpeed_Level, _stageData.PlayerCapacity_Level, _stageData.PlayerIncome_Level);
+
                 break;
 
             case 1:
+                for (int i = 0; i < _stageData.PlayerCapacity_Level + 1; i++)
+                {
+                    _gameUi.Player_Capacity_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
+                }
                 _stageData.PlayerCapacity_Level++;
                 _player.UpdateStat(_stageData.PlayerSpeed_Level, _stageData.PlayerCapacity_Level, _stageData.PlayerIncome_Level);
+
                 break;
 
             case 2:
+                for (int i = 0; i < _stageData.PlayerIncome_Level + 1; i++)
+                {
+                    _gameUi.Player_Income_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
+                }
                 _stageData.PlayerIncome_Level++;
                 _player.UpdateStat(_stageData.PlayerSpeed_Level, _stageData.PlayerCapacity_Level, _stageData.PlayerIncome_Level);
+
                 break;
 
             case 3:
+                for (int i = 0; i < _stageData.StaffSpeed_Level + 1; i++)
+                {
+                    _gameUi.Staff_Speed_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
+                }
                 _stageData.StaffSpeed_Level++;
                 StaffUpdateStat();
+
                 break;
 
             case 4:
-                _stageData.StaffCount_Level++;
-                AddStaff();
+                for (int i = 0; i < _stageData.StaffCapacity_Level + 1; i++)
+                {
+                    _gameUi.Staff_Capacity_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
+                }
+                _stageData.StaffCapacity_Level++;
+                StaffUpdateStat();
+
                 break;
 
             case 5:
+                for (int i = 0; i < _stageData.StaffHire_Level + 1; i++)
+                {
+                    _gameUi.Staff_Hire_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
+                }
+                AddStaff();
 
+                _stageData.StaffHire_Level++;
                 break;
         }
+
+        CheckButton();
     }
 
     public void StaffUpdateStat()
@@ -304,6 +385,16 @@ public class StageManager : MonoBehaviour
         {
             List_Staff[i].UpdateStat(_stageData.StaffSpeed_Level, _stageData.StaffCapacity_Level);
         }
+    }
+
+
+    public void CheckButton()
+    {
+        _gameUi.Money_Text.text = $"{Managers.ToCurrencyString(_gameManager.Money)}";
+
+
+
+
     }
 
 

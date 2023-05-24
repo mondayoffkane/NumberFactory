@@ -20,7 +20,14 @@ public class UI_GameScene : UI_Scene
         RV_Player_Capacity_Button,
         Buy_Player_Capacity_Button,
         RV_Player_Income_Button,
-        Buy_Player_Income_Button
+        Buy_Player_Income_Button,
+
+        RV_Staff_Speed_Button,
+        Buy_Staff_Speed_Button,
+        RV_Staff_Capacity_Button,
+        Buy_Staff_Capacity_Button,
+        RV_Staff_Hire_Button,
+        Buy_Staff_Hire_Button
 
     }
     enum Texts
@@ -37,14 +44,23 @@ public class UI_GameScene : UI_Scene
         PlayerHR_Panel,
         Player_Speed_Level_Group,
         Player_Capacity_Level_Group,
-        Player_Income_Level_Group
+        Player_Income_Level_Group,
+
+        StaffHR_Panel,
+        Staff_Speed_Level_Group,
+        Staff_Capacity_Level_Group,
+        Staff_Hire_Level_Group
+
+
 
     }
 
     public Image Stage_Slider;
-    public Button Setting_Button, Sound_Button, Vibe_Button, RV_Player_Speed_Button, Buy_Player_Speed_Button, RV_Player_Capacity_Button, Buy_Player_Capacity_Button, RV_Player_Income_Button, Buy_Player_Income_Button;
+    public Button Setting_Button, Sound_Button, Vibe_Button, RV_Player_Speed_Button, Buy_Player_Speed_Button, RV_Player_Capacity_Button, Buy_Player_Capacity_Button, RV_Staff_Speed_Button, Buy_Staff_Speed_Button, RV_Staff_Capacity_Button, Buy_Staff_Capacity_Button, RV_Staff_Hire_Button, Buy_Staff_Hire_Button, RV_Player_Income_Button, Buy_Player_Income_Button;
     public Text Money_Text, StageGuage_Text;
-    public GameObject Base_Panel, Setting_Panel, PlayerHR_Panel, Player_Speed_Level_Group, Player_Capacity_Level_Group, Player_Income_Level_Group;
+    public GameObject Base_Panel, Setting_Panel,
+        PlayerHR_Panel, Player_Speed_Level_Group, Player_Capacity_Level_Group, Player_Income_Level_Group,
+        StaffHR_Panel, Staff_Speed_Level_Group, Staff_Capacity_Level_Group, Staff_Hire_Level_Group;
 
     // ============================
     private void Awake()
@@ -73,16 +89,30 @@ public class UI_GameScene : UI_Scene
         RV_Player_Income_Button = GetButton(Buttons.RV_Player_Income_Button);
         Buy_Player_Income_Button = GetButton(Buttons.Buy_Player_Income_Button);
 
+        RV_Staff_Speed_Button = GetButton(Buttons.RV_Staff_Speed_Button);
+        Buy_Staff_Speed_Button = GetButton(Buttons.Buy_Staff_Speed_Button);
+        RV_Staff_Capacity_Button = GetButton(Buttons.RV_Staff_Capacity_Button);
+        Buy_Staff_Capacity_Button = GetButton(Buttons.Buy_Staff_Capacity_Button);
+        RV_Staff_Hire_Button = GetButton(Buttons.RV_Staff_Hire_Button);
+        Buy_Staff_Hire_Button = GetButton(Buttons.Buy_Staff_Hire_Button);
 
+          
         Money_Text = GetText(Texts.Money_Text);
         StageGuage_Text = GetText(Texts.StageGuage_Text);
 
         Base_Panel = GetObject(GameObjects.Base_Panel);
         Setting_Panel = GetObject(GameObjects.Setting_Panel);
+
         PlayerHR_Panel = GetObject(GameObjects.PlayerHR_Panel);
         Player_Speed_Level_Group = GetObject(GameObjects.Player_Speed_Level_Group);
         Player_Capacity_Level_Group = GetObject(GameObjects.Player_Capacity_Level_Group);
         Player_Income_Level_Group = GetObject(GameObjects.Player_Income_Level_Group);
+
+        StaffHR_Panel = GetObject(GameObjects.StaffHR_Panel);
+        Staff_Speed_Level_Group = GetObject(GameObjects.Staff_Speed_Level_Group);
+        Staff_Capacity_Level_Group = GetObject(GameObjects.Staff_Capacity_Level_Group);
+        Staff_Hire_Level_Group = GetObject(GameObjects.Staff_Hire_Level_Group);
+
 
         // ========= add button event
 
@@ -100,12 +130,26 @@ public class UI_GameScene : UI_Scene
         });
 
         RV_Player_Speed_Button.AddButtonEvent(() => { });
-        Buy_Player_Speed_Button.AddButtonEvent(() => Managers.Game._stagemanager.LevelUpgrade(0));
+        Buy_Player_Speed_Button.AddButtonEvent(() =>
+        {
+
+            Managers.Game._stagemanager.LevelUpgrade(0);
+
+        });
+
+        RV_Player_Speed_Button.AddButtonEvent(() => { });
+        Buy_Player_Speed_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(0); });
         RV_Player_Capacity_Button.AddButtonEvent(() => { });
         Buy_Player_Capacity_Button.AddButtonEvent(() => Managers.Game._stagemanager.LevelUpgrade(1));
         RV_Player_Income_Button.AddButtonEvent(() => { });
         Buy_Player_Income_Button.AddButtonEvent(() => Managers.Game._stagemanager.LevelUpgrade(2));
 
+        RV_Staff_Speed_Button.AddButtonEvent(() => { });
+        Buy_Staff_Speed_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(3); });
+        RV_Staff_Capacity_Button.AddButtonEvent(() => { });
+        Buy_Staff_Capacity_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(4); });
+        RV_Staff_Hire_Button.AddButtonEvent(() => { });
+        Buy_Staff_Hire_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(5); });
 
 
 

@@ -1171,6 +1171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cf500574c7eb41f383340e379a86e6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _minDist: 0.5
   StageManager: {fileID: 0}
   isArrive: 0
   _agent: {fileID: 0}
@@ -1181,6 +1182,7 @@ MonoBehaviour:
   Stack_Interval: 1.2
   BaseUp_Interval: 0.5
   Init_StackPointPos: {x: 0, y: 0, z: 0}
+  isFirstCustomer: 0
   CustomerState: 0
   _animator: {fileID: 1308113229394671963}
 --- !u!195 &8025084249157588800

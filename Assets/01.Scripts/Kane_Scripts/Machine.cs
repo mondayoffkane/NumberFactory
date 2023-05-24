@@ -44,7 +44,7 @@ public class Machine : MonoBehaviour
     public float BaseUpStack_Inteval = 1f;
     public int Base_Value = 1;
 
-    public Transform InteractArea;
+    public InteractArea _interactArea;
     public Text PriceText;
 
     public string _objectName = "Machine";
@@ -60,7 +60,8 @@ public class Machine : MonoBehaviour
     public double CurrentPrice = 100d;
 
     public bool isPlayerIn = false;
-
+    bool isActive = false;
+    bool isnextinit = false;
     // =======================================
 
     public void SetObj()
@@ -70,8 +71,10 @@ public class Machine : MonoBehaviour
         MachineTable = Child_Machine.transform.Find("MachineTable").GetComponent<MachineTable>();
         StartBelt = Child_Machine.transform.Find("StartBelt");
         EndBelt = Child_Machine.transform.Find("EndBelt");
-        InteractArea = transform.Find("InteractArea");
-        PriceText = InteractArea.GetComponentInChildren<Text>();
+
+        _interactArea = GetComponentInChildren<InteractArea>();
+        _interactArea.SetTarget(this, InteractArea.TargetType.Machine);
+        PriceText = _interactArea.GetComponentInChildren<Text>();
     }
 
     [Button]
@@ -99,25 +102,26 @@ public class Machine : MonoBehaviour
 
     }
 
-    private void Start()
+    public void SetStart()
     {
         SetObj();
 
         Sample_Product.transform.rotation = Quaternion.Euler(SampleRot);
         Child_Machine.gameObject.SetActive(false);
 
+        if (Upgrade_Level != 0)
+        {
+            ActiveMachine();
+            isActive = true;
+        }
         Upgrade_Level = Managers.Data.GetInt(_objectName + Machine_Num.ToString());
-        if (Upgrade_Level >= 3) InteractArea.gameObject.SetActive(false);
+        if (Upgrade_Level >= 3) _interactArea.gameObject.SetActive(false);
         StartCoroutine(Cor_Update());
         StartCoroutine(Cor_Spawn());
 
         CurrentPrice = UpgradePrice[Upgrade_Level];
         PriceText.text = $"{CurrentPrice:0}";
 
-        if (Upgrade_Level != 0)
-        {
-            ActiveMachine();
-        }
 
 
     }
@@ -172,39 +176,43 @@ public class Machine : MonoBehaviour
             if (Upgrade_Level > 0)
             {
                 Product _product;
-                if (isProduce)
-                {
-                    _product = Managers.Pool.Pop(Resources.Load<GameObject>("Product"), transform).transform.GetComponent<Product>();
-                    _product.transform.localScale = Vector3.one;
-                    _product.transform.eulerAngles = new Vector3(0f, 90f, 0f);
-                    _product.GetComponent<Product>().Setproduct(Sample_Product.sharedMesh, _productType, Base_Value);
-                }
-                else if (resource_Stack.Count > 0)
-                {
-                    _product = resource_Stack.Pop();
 
-                    switch (_machineType)
+                if (isActive)
+                {
+                    if (isProduce)
                     {
-
-                        case MachineType.Plus:
-                            _product.SetNum(_product.Number += Base_Value);
-                            break;
-
-                        case MachineType.Multiple:
-                            _product.SetNum(_product.Number *= Base_Value);
-
-                            break;
-
-                        default:
-
-                            break;
+                        _product = Managers.Pool.Pop(Resources.Load<GameObject>("Product"), transform).transform.GetComponent<Product>();
+                        _product.transform.localScale = Vector3.one;
+                        _product.transform.eulerAngles = new Vector3(0f, 90f, 0f);
+                        _product.GetComponent<Product>().Setproduct(Sample_Product.sharedMesh, _productType, Base_Value);
                     }
+                    else if (resource_Stack.Count > 0)
+                    {
+                        _product = resource_Stack.Pop();
 
+                        switch (_machineType)
+                        {
+
+                            case MachineType.Plus:
+                                _product.SetNum(_product.Number += Base_Value);
+                                break;
+
+                            case MachineType.Multiple:
+                                _product.SetNum(_product.Number *= Base_Value);
+
+                                break;
+
+                            default:
+
+                                break;
+                        }
+
+                    }
+                    else _product = null;
+
+                    if (_product != null)
+                        MoveNextNode(_product);
                 }
-                else _product = null;
-
-                if (_product != null)
-                    MoveNextNode(_product);
             }
         }
     }
@@ -212,11 +220,14 @@ public class Machine : MonoBehaviour
     [Button]
     public void UpgradeMachine()
     {
+        ActiveMachine();
+        isActive = true;
+
         Upgrade_Level++;
         if (Upgrade_Level >= 3)
         {
             Upgrade_Level = 3;
-            InteractArea.gameObject.SetActive(false);
+            _interactArea.gameObject.SetActive(false);
         }
         else
         {
@@ -224,21 +235,22 @@ public class Machine : MonoBehaviour
             PriceText.text = $"{CurrentPrice:0}";
 
         }
-        SpawnInterval = 1f - 0.1f * Upgrade_Level;
-        Max_Count = 20 + 10 * Upgrade_Level;
+        //SpawnInterval = 1f - 0.1f * Upgrade_Level;
+        //Max_Count = 20 + 10 * Upgrade_Level;
 
 
 
-        if (NextNode != null)
-        {
-            NextNode.UpgradeMachine();
-        }
+        //if (NextNode != null)
+        //{
+        //    NextNode.UpgradeMachine();
+        //}
 
-        Managers.Data.SetInt(_objectName + Machine_Num.ToString(), Upgrade_Level);
-        if (Upgrade_Level < 2)
-        {
-            ActiveMachine();
-        }
+        //Managers.Data.SetInt(_objectName + Machine_Num.ToString(), Upgrade_Level);
+
+        //if (Upgrade_Level < 2)
+        //{
+        //    ActiveMachine();
+        //}
     }
 
 
@@ -250,7 +262,11 @@ public class Machine : MonoBehaviour
             .Append(_productObj.transform.DOMove(EndBelt.position + RailonProduct_interval, Rail_Speed))
             .OnComplete(() =>
             {
-                if (NextNode == null)
+                if (NextNode != null && NextNode.isActive) // next node  true and isactive
+                {
+                    NextNode.Input_Resource(_productObj);
+                }
+                else // next node null
                 {
                     if (MachineTable.ProductStack.Count < Max_Count)
                     {
@@ -261,33 +277,29 @@ public class Machine : MonoBehaviour
                             _productObj.transform.DOJump(MachineTable.transform.position + new Vector3(-0.3f * Mathf.Sin(45), BaseUpStack_Inteval + (_count / 2) * Product_Stack_Interval, -0.3f * Mathf.Sin(45)) // positon
                             , 0.5f, 1, 0.5f) // power,jump count,duration                            
                             .Join(_product.transform.DORotate(new Vector3(0f, 90f, 0f), 0.5f).SetEase(Ease.Linear));
-                            //.OnComplete(() => MachineTable.ProductStack.Push(_productObj));
-
                         }
                         else
                         {
-
                             _productObj.transform.DOJump(MachineTable.transform.position + new Vector3(0.3f * Mathf.Sin(45), BaseUpStack_Inteval + (_count / 2) * Product_Stack_Interval, +0.3f * Mathf.Sin(45)) // positon
                           , 0.5f, 1, 0.5f) // power,jump count,duration                            
                             .Join(_product.transform.DORotate(new Vector3(0f, 90f, 0f), 0.5f).SetEase(Ease.Linear));
-                            //.OnComplete(() => MachineTable.ProductStack.Push(_productObj));
-
                         }
                     }
                     else
                     {
                         Managers.Pool.Push(_productObj.GetComponent<Poolable>());
+                        if (isnextinit == false)
+                        {
+                            isnextinit = true;
+                            int count = MachineTable.ProductStack.Count;
+                            for (int i = 0; i < count; i++)
+                            {
+                                NextNode.resource_Stack.Push(MachineTable.ProductStack.Pop());
+                            }
+                        }
                     }
-
-                }
-                else // NextNode == true
-                {
-                    //NextNode.MoveNextNode(_product);
-                    NextNode.Input_Resource(_productObj);
                 }
             });
-
-        //_productObj = null;
     }
 
     public void Input_Resource(Product _resource)
@@ -317,20 +329,20 @@ public class Machine : MonoBehaviour
         ES3.Save<int>(_objectName + Machine_Num.ToString(), 0);
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            isPlayerIn = true;
-        }
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.CompareTag("Player"))
+    //    {
+    //        isPlayerIn = true;
+    //    }
+    //}
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            isPlayerIn = false;
-        }
-    }
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if (other.CompareTag("Player"))
+    //    {
+    //        isPlayerIn = false;
+    //    }
+    //}
 
 }
