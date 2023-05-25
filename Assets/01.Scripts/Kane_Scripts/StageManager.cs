@@ -137,6 +137,7 @@ public class StageManager : MonoBehaviour
         {
             Transform _human = Managers.Pool.Pop(Customer_Human, transform).transform;
             _human.position = HumanMovePos[0].position;
+            _human.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(HumanMovePos[0].position);
             Customer _customerHuman = _human.GetComponent<Customer>();
             _customerHuman.SetInit(this, Random.Range(Min_Count, Max_Count));
 
@@ -150,12 +151,15 @@ public class StageManager : MonoBehaviour
         if (List_Cars.Count < 10)
         {
             Transform _car = Managers.Pool.Pop(Customer_Car, transform).transform;
-            _car.position = CarMovePos[0].position;
             CustomerCar _customerCar = _car.GetComponent<CustomerCar>();
             _customerCar.SetInit(this, _chargingMachine, Random.Range(Min_Count, Max_Count));
 
+            _car.position = CarMovePos[0].position;
+            _car.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(CarMovePos[0].position);
             List_Cars.Add(_customerCar);
             MoveCustomerCar();
+
+
         }
     }
 

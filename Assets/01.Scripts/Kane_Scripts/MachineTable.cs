@@ -9,4 +9,5 @@ public class MachineTable : MonoBehaviour
     [ShowInInspector]
     public Stack<Product> ProductStack = new Stack<Product>();
 
+    public bool isActive = false;
 }

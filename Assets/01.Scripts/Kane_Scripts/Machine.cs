@@ -26,8 +26,6 @@ public class Machine : MonoBehaviour
     [SerializeField] Transform StartBelt, EndBelt;
 
 
-    public bool isProduce = false;
-    public Machine NextNode;
     [ShowInInspector]
     public Stack<Product> resource_Stack = new Stack<Product>();
     //Product _product;
@@ -60,8 +58,12 @@ public class Machine : MonoBehaviour
     public double CurrentPrice = 100d;
 
     public bool isPlayerIn = false;
-    bool isActive = false;
-    bool isnextinit = false;
+
+    //public bool isProduce = false;
+    public Machine PrevNode;
+    public Machine NextNode;
+    public bool isActive = false;
+    //bool isnextinit = false;
     // =======================================
 
     public void SetObj()
@@ -123,6 +125,10 @@ public class Machine : MonoBehaviour
         PriceText.text = $"{CurrentPrice:0}";
 
 
+        if (PrevNode != null)
+        {
+            _interactArea.gameObject.SetActive(false);
+        }
 
     }
 
@@ -136,7 +142,17 @@ public class Machine : MonoBehaviour
     public void ActiveMachine()
     {
         Child_Machine.gameObject.SetActive(true);
-
+        if (PrevNode != null)
+        {
+            int count = PrevNode.MachineTable.ProductStack.Count;
+            for (int i = 0; i < count; i++)
+            {
+                resource_Stack.Push(PrevNode.MachineTable.ProductStack.Pop());
+                //MachineTable.ProductStack.Push(PrevNode.MachineTable.ProductStack.Pop());
+            }
+            PrevNode.MachineTable.gameObject.SetActive(false);
+            PrevNode.MachineTable.isActive = false;
+        }
     }
 
     IEnumerator Cor_Update()
@@ -179,7 +195,7 @@ public class Machine : MonoBehaviour
 
                 if (isActive)
                 {
-                    if (isProduce)
+                    if (PrevNode == null)
                     {
                         _product = Managers.Pool.Pop(Resources.Load<GameObject>("Product"), transform).transform.GetComponent<Product>();
                         _product.transform.localScale = Vector3.one;
@@ -235,6 +251,17 @@ public class Machine : MonoBehaviour
             PriceText.text = $"{CurrentPrice:0}";
 
         }
+        if (NextNode != null)
+        {
+            NextNode._interactArea.gameObject.SetActive(true);
+            if (NextNode.isActive == false)
+                MachineTable.isActive = true;
+        }
+        else
+        {
+            MachineTable.isActive = true;
+        }
+
         //SpawnInterval = 1f - 0.1f * Upgrade_Level;
         //Max_Count = 20 + 10 * Upgrade_Level;
 
@@ -288,15 +315,15 @@ public class Machine : MonoBehaviour
                     else
                     {
                         Managers.Pool.Push(_productObj.GetComponent<Poolable>());
-                        if (isnextinit == false)
-                        {
-                            isnextinit = true;
-                            int count = MachineTable.ProductStack.Count;
-                            for (int i = 0; i < count; i++)
-                            {
-                                NextNode.resource_Stack.Push(MachineTable.ProductStack.Pop());
-                            }
-                        }
+                        //if (isnextinit == false)
+                        //{
+                        //    isnextinit = true;
+                        //    int count = MachineTable.ProductStack.Count;
+                        //    for (int i = 0; i < count; i++)
+                        //    {
+                        //        NextNode.resource_Stack.Push(MachineTable.ProductStack.Pop());
+                        //    }
+                        //}
                     }
                 }
             });
@@ -309,17 +336,17 @@ public class Machine : MonoBehaviour
         _resource.transform.SetParent(transform);
     }
 
-    public void SetNextNode(Machine _nextNode)
-    {
-        NextNode = _nextNode;
+    //public void SetNextNode(Machine _nextNode)
+    //{
+    //    NextNode = _nextNode;
 
-        int count = MachineTable.ProductStack.Count;
+    //    int count = MachineTable.ProductStack.Count;
 
-        for (int i = 0; i < count; i++)
-        {
-            NextNode.resource_Stack.Push(MachineTable.ProductStack.Pop());
-        }
-    }
+    //    for (int i = 0; i < count; i++)
+    //    {
+    //        NextNode.resource_Stack.Push(MachineTable.ProductStack.Pop());
+    //    }
+    //}
 
     [Button]
     public void InitData()

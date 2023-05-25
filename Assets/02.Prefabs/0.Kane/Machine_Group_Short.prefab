@@ -390,7 +390,7 @@ MonoBehaviour:
   - {fileID: -3500233323168017150, guid: 587f29b6e7c834b81889d37ad0b10c61, type: 3}
   - {fileID: -7556400845987783502, guid: 6e84a4037918043359d942e7f4809c9f, type: 3}
   - {fileID: 5971109621814348369, guid: bb0fc52e2a88d4765865f26f4c121722, type: 3}
-  Machine_Num: 0
+  Machine_Num: 3
   Upgrade_Level: 0
   _productType: 1
   Child_Machine: {fileID: 7388478001554669604}
@@ -398,8 +398,6 @@ MonoBehaviour:
   MachineTable: {fileID: 2530783548459313138}
   StartBelt: {fileID: 5134886641482976339}
   EndBelt: {fileID: 8238229730921157567}
-  isProduce: 1
-  NextNode: {fileID: 0}
   SampleRot: {x: 0, y: 45, z: -90}
   SpawnInterval: 1
   Rail_Speed: 3
@@ -420,6 +418,8 @@ MonoBehaviour:
   - 1000
   CurrentPrice: 100
   isPlayerIn: 0
+  PrevNode: {fileID: 0}
+  NextNode: {fileID: 0}
 --- !u!1 &1434056209237870743
 GameObject:
   m_ObjectHideFlags: 0

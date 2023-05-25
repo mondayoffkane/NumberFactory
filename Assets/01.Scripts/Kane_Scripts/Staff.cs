@@ -32,6 +32,7 @@ public class Staff : MonoBehaviour
 
     public StageManager _stageManager;
 
+
     public Stack<Product> _productStack = new Stack<Product>();
 
     Animator _animator;
@@ -55,25 +56,27 @@ public class Staff : MonoBehaviour
 
     public List<MachineTable> _list;
     float Stack_Interval = 0.2f;
+
+    public float remainDistance;
     // =========================================
 
 
     public void SetStaffLevel(int _speed_Level, int _capacity_Level)
     {
-       if(_agent==null) _agent = GetComponent<NavMeshAgent>();
+        if (_agent == null) _agent = GetComponent<NavMeshAgent>();
         if (_animator == null) _animator = GetComponent<Animator>();
 
 
         UpdateStat(_speed_Level, _capacity_Level);
     }
 
-    public void UpdateStat(int _speedLevel , int _capacityLevel)
+    public void UpdateStat(int _speedLevel, int _capacityLevel)
     {
         Speed_Level = _speedLevel;
         Capacity_Level = _capacityLevel;
 
-        _agent.speed = base_Speed +  (add_Speed* Speed_Level);
-        max_Capacity = base_Capacity + (add_Capacity* Capacity_Level);
+        _agent.speed = base_Speed + (add_Speed * Speed_Level);
+        max_Capacity = base_Capacity + (add_Capacity * Capacity_Level);
 
     }
 
@@ -88,10 +91,12 @@ public class Staff : MonoBehaviour
 
     private void Update()
     {
+
+        remainDistance = _agent.remainingDistance;
         //if (Vector3.Distance(transform.position, _agent.destination) < 1f)
         if (_agent.remainingDistance < _minDist)
         {
-            _agent.isStopped = true;
+            //_agent.isStopped = true;
             _agent.velocity = Vector3.zero;
             switch (_staffState)
             {
@@ -105,7 +110,7 @@ public class Staff : MonoBehaviour
                 case StaffState.PickUp:
 
                     currentTime += Time.deltaTime;
-                    if (currentTime >= 1f)
+                    if (currentTime >= 0.5f)
                     {
                         currentTime = 0f;
                         MachineTable _table = (MachineTable)_targetPlace;
@@ -113,28 +118,34 @@ public class Staff : MonoBehaviour
                         {
                             PushProduct(_table.ProductStack.Pop());
                         }
+                        if (_table.gameObject.activeSelf == false)
+                        {
+                            ReFind();
+                        }
 
                         if (_productStack.Count >= max_Capacity)
                         {
                             switch (_targetNum)
                             {
                                 case 0:
-                                    _agent.destination = _stageManager._counter.transform.position;
                                     _targetPlace = _stageManager._counter;
+                                    _agent.destination = _stageManager._counter.transform.position;
+
                                     break;
 
                                 case 1:
-                                    _agent.destination = _stageManager._chargingMachine.transform.position;
                                     _targetPlace = _stageManager._chargingMachine;
+                                    _agent.destination = _stageManager._chargingMachine.transform.position;
 
                                     break;
 
                                 case 2:
-                                    _agent.destination = _stageManager._generator.transform.position;
                                     _targetPlace = _stageManager._generator;
+                                    _agent.destination = new Vector3(_stageManager._generator.transform.position.x, 0f, _stageManager._generator.transform.position.z);
+                                    //UnityEditor.EditorApplication.isPaused = true;
                                     break;
                             }
-                            _agent.isStopped = false;
+                            //_agent.isStopped = false
                             _animator.SetBool("Walk", true);
                             _animator.SetBool("Pick", true);
                             _staffState = StaffState.Move2;
@@ -147,6 +158,7 @@ public class Staff : MonoBehaviour
                     _animator.SetBool("Walk", false);
                     _animator.SetBool("Pick", true);
                     _staffState = StaffState.PickDowm;
+                    //Debug.Log(_agent.remainingDistance);
                     break;
 
                 case StaffState.PickDowm:
@@ -174,7 +186,7 @@ public class Staff : MonoBehaviour
                         }
                         if (_productStack.Count <= 0)
                         {
-                            _agent.isStopped = false;
+                            //_agent.isStopped = false;
                             _animator.SetBool("Walk", false);
                             _animator.SetBool("Pick", false);
                             _staffState = StaffState.Idle;
@@ -244,7 +256,7 @@ public class Staff : MonoBehaviour
 
                 for (int i = 0; i < _list.Count; i++)
                 {
-                    if (_list[i].ProductStack.Count > 0)
+                    if (_list[i].isActive && _list[i].ProductStack.Count > 0)
                     {
                         _agent.destination = _list[i].transform.position;
                         _targetPlace = _list[i];
@@ -289,5 +301,19 @@ public class Staff : MonoBehaviour
 
     }
 
+    void ReFind()
+    {
+        int count = _productStack.Count;
+
+        for (int i = 0; i < count; i++)
+        {
+            Managers.Pool.Push(_productStack.Pop().GetComponent<Poolable>());
+        }
+        _animator.SetBool("Walk", false);
+        _animator.SetBool("Pick", false);
+        _staffState = StaffState.Idle;
+
+        FindWork();
+    }
 
 }

@@ -124,7 +124,7 @@ public class StageData
     public int StaffCapacity_Level = 0;
     public int StaffHire_Level = 0;
 
-    public int[] MachineLevels = new int[3] { 0, 0, 0 };
+    public int[] MachineLevels = new int[6] { 0, 0, 0, 0, 0, 0 };
 
 }
 
