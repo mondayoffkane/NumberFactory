@@ -147,7 +147,9 @@ public class Machine : MonoBehaviour
             int count = PrevNode.MachineTable.ProductStack.Count;
             for (int i = 0; i < count; i++)
             {
-                resource_Stack.Push(PrevNode.MachineTable.ProductStack.Pop());
+                //resource_Stack.Push(PrevNode.MachineTable.ProductStack.Pop());
+                Managers.Pool.Push(PrevNode.MachineTable.ProductStack.Pop().GetComponent<Poolable>());
+
                 //MachineTable.ProductStack.Push(PrevNode.MachineTable.ProductStack.Pop());
             }
             PrevNode.MachineTable.gameObject.SetActive(false);

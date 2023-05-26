@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7198635776710936650}
   - component: {fileID: 7198635776710936651}
   - component: {fileID: 7198635776710936663}
+  - component: {fileID: 7125142551180655367}
   m_Layer: 0
   m_Name: ChargineMachine
   m_TagString: ChargingMachine
@@ -129,6 +130,19 @@ MonoBehaviour:
   horizontal_interval: 0.3
   vertical_inteval: 0.6
   height_interval: 0.1
+--- !u!65 &7125142551180655367
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7198635776710936648}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.1764622, y: 3.4829125, z: 1.965946}
+  m_Center: {x: 0.22762436, y: 1.7414563, z: 0.01702702}
 --- !u!1 &7198635776969500996
 GameObject:
   m_ObjectHideFlags: 0

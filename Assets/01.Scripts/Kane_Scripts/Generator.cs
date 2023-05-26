@@ -43,6 +43,7 @@ public class Generator : MonoBehaviour
     public float BaseUp_Interval = 0.5f;
     public float BaseSide_Interval = 0.09f;
 
+    float _initY;
 
     // ====================================
     public bool isSpawn = true;
@@ -54,6 +55,7 @@ public class Generator : MonoBehaviour
         StartCoroutine(Cor_Update());
         Stack_Interval = Battery.GetComponent<MeshFilter>().sharedMesh.bounds.size.y;
         BaseSide_Interval = Battery.GetComponent<MeshFilter>().sharedMesh.bounds.size.x * 0.5f;
+        _initY = Digit_MeshFilter[0].transform.localPosition.y;
         //MoneyUi_Update();
     }
 
@@ -148,19 +150,19 @@ public class Generator : MonoBehaviour
             switch (digit_count)
             {
                 case 0:
-                    Digit_MeshFilter[0].transform.localPosition = Vector3.zero;
+                    Digit_MeshFilter[0].transform.localPosition = Vector3.up * _initY;
                     //Unit_Obj.transform.position = Digit_MeshFilter[0].transform.position + Vector3.right * 1.5;
                     break;
 
                 case 1:
-                    Digit_MeshFilter[0].transform.localPosition = Vector3.left * Double_Pos_interval;
-                    Digit_MeshFilter[1].transform.localPosition = Vector3.right * Double_Pos_interval;
+                    Digit_MeshFilter[0].transform.localPosition = Vector3.left * Double_Pos_interval + Vector3.up * _initY;
+                    Digit_MeshFilter[1].transform.localPosition = Vector3.right * Double_Pos_interval + Vector3.up * _initY;
                     break;
 
                 case 2:
-                    Digit_MeshFilter[0].transform.localPosition = Vector3.left * Third_Pos_interval;
-                    Digit_MeshFilter[1].transform.localPosition = Vector3.zero;
-                    Digit_MeshFilter[2].transform.localPosition = Vector3.right * Third_Pos_interval;
+                    Digit_MeshFilter[0].transform.localPosition = Vector3.left * Third_Pos_interval + Vector3.up * _initY;
+                    Digit_MeshFilter[1].transform.localPosition = Vector3.zero + Vector3.up * _initY;
+                    Digit_MeshFilter[2].transform.localPosition = Vector3.right * Third_Pos_interval + Vector3.up * _initY;
                     //Unit_Obj.transform.position = Digit_MeshFilter[2].transform.position + Vector3.right * (Third_Pos_interval + 0.25f);
                     break;
             }
@@ -173,21 +175,22 @@ public class Generator : MonoBehaviour
             switch (digit_count)
             {
                 case 0:
-                    Digit_MeshFilter[0].transform.localPosition = Vector3.left * Double_Pos_interval;
-                    Unit_Obj.transform.localPosition = Vector3.right * Double_Pos_interval;
+                    Digit_MeshFilter[0].transform.localPosition = Vector3.left * Double_Pos_interval
+                       + Vector3.up * _initY;
+                    Unit_Obj.transform.localPosition = Vector3.right * Double_Pos_interval + Vector3.up * _initY;
                     break;
 
                 case 1:
-                    Digit_MeshFilter[0].transform.localPosition = Vector3.left * Third_Pos_interval;
-                    Digit_MeshFilter[1].transform.localPosition = Vector3.zero;
-                    Unit_Obj.transform.localPosition = Vector3.right * Third_Pos_interval;
+                    Digit_MeshFilter[0].transform.localPosition = Vector3.left * Third_Pos_interval + Vector3.up * _initY;
+                    Digit_MeshFilter[1].transform.localPosition = Vector3.zero + Vector3.up * _initY;
+                    Unit_Obj.transform.localPosition = Vector3.right * Third_Pos_interval + Vector3.up * _initY;
                     break;
 
                 case 2:
-                    Digit_MeshFilter[0].transform.localPosition = Vector3.left * Double_Pos_interval * 3;
-                    Digit_MeshFilter[1].transform.localPosition = Vector3.left * Double_Pos_interval;
-                    Digit_MeshFilter[2].transform.localPosition = Vector3.right * Double_Pos_interval;
-                    Unit_Obj.transform.localPosition = Vector3.right * Double_Pos_interval * 3;
+                    Digit_MeshFilter[0].transform.localPosition = Vector3.left * Double_Pos_interval * 3 + Vector3.up * _initY;
+                    Digit_MeshFilter[1].transform.localPosition = Vector3.left * Double_Pos_interval + Vector3.up * _initY;
+                    Digit_MeshFilter[2].transform.localPosition = Vector3.right * Double_Pos_interval + Vector3.up * _initY;
+                    Unit_Obj.transform.localPosition = Vector3.right * Double_Pos_interval * 3 + Vector3.up * _initY;
                     break;
             }
 

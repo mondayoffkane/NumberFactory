@@ -52,6 +52,8 @@ public class StageManager : MonoBehaviour
     public double[] _staffCapacityPrice = new double[] { 100, 200, 500, 1000, 2000 };
     public double[] _staffCountPrice = new double[] { 100, 200, 500, 1000, 2000 };
 
+    // ==================
+    public bool isPlayerinCounter = false;
 
 
 
@@ -61,6 +63,8 @@ public class StageManager : MonoBehaviour
 
     [SerializeField] GameManager _gameManager;
     [SerializeField] UI_GameScene _gameUi;
+
+    // ==================================
 
     [Button]
     public void SaveData()
@@ -171,7 +175,7 @@ public class StageManager : MonoBehaviour
         {
             yield return _interval;
 
-            if (List_Humans.Count > 0)
+            if (List_Humans.Count > 0 && (isPlayerinCounter || _counter.Upgrade_Level > 0))
             {
                 Customer _customer = List_Humans[0];
 
@@ -290,6 +294,33 @@ public class StageManager : MonoBehaviour
         _player.UpdateStat(_stageData.PlayerSpeed_Level, _stageData.PlayerCapacity_Level, _stageData.PlayerIncome_Level);
 
 
+        for (int i = 0; i < _stageData.PlayerSpeed_Level; i++)
+        {
+            _gameUi.Player_Speed_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
+        }
+        for (int i = 0; i < _stageData.PlayerCapacity_Level; i++)
+        {
+            _gameUi.Player_Capacity_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
+        }
+        for (int i = 0; i < _stageData.PlayerIncome_Level; i++)
+        {
+            _gameUi.Player_Income_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
+        }
+
+        for (int i = 0; i < _stageData.StaffSpeed_Level; i++)
+        {
+            _gameUi.Staff_Speed_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
+        }
+        for (int i = 0; i < _stageData.StaffCapacity_Level; i++)
+        {
+            _gameUi.Staff_Capacity_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
+        }
+        for (int i = 0; i < _stageData.StaffHire_Level; i++)
+        {
+            _gameUi.Staff_Hire_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
+        }
+
+
         // Staff Setting
         for (int i = 0; i < _stageData.StaffHire_Level; i++)
         {
@@ -374,6 +405,8 @@ public class StageManager : MonoBehaviour
                 {
                     _gameUi.Staff_Hire_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
                 }
+
+
                 AddStaff();
 
                 _stageData.StaffHire_Level++;

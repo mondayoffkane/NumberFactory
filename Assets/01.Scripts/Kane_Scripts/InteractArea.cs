@@ -16,7 +16,8 @@ public class InteractArea : MonoBehaviour
     {
         Machine,
         Table,
-        Park
+        Park,
+        Counter
     }
     public TargetType _targetType;
 
@@ -25,7 +26,7 @@ public class InteractArea : MonoBehaviour
     [SerializeField] Machine _machine;
     [SerializeField] ChargingTable _table;
     [SerializeField] ChargingPark _park;
-
+    [SerializeField] Counter _counter;
 
 
     public void SetTarget(Object _obj, TargetType _type)
@@ -45,6 +46,10 @@ public class InteractArea : MonoBehaviour
 
             case TargetType.Park:
                 _park = (ChargingPark)_target;
+                break;
+
+            case TargetType.Counter:
+                _counter = (Counter)_target;
                 break;
         }
 
@@ -70,6 +75,10 @@ public class InteractArea : MonoBehaviour
                 case TargetType.Park:
 
                     break;
+
+                case TargetType.Counter:
+                    _counter.isPlayerIn = true;
+                    break;
             }
         }
     }
@@ -91,6 +100,10 @@ public class InteractArea : MonoBehaviour
 
                 case TargetType.Park:
 
+                    break;
+
+                case TargetType.Counter:
+                    _counter.isPlayerIn = false;
                     break;
             }
         }

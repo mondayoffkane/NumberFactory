@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 2414123696550003150}
   - component: {fileID: 2414123696550003149}
   - component: {fileID: 4395306300852843375}
+  - component: {fileID: 6421461416747782967}
   m_Layer: 0
   m_Name: ChargingTable
   m_TagString: ChargingTable
@@ -215,6 +216,19 @@ MonoBehaviour:
   horizontal_interval: 0.3
   vertical_inteval: 0.6
   height_interval: 0.1
+--- !u!135 &6421461416747782967
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2414123696550003148}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.9553185
+  m_Center: {x: -0.00000023841858, y: 0.32500005, z: -0.000000029802322}
 --- !u!1 &4530028462505915167
 GameObject:
   m_ObjectHideFlags: 0

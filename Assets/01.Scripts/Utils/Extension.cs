@@ -29,7 +29,7 @@ internal static class Extension
         go.onClick.AddListener(action);
 
         //===소리 넣고 싶으면=====
-        // go.onClick.AddListener(delegate { Managers.Sound.Play("Click"); }); //버튼 소리
+        go.onClick.AddListener(delegate { Managers.Sound.Play("Click"); }); //버튼 소리
         //===소리 넣고 싶으면=====
 
         //====여기 빼도됨 버튼 뽀잉 하고싶으면넣기=========

@@ -4,6 +4,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using DG.Tweening;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -44,6 +45,9 @@ public class Player : MonoBehaviour
 
     public AnimationCurve _curveLine;
     public JoyStickController _joystick;
+    [SerializeField] double tempGetMoney = 0;
+
+    [SerializeField] GameObject _FloatingText;
     // ==========================
 
     public void UpdateStat(int _speedLevel, int _capacityLevel, int _incomeLevel)
@@ -66,7 +70,7 @@ public class Player : MonoBehaviour
 
         Rail_Mat.SetTextureOffset("_BaseMap", Vector2.zero);
         Rail_Mat.DOOffset(Vector2.down, RailMat_Speed).SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
-
+        _FloatingText = Resources.Load<GameObject>("Floating");
     }
 
     private void Update()
@@ -101,6 +105,20 @@ public class Player : MonoBehaviour
             case "StaffHR":
                 Managers.GameUI.StaffHR_Panel.SetActive(true);
                 break;
+
+            case "ChargingTable":
+                GetMoney2(other.GetComponent<ChargingTable>().MoneyStack);
+
+                break;
+
+            case "ChargingMachine":
+                GetMoney2(other.GetComponent<ChargingMachine>().MoneyStack);
+
+                break;
+
+            case "Counter":
+                Managers.Game._stagemanager.isPlayerinCounter = true;
+                break;
         }
     }
 
@@ -115,6 +133,10 @@ public class Player : MonoBehaviour
             case "StaffHR":
                 Managers.GameUI.StaffHR_Panel.SetActive(false);
                 break;
+            case "Counter":
+                Managers.Game._stagemanager.isPlayerinCounter = false;
+                break;
+
         }
     }
 
@@ -186,34 +208,34 @@ public class Player : MonoBehaviour
 
 
             case "ChargingMachine":
-                if (isReady && ProductStack.Count > 0 && ProductStack.Peek().GetComponent<Product>()._productType == Product.ProductType.Battery)
-                {
-                    other.GetComponent<ChargingMachine>().PushBattery(ProductStack.Pop(), Move_Interval);
-                    DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
-                }
-                else if (ProductStack.Count <= 0) _animator.SetBool("Pick", false);
+                //if (isReady && ProductStack.Count > 0 && ProductStack.Peek().GetComponent<Product>()._productType == Product.ProductType.Battery)
+                //{
+                //    other.GetComponent<ChargingMachine>().PushBattery(ProductStack.Pop(), Move_Interval);
+                //    DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
+                //}
+                //else if (ProductStack.Count <= 0) _animator.SetBool("Pick", false);
 
-                ChargingMachine _chargingmachine = other.GetComponent<ChargingMachine>();
-                int _count = _chargingmachine.MoneyStack.Count / 10;
-                _count = _count < 1 ? 1 : _count;
-                _count = _count > 10 ? 10 : _count;
-                for (int i = 0; i < _count; i++)
-                {
-                    GetMoney(_chargingmachine.PopMoney());
-                }
+                //ChargingMachine _chargingmachine = other.GetComponent<ChargingMachine>();
+                //int _count = _chargingmachine.MoneyStack.Count / 10;
+                //_count = _count < 1 ? 1 : _count;
+                //_count = _count > 10 ? 10 : _count;
+                //for (int i = 0; i < _count; i++)
+                //{
+                //    GetMoney(_chargingmachine.PopMoney());
+                //}
 
 
                 break;
             case "ChargingTable":
 
-                ChargingTable _chargingtable = other.GetComponent<ChargingTable>();
-                int _count2 = _chargingtable.MoneyStack.Count / 10;
-                _count2 = _count2 < 1 ? 1 : _count2;
-                _count2 = _count2 > 10 ? 10 : _count2;
-                for (int i = 0; i < _count2; i++)
-                {
-                    GetMoney(_chargingtable.PopMoney());
-                }
+                //ChargingTable _chargingtable = other.GetComponent<ChargingTable>();
+                //int _count2 = _chargingtable.MoneyStack.Count / 10;
+                //_count2 = _count2 < 1 ? 1 : _count2;
+                //_count2 = _count2 > 10 ? 10 : _count2;
+                //for (int i = 0; i < _count2; i++)
+                //{
+                //    GetMoney(_chargingtable.PopMoney());
+                //}
 
                 break;
 
@@ -257,8 +279,57 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void GetMoney2(Stack<Transform> _tempmoneyStack)
+    {
+
+        Stack<Transform> _moneyStack = _tempmoneyStack;
+        int totalcount = _moneyStack.Count;
+        int _count = _moneyStack.Count / 10 < 1 ? _moneyStack.Count : _moneyStack.Count / 10;
+
+        if (_count != 0)
+        {
+            StartCoroutine(Cor_GetMoney());
+        }
+        IEnumerator Cor_GetMoney()
+        {
+            for (int i = 0; i < 11; i++)
+            {
+                for (int j = 0; j < _count; j++)
+                {
+                    try
+                    {
+                        Transform _money = _moneyStack.Pop();
+                        _money.SetParent(transform);
+                        _money.DOLocalJump(Vector3.zero, 2, 1, Move_Interval * 0.5f).SetEase(Ease.Linear)
+                            .OnComplete(() =>
+                            {
+                                Managers.Pool.Push(_money.GetComponent<Poolable>());
+                                _money.gameObject.SetActive(false);
+                            });
+                    }
+                    catch { }
+                }
+                yield return new WaitForSeconds(0.05f);
+            }
+
+            tempGetMoney = total_MoneyPrice * totalcount;
+            Managers.Game.Money += tempGetMoney;
+            PopText(Managers.ToCurrencyString(tempGetMoney));
+
+        }
+    }
 
 
+
+    public void PopText(string _str)
+    {
+        Transform _floatingText = Managers.Pool.Pop(_FloatingText, transform).GetComponent<Transform>();
+        _floatingText.localPosition = new Vector3(0f, 3f, 0f);
+        _floatingText.GetComponentInChildren<Text>().text = $"{_str}";
+        _floatingText.DOMoveY(4f, 1f).SetEase(Ease.Linear)
+            .OnComplete(() => Managers.Pool.Push(_floatingText.GetComponent<Poolable>()));
+    }
 
 
 }
+
