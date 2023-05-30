@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using DG.Tweening;
+using UnityEngine.UI;
 
 
 public class ChargingTable : MonoBehaviour
 {
-
-
+    public string _objectName = "Table";
+    public int Table_Num = 0;
+    public bool isActive = false;
 
 
     //[ShowInInspector]
@@ -22,12 +24,17 @@ public class ChargingTable : MonoBehaviour
     public Stack<Transform> MoneyStack = new Stack<Transform>();
     public GameObject Money_Pref;
     public Transform MoneyStackPoint;
+    public Transform customerPos;
+    public InteractArea _interactArea;
+
 
 
     // ===== Values
     public float Stack_Interval = 0.2f;
     public float Update_Interval = 1f;
     public float BaseUp_Interval = 0.5f;
+    public double Upgrade_Price = 100d;
+    public double Current_Price = 100d;
 
     // ======= money 
     public int width = 5, height = 3;
@@ -37,12 +44,80 @@ public class ChargingTable : MonoBehaviour
     public float vertical_inteval = 0.6f;
     public float height_interval = 0.1f;
     // =============================
+    public Text PriceText;
+    public bool isPlayerIn = false;
+
+    Renderer _renderer;
+    // ==================
     private void Start()
     {
         if (StackPoint == null) StackPoint = transform.GetChild(0);
 
-        //StartCoroutine(Cor_Update());
+        _interactArea = GetComponentInChildren<InteractArea>();
+        _interactArea.SetTarget(this, InteractArea.TargetType.Table);
+        PriceText = _interactArea.GetComponentInChildren<Text>();
+        _renderer = GetComponent<Renderer>();
+        _renderer.enabled = false;
+        GetComponent<SphereCollider>().isTrigger = true;
+
+        isActive = Managers.Data.GetBool(_objectName + Table_Num.ToString());
+
+
+        Current_Price = Upgrade_Price;
+        PriceText.text = $"{Current_Price:0}";
+        CheckActive();
+
+        StartCoroutine(Cor_Update());
     }
+
+
+    IEnumerator Cor_Update()
+    {
+
+        while (true)
+        {
+            yield return null;
+            if (isActive == false)
+            {
+                if (isPlayerIn)
+                {
+                    if (Managers.Game.Money >= Upgrade_Price * 0.5f * Time.deltaTime)
+                    {
+                        //Managers.Game.Money -= UpgradePrice[Upgrade_Level] * 0.5f * Time.deltaTime;
+                        Managers.Game.UpdateMoney(-Upgrade_Price * 0.5f * Time.deltaTime);
+                        Current_Price -= Upgrade_Price * 0.5f * Time.deltaTime;
+                        if (Current_Price <= 0)
+                        {
+                            Current_Price = 0;
+                            isPlayerIn = false;
+                            isActive = true;
+                            CheckActive();
+                            Managers.Data.SetBool(_objectName + Table_Num.ToString(),true);
+                            // add save data
+                        }
+                        PriceText.text = $"{Current_Price:0}";
+
+                    }
+                }
+            }
+            else
+            {
+
+                break;
+            }
+
+
+        }
+    }
+
+
+    void CheckActive()
+    {
+        _renderer.enabled = isActive;
+        _interactArea.gameObject.SetActive(!isActive);
+        GetComponent<SphereCollider>().isTrigger = !isActive;
+    }
+
 
 
     //IEnumerator Cor_Update()

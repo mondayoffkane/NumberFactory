@@ -7,6 +7,7 @@ using System;
 
 public class Generator : MonoBehaviour
 {
+    public string _objectName = "Generator";
     public Double Num;
 
 
@@ -50,13 +51,22 @@ public class Generator : MonoBehaviour
 
     private void Start()
     {
+
+        Num = Managers.Data.GetDouble(_objectName + Managers.Game._stagemanager.Stage_Num.ToString());
+
         transform.DOScaleY(1.2f, 0.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
         Battery = Resources.Load<GameObject>("Battery");
         StartCoroutine(Cor_Update());
         Stack_Interval = Battery.GetComponent<MeshFilter>().sharedMesh.bounds.size.y;
         BaseSide_Interval = Battery.GetComponent<MeshFilter>().sharedMesh.bounds.size.x * 0.5f;
         _initY = Digit_MeshFilter[0].transform.localPosition.y;
-        //MoneyUi_Update();
+
+        AbbreviateNumber(Num);
+        SetMesh();
+
+        MoneyUi_Update();
+
+
     }
 
 
@@ -67,7 +77,7 @@ public class Generator : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(Spawn_Interval); //_interval;
-            if (isSpawn && Num > 100 && StackPoint.ProductStack.Count < Max_Count)
+            if (isSpawn && Num > 0 && StackPoint.ProductStack.Count < Max_Count)
             {
                 Transform _battery = Managers.Pool.Pop(Battery, StackPoint.transform).transform;
 
@@ -119,7 +129,7 @@ public class Generator : MonoBehaviour
     public void AddNum(int _num)
     {
         Num += _num;
-
+        Managers.Data.SetDouble(_objectName + Managers.Game._stagemanager.Stage_Num.ToString(), Num);
         AbbreviateNumber(Num);
         SetMesh();
         // Change Size Value;
@@ -279,9 +289,9 @@ public class Generator : MonoBehaviour
 
     public void MoneyUi_Update()
     {
-        Managers.GameUI.StageGuage_Text.text = $"{Managers.ToCurrencyString(Managers.Game._stagemanager._generator.Num)} / {Managers.ToCurrencyString(Managers.Game._stagemanager.Clear_Money)}";
+        Managers.GameUI.StageGuage_Text.text = $"{Managers.ToCurrencyString(Num)} / {Managers.ToCurrencyString(Managers.Game._stagemanager.Clear_Money)}";
 
-        Managers.GameUI.Stage_Slider.DOFillAmount((float)(Managers.Game._stagemanager._generator.Num / Managers.Game._stagemanager.Clear_Money), 0.2f).SetEase(Ease.Linear);
+        Managers.GameUI.Stage_Slider.DOFillAmount((float)(Num / Managers.Game._stagemanager.Clear_Money), 0.2f).SetEase(Ease.Linear);
 
     }
 }

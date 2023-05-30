@@ -1506,10 +1506,10 @@ RectTransform:
   m_Father: {fileID: 2884367868944051606}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -3.199997, y: 266.1}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 364, y: 110.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4250845573772703164
 CanvasRenderer:
@@ -1749,10 +1749,10 @@ RectTransform:
   m_Father: {fileID: 2091833440861333714}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -3.199997, y: 266.1}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 364, y: 110.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6979316719412093590
 CanvasRenderer:
@@ -1829,10 +1829,10 @@ RectTransform:
   m_Father: {fileID: 2093513722918917692}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -3.199997, y: 266.1}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -3.199997, y: 266}
+  m_SizeDelta: {x: 364, y: 83.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1978430739953668107
 CanvasRenderer:
@@ -3029,7 +3029,7 @@ GameObject:
   - component: {fileID: 5475764281609722935}
   - component: {fileID: 2431517676649577913}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: StaffHirePriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3958,7 +3958,7 @@ GameObject:
   - component: {fileID: 4093375780107516931}
   - component: {fileID: 7224858333292624729}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: StaffSpeedPriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4573,7 +4573,7 @@ GameObject:
   - component: {fileID: 6255017387900527063}
   - component: {fileID: 4919564786628404666}
   m_Layer: 5
-  m_Name: Button (Legacy)
+  m_Name: StaffHR_Close_Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4680,19 +4680,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6255017387900527063}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3250860378951848301}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &3759521460443080658
 GameObject:
   m_ObjectHideFlags: 0
@@ -5772,7 +5760,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -6969,7 +6957,7 @@ GameObject:
   - component: {fileID: 377516761429725938}
   - component: {fileID: 3995192787085242772}
   m_Layer: 5
-  m_Name: Button (Legacy)
+  m_Name: PlayerHR_Close_Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7076,19 +7064,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 377516761429725938}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5740623602359021749}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &5234502016133393339
 GameObject:
   m_ObjectHideFlags: 0
@@ -7376,7 +7352,7 @@ GameObject:
   - component: {fileID: 5439012898417731803}
   - component: {fileID: 3959529603063102868}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: PlayerSpeedPriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7919,7 +7895,7 @@ GameObject:
   - component: {fileID: 4719659375697623538}
   - component: {fileID: 2213585651769018236}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: StaffCapacityPriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8300,10 +8276,10 @@ RectTransform:
   m_Father: {fileID: 3685782374969682707}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -3.199997, y: 266.1}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 364, y: 110.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3963592506972068154
 CanvasRenderer:
@@ -8558,7 +8534,7 @@ GameObject:
   - component: {fileID: 8935525445271625116}
   - component: {fileID: 1134637995500941635}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: PlayerIncomePriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8815,10 +8791,10 @@ RectTransform:
   m_Father: {fileID: 6846285936435443109}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -3.199997, y: 266.1}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -3.199997, y: 266}
+  m_SizeDelta: {x: 364, y: 83.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1453689191378814001
 CanvasRenderer:
@@ -9225,14 +9201,23 @@ MonoBehaviour:
   Buy_Staff_Hire_Button: {fileID: 0}
   RV_Player_Income_Button: {fileID: 0}
   Buy_Player_Income_Button: {fileID: 0}
+  PlayerHR_Close_Button: {fileID: 0}
+  StaffHR_Close_Button: {fileID: 0}
   Money_Text: {fileID: 0}
   StageGuage_Text: {fileID: 0}
+  PlayerSpeedPriceText: {fileID: 0}
+  PlayerCapacityPriceText: {fileID: 0}
+  PlayerIncomePriceText: {fileID: 0}
+  StaffSpeedPriceText: {fileID: 0}
+  StaffCapacityPriceText: {fileID: 0}
+  StaffHirePriceText: {fileID: 0}
   Base_Panel: {fileID: 0}
   Setting_Panel: {fileID: 0}
   PlayerHR_Panel: {fileID: 0}
   Player_Speed_Level_Group: {fileID: 0}
   Player_Capacity_Level_Group: {fileID: 0}
   Player_Income_Level_Group: {fileID: 0}
+  StaffHR_Panel: {fileID: 0}
   Staff_Speed_Level_Group: {fileID: 0}
   Staff_Capacity_Level_Group: {fileID: 0}
   Staff_Hire_Level_Group: {fileID: 0}
@@ -10603,10 +10588,10 @@ RectTransform:
   m_Father: {fileID: 7539809621201325116}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -3.199997, y: 266.1}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -3.199997, y: 266}
+  m_SizeDelta: {x: 364, y: 83.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1548159065877615175
 CanvasRenderer:
@@ -12144,7 +12129,7 @@ GameObject:
   - component: {fileID: 1161205314344104130}
   - component: {fileID: 6178643127753028099}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: PlayerCapacityPriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

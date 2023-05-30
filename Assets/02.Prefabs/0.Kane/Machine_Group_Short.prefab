@@ -448,19 +448,26 @@ MonoBehaviour:
   - {fileID: -2663756061269840162, guid: 93dbe427544414019b7724426534e695, type: 3}
   - {fileID: 704573614077420778, guid: 061ebb1849b3e4a1a867b3648c0215e4, type: 3}
   Product_Meshes:
+  - {fileID: 7775213894042699684, guid: 9d3de348a9d864ef2bccfbafa52ba2bf, type: 3}
   - {fileID: -7128587385912281012, guid: f671ec5f1ae0f46aa86f91a28aa28064, type: 3}
   - {fileID: -3500233323168017150, guid: 587f29b6e7c834b81889d37ad0b10c61, type: 3}
   - {fileID: -7556400845987783502, guid: 6e84a4037918043359d942e7f4809c9f, type: 3}
   - {fileID: 5971109621814348369, guid: bb0fc52e2a88d4765865f26f4c121722, type: 3}
+  - {fileID: 6922802136151924049, guid: fc0ef7131409947589bc88b74ef79747, type: 3}
+  - {fileID: -2867422295275702076, guid: fc80a16ea77f542428dd6f2c4446f155, type: 3}
+  - {fileID: 6532312492690549175, guid: 950be2659859a48a38f97da9059d7417, type: 3}
+  - {fileID: -12425458558257438, guid: fea6d73a15f554e68a668683b49b2371, type: 3}
+  - {fileID: 7904926555621154873, guid: 3d44f51d7030f4396994e7b77d3133ed, type: 3}
   Machine_Num: 3
   Upgrade_Level: 0
+  MaxUpgrade_Level: 5
   _productType: 1
   Child_Machine: {fileID: 7388478001554669604}
   Sample_Product: {fileID: 6689072618827146347}
   MachineTable: {fileID: 2530783548459313138}
   StartBelt: {fileID: 5134886641482976339}
   EndBelt: {fileID: 8238229730921157567}
-  SampleRot: {x: 0, y: 45, z: -90}
+  SampleRot: {x: 0, y: 90, z: -90}
   SpawnInterval: 1
   Rail_Speed: 3
   Max_Count: 60
@@ -468,7 +475,8 @@ MonoBehaviour:
   RailonProduct_interval: {x: 0, y: 0.5, z: 0}
   Product_Stack_Interval: 0.06
   BaseUpStack_Inteval: 0.52
-  Base_Value: 1
+  base_Value: 0
+  calc_Value: 1
   _interactArea: {fileID: 0}
   PriceText: {fileID: 0}
   _objectName: Machine
@@ -478,6 +486,12 @@ MonoBehaviour:
   - 200
   - 500
   - 1000
+  - 2000
+  - 4000
+  - 8000
+  - 16000
+  - 32000
+  - 64000
   CurrentPrice: 100
   isPlayerIn: 0
   PrevNode: {fileID: 0}
@@ -1574,15 +1588,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6931135632568004980}
-  m_LocalRotation: {x: -0.65328133, y: 0.65328133, z: 0.27059844, w: -0.27059844}
-  m_LocalPosition: {x: 0, y: 2.2, z: 0}
+  m_LocalRotation: {x: -0.65328133, y: 0.65328157, z: -0.2705986, w: 0.27059788}
+  m_LocalPosition: {x: 0.008408042, y: 2.2, z: -0.020305648}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6655375781556380212}
   m_Father: {fileID: 5847640502261469057}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: -90}
+  m_LocalEulerAnglesHint: {x: 0, y: 135, z: -90}
 --- !u!33 &6689072618827146347
 MeshFilter:
   m_ObjectHideFlags: 0

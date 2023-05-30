@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
         Money = Managers.Data.GetDouble("Money");
         if (Money < 100) Money = 100;
         if (_stagemanager == null) _stagemanager = GameObject.Find("Stage1_Manager").GetComponent<StageManager>();
+
+      
     }
     public void Clear()
     {
@@ -35,12 +37,19 @@ public class GameManager : MonoBehaviour
 
     // ===========================
 
-   public StageManager _stagemanager;
+    public StageManager _stagemanager;
 
 
 
     public double Money;
-    static readonly string[] CurrencyUnits = new string[] { "", "K", "M", "B", "T", "aa", "bb", "cc", "dd"};
+    static readonly string[] CurrencyUnits = new string[] { "", "K", "M", "B", "T", "aa", "bb", "cc", "dd" };
+
+    public void UpdateMoney(double _value)
+    {
+        Money += _value;
+        Managers.GameUI.Money_Text.text = $"{ToCurrencyString(Money)}";
+        _stagemanager.CheckButton();
+    }
 
 
     public static string ToCurrencyString(double number, int _num = 0)

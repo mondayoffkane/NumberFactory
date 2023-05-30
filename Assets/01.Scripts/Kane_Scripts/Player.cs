@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
 
     public Stack<Product> ProductStack = new Stack<Product>();
     public float Stack_Interval = 1f;
+    public float Stack_num_interval = 0.05f;
 
     [SerializeField] Transform PickPos;
 
@@ -48,6 +49,7 @@ public class Player : MonoBehaviour
     [SerializeField] double tempGetMoney = 0;
 
     [SerializeField] GameObject _FloatingText;
+    public GameObject MaxText;
     // ==========================
 
     public void UpdateStat(int _speedLevel, int _capacityLevel, int _incomeLevel)
@@ -159,7 +161,7 @@ public class Player : MonoBehaviour
                         ProductStack.Push(_product);
                         _product.transform.SetParent(PickPos);
 
-                        Stack_Interval = _product.GetComponent<MeshFilter>().sharedMesh.bounds.size.y;
+                        Stack_Interval = _product.GetComponent<MeshFilter>().sharedMesh.bounds.size.y + Stack_num_interval;
 
                         isReady = false;
 
@@ -175,7 +177,11 @@ public class Player : MonoBehaviour
                         }
 
 
-                        DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
+                        DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() =>
+                        {
+                            isReady = true;
+                            //if (ProductStack.Count >= Max_Count) MaxText.SetActive(true);
+                        });
 
                     }
                 }
@@ -208,12 +214,12 @@ public class Player : MonoBehaviour
 
 
             case "ChargingMachine":
-                //if (isReady && ProductStack.Count > 0 && ProductStack.Peek().GetComponent<Product>()._productType == Product.ProductType.Battery)
-                //{
-                //    other.GetComponent<ChargingMachine>().PushBattery(ProductStack.Pop(), Move_Interval);
-                //    DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
-                //}
-                //else if (ProductStack.Count <= 0) _animator.SetBool("Pick", false);
+                if (isReady && ProductStack.Count > 0 && ProductStack.Peek().GetComponent<Product>()._productType == Product.ProductType.Battery)
+                {
+                    other.GetComponent<ChargingMachine>().PushBattery(ProductStack.Pop(), Move_Interval);
+                    DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
+                }
+                else if (ProductStack.Count <= 0) _animator.SetBool("Pick", false);
 
                 //ChargingMachine _chargingmachine = other.GetComponent<ChargingMachine>();
                 //int _count = _chargingmachine.MoneyStack.Count / 10;
@@ -257,6 +263,12 @@ public class Player : MonoBehaviour
 
         }
 
+        if (ProductStack.Count >= Max_Count) MaxText.SetActive(true);
+
+        bool isactive = ProductStack.Count >= Max_Count ? true : false;
+        MaxText.SetActive(isactive);
+
+
     }
 
     public void GetMoney(Transform _money)
@@ -284,7 +296,7 @@ public class Player : MonoBehaviour
 
         Stack<Transform> _moneyStack = _tempmoneyStack;
         int totalcount = _moneyStack.Count;
-        int _count = _moneyStack.Count / 10 < 1 ? _moneyStack.Count : _moneyStack.Count / 10;
+        int _count = _moneyStack.Count / 10 < 1 ? _moneyStack.Count : (_moneyStack.Count / 10) + 1;
 
         if (_count != 0)
         {
@@ -292,12 +304,13 @@ public class Player : MonoBehaviour
         }
         IEnumerator Cor_GetMoney()
         {
-            for (int i = 0; i < 11; i++)
+            for (int i = 0; i < 12; i++)
             {
                 for (int j = 0; j < _count; j++)
                 {
                     try
                     {
+                        if (_moneyStack.Count < 1) break;
                         Transform _money = _moneyStack.Pop();
                         _money.SetParent(transform);
                         _money.DOLocalJump(Vector3.zero, 2, 1, Move_Interval * 0.5f).SetEase(Ease.Linear)
@@ -313,7 +326,8 @@ public class Player : MonoBehaviour
             }
 
             tempGetMoney = total_MoneyPrice * totalcount;
-            Managers.Game.Money += tempGetMoney;
+            //Managers.Game.Money += tempGetMoney;
+            Managers.Game.UpdateMoney(tempGetMoney);
             PopText(Managers.ToCurrencyString(tempGetMoney));
 
         }
@@ -330,6 +344,12 @@ public class Player : MonoBehaviour
             .OnComplete(() => Managers.Pool.Push(_floatingText.GetComponent<Poolable>()));
     }
 
+
+    [Button]
+    public void InitData()
+    {
+        PlayerPrefs.DeleteAll();
+    }
 
 }
 

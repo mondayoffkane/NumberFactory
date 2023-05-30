@@ -69,7 +69,7 @@ public class InteractArea : MonoBehaviour
                     break;
 
                 case TargetType.Table:
-
+                    _table.isPlayerIn = true;
                     break;
 
                 case TargetType.Park:
@@ -95,7 +95,7 @@ public class InteractArea : MonoBehaviour
                     break;
 
                 case TargetType.Table:
-
+                    _table.isPlayerIn = false;
                     break;
 
                 case TargetType.Park:

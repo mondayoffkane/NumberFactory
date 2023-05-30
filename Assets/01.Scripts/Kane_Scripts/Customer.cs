@@ -111,12 +111,16 @@ public class Customer : MonoBehaviour
                     _animator.SetBool("Walk", false);
                     _animator.SetBool("Pick", false);
                     _animator.SetBool("Charge", true);
+
+                    transform.rotation = _chargingTable.customerPos.rotation;
+
                     CustomerState = State.Charging;
                     break;
 
                 case State.Charging:
                     if (BatteryStack.Count > 0)
                     {
+
                         Current_ChargingTime += Time.deltaTime;
                         if (Current_ChargingTime >= /*Total_ChargingTime*/ 1f)
                         {
@@ -127,15 +131,19 @@ public class Customer : MonoBehaviour
                     }
                     else
                     {
+                        isArrive = true;
                         SetDest(StageManager.HumanMovePos[0].position);
                         _chargingTable.isEmpty = true;
                         _animator.SetBool("Walk", true);
                         _animator.SetBool("Charge", false);
-                        CustomerState = State.Exit;
+
+                        DOTween.Sequence().AppendInterval(0.5f).OnComplete(() =>
+                        CustomerState = State.Exit);
                     }
                     break;
 
                 case State.Exit:
+
                     StackPos.localPosition = Init_StackPointPos;
                     StageManager.List_Humans.Remove(this);
                     Managers.Pool.Push(this.GetComponent<Poolable>());

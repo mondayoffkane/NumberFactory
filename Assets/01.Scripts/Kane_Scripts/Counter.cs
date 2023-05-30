@@ -7,7 +7,7 @@ using Sirenix.OdinInspector;
 
 public class Counter : MonoBehaviour
 {
-    public bool isSell = true;
+    //public bool isSell = true;
     public Transform StackPoint;
     public GameObject _staff;
 
@@ -36,9 +36,11 @@ public class Counter : MonoBehaviour
         _interactArea.SetTarget(this, InteractArea.TargetType.Counter);
         PriceText = _interactArea.GetComponentInChildren<Text>();
         _staff.SetActive(false);
-        Managers.Data.GetInt("Stage_" + Managers.Game._stagemanager.Stage_Num.ToString() + "_counter");
+        Upgrade_Level = Managers.Data.GetInt("Stage_" + Managers.Game._stagemanager.Stage_Num.ToString() + "_counter");
 
         Setting();
+
+        CurrentPrice = UpgradePrice[Upgrade_Level];
     }
 
 
@@ -48,7 +50,8 @@ public class Counter : MonoBehaviour
         {
             if (Managers.Game.Money >= UpgradePrice[Upgrade_Level] * 0.5f * Time.deltaTime && Upgrade_Level < 1)
             {
-                Managers.Game.Money -= UpgradePrice[Upgrade_Level] * 0.5f * Time.deltaTime;
+                //Managers.Game.Money -= UpgradePrice[Upgrade_Level] * 0.5f * Time.deltaTime;
+                Managers.Game.UpdateMoney(-UpgradePrice[Upgrade_Level] * 0.5f * Time.deltaTime);
                 CurrentPrice -= UpgradePrice[Upgrade_Level] * 0.5f * Time.deltaTime;
                 if (CurrentPrice <= 0)
                 {
@@ -78,9 +81,9 @@ public class Counter : MonoBehaviour
     {
         if (Upgrade_Level > 0)
         {
-            _staff.gameObject.SetActive(true);
+            _staff.SetActive(true);
         }
-
+        _interactArea.gameObject.SetActive(false);
 
     }
 

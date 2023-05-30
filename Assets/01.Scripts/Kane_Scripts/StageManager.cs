@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using DG.Tweening;
+using System.Linq;
+using UnityEngine.UI;
 //using UnityEngine.AI;
 
 
@@ -122,6 +124,8 @@ public class StageManager : MonoBehaviour
         StageSetting();
         StartCoroutine(Cor_Update());
         StartCoroutine(Cor_Order());
+
+        CheckButton();
     }
 
     IEnumerator Cor_Update()
@@ -196,7 +200,7 @@ public class StageManager : MonoBehaviour
                         if (_table != null)
                         {
                             _table.isEmpty = false;
-                            _customer.SetDest(_table.transform.position);
+                            _customer.SetDest(_table.customerPos.position);
                             _customer._chargingTable = _table;
                             List_Humans.Remove(_customer);
                             MoveCustomerHuman();
@@ -262,11 +266,14 @@ public class StageManager : MonoBehaviour
 
     public ChargingTable FindTable()
     {
+
+        List<ChargingTable> _lsit = Tables.OrderBy(x => Random.value).ToList();
+
         for (int i = 0; i < Tables.Count; i++)
         {
-            if (Tables[i].isEmpty == true)
+            if (_lsit[i].isEmpty == true && _lsit[i].isActive == true)
             {
-                return Tables[i];
+                return _lsit[i];
             }
         }
         return null;
@@ -428,6 +435,117 @@ public class StageManager : MonoBehaviour
     public void CheckButton()
     {
         _gameUi.Money_Text.text = $"{Managers.ToCurrencyString(_gameManager.Money)}";
+
+
+
+
+
+
+
+
+
+
+        //============ Player Upgrade
+        if (_stageData.PlayerSpeed_Level < 5)
+        {
+            Managers.GameUI.RV_Player_Speed_Button.interactable = true;
+            if (_gameManager.Money >= _playerSpeedPrice[_stageData.PlayerSpeed_Level])
+            {
+                Managers.GameUI.Buy_Player_Speed_Button.interactable = true;
+                Managers.GameUI.PlayerSpeedPriceText.text = $"{Managers.ToCurrencyString(_playerSpeedPrice[_stageData.PlayerSpeed_Level])}";
+            }
+        }
+        else
+        {
+            Managers.GameUI.Buy_Player_Speed_Button.interactable = false;
+            Managers.GameUI.RV_Player_Speed_Button.interactable = false;
+
+            Managers.GameUI.Buy_Player_Speed_Button.GetComponentInChildren<Text>().text = "Max";
+        }
+
+        if (_stageData.PlayerCapacity_Level < 5)
+        {
+            Managers.GameUI.RV_Player_Capacity_Button.interactable = true;
+            if (_gameManager.Money >= _playerCapacityPrice[_stageData.PlayerCapacity_Level])
+            {
+                Managers.GameUI.Buy_Player_Capacity_Button.interactable = true;
+                Managers.GameUI.PlayerCapacityPriceText.text = $"{Managers.ToCurrencyString(_playerCapacityPrice[_stageData.PlayerCapacity_Level])}";
+            }
+        }
+        else
+        {
+            Managers.GameUI.Buy_Player_Capacity_Button.interactable = false;
+            Managers.GameUI.RV_Player_Capacity_Button.interactable = false;
+            Managers.GameUI.Buy_Player_Capacity_Button.GetComponentInChildren<Text>().text = "Max";
+        }
+
+        if (_stageData.PlayerIncome_Level < 5)
+        {
+            Managers.GameUI.RV_Player_Income_Button.interactable = true;
+            if (_gameManager.Money >= _playerIncomePrice[_stageData.PlayerIncome_Level])
+            {
+                Managers.GameUI.Buy_Player_Income_Button.interactable = true;
+                Managers.GameUI.PlayerIncomePriceText.text = $"{Managers.ToCurrencyString(_playerIncomePrice[_stageData.PlayerIncome_Level])}";
+            }
+        }
+        else
+        {
+            Managers.GameUI.Buy_Player_Income_Button.interactable = false;
+            Managers.GameUI.RV_Player_Income_Button.interactable = false;
+            Managers.GameUI.Buy_Player_Income_Button.GetComponentInChildren<Text>().text = "Max";
+        }
+
+        // =======Staff Upgrade
+
+
+        if (_stageData.StaffSpeed_Level < 5)
+        {
+            Managers.GameUI.RV_Staff_Speed_Button.interactable = true;
+            if (_gameManager.Money >= _staffSpeedPrice[_stageData.StaffSpeed_Level])
+            {
+                Managers.GameUI.Buy_Staff_Speed_Button.interactable = true;
+                Managers.GameUI.StaffSpeedPriceText.text = $"{Managers.ToCurrencyString(_staffSpeedPrice[_stageData.StaffSpeed_Level])}";
+            }
+        }
+        else
+        {
+            Managers.GameUI.Buy_Staff_Speed_Button.interactable = false;
+            Managers.GameUI.RV_Staff_Speed_Button.interactable = false;
+            Managers.GameUI.Buy_Staff_Speed_Button.GetComponentInChildren<Text>().text = "Max";
+        }
+
+        if (_stageData.StaffCapacity_Level < 5)
+        {
+            Managers.GameUI.RV_Staff_Capacity_Button.interactable = true;
+            if (_gameManager.Money >= _staffCapacityPrice[_stageData.StaffCapacity_Level])
+            {
+                Managers.GameUI.Buy_Staff_Capacity_Button.interactable = true;
+                Managers.GameUI.StaffCapacityPriceText.text = $"{Managers.ToCurrencyString(_staffCapacityPrice[_stageData.StaffCapacity_Level])}";
+            }
+        }
+        else
+        {
+            Managers.GameUI.Buy_Staff_Capacity_Button.interactable = false;
+            Managers.GameUI.RV_Staff_Capacity_Button.interactable = false;
+            Managers.GameUI.Buy_Staff_Capacity_Button.GetComponentInChildren<Text>().text = "Max";
+        }
+
+        if (_stageData.StaffHire_Level < 5)
+        {
+            Managers.GameUI.RV_Staff_Hire_Button.interactable = true;
+            if (_gameManager.Money >= _staffCountPrice[_stageData.StaffHire_Level])
+            {
+                Managers.GameUI.Buy_Staff_Hire_Button.interactable = true;
+
+                Managers.GameUI.StaffHirePriceText.text = $"{Managers.ToCurrencyString(_staffCountPrice[_stageData.StaffHire_Level])}";
+            }
+        }
+        else
+        {
+            Managers.GameUI.Buy_Staff_Hire_Button.interactable = false;
+            Managers.GameUI.RV_Staff_Hire_Button.interactable = false;
+            Managers.GameUI.Buy_Staff_Hire_Button.GetComponentInChildren<Text>().text = "Max";
+        }
 
 
 
