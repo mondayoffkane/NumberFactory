@@ -28,6 +28,27 @@ public class InteractArea : MonoBehaviour
     [SerializeField] ChargingPark _park;
     [SerializeField] Counter _counter;
 
+    public double Max_Price;
+    public double Current_Price;
+
+    public Image _fillImg;
+    public Text _priceText;
+
+    public void SetPrice(double _value)
+    {
+        Max_Price = _value;
+        Current_Price = Max_Price;
+        _priceText.text = $"{Managers.ToCurrencyString(Current_Price)}";
+
+    }
+    public void UpdatePrice(double _value)
+    {
+        Current_Price = _value;
+        _priceText.text = $"{Managers.ToCurrencyString(Current_Price)}";
+        _fillImg.fillAmount = (float)((Max_Price - Current_Price) / Max_Price);
+
+    }
+
 
     public void SetTarget(Object _obj, TargetType _type)
     {

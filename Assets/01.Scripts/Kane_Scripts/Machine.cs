@@ -25,7 +25,8 @@ public class Machine : MonoBehaviour
 
     [SerializeField] MachineTable MachineTable;
     [SerializeField] Transform StartBelt, EndBelt;
-
+    Transform _player;
+    public GameObject Money_Pref;
 
     [ShowInInspector]
     public Stack<Product> resource_Stack = new Stack<Product>();
@@ -36,7 +37,7 @@ public class Machine : MonoBehaviour
     public Vector3 SampleRot = new Vector3(0f, 90f, -90f);
     public float SpawnInterval = 2f;
     public float Rail_Speed = 4f;
-    public int Max_Count = 20;
+    public int Max_Count = 10;
     public int Current_Count = 0;
     public Vector3 RailonProduct_interval = Vector3.up * 0.5f;
     public float Product_Stack_Interval = 0.06f;
@@ -47,7 +48,7 @@ public class Machine : MonoBehaviour
 
 
     public InteractArea _interactArea;
-    public Text PriceText;
+    //public Text PriceText;
 
     public string _objectName = "Machine";
 
@@ -68,6 +69,9 @@ public class Machine : MonoBehaviour
     public Machine NextNode;
     public bool isActive = false;
     //bool isnextinit = false;
+    public GameObject MaxText;
+    //public bool isVertical = false;
+    public Vector3 StackOffset = new Vector3(0.5f, 45f, 0.5f);
     // =======================================
 
     public void SetObj()
@@ -80,7 +84,7 @@ public class Machine : MonoBehaviour
 
         _interactArea = GetComponentInChildren<InteractArea>();
         _interactArea.SetTarget(this, InteractArea.TargetType.Machine);
-        PriceText = _interactArea.GetComponentInChildren<Text>();
+        //PriceText = _interactArea.GetComponentInChildren<Text>();
     }
 
     [Button]
@@ -130,14 +134,17 @@ public class Machine : MonoBehaviour
         StartCoroutine(Cor_Spawn());
 
         CurrentPrice = UpgradePrice[Upgrade_Level];
-        PriceText.text = $"{CurrentPrice:0}";
+        _interactArea.SetPrice(CurrentPrice);
+        //PriceText.text = $"{CurrentPrice:0}";
+        _player = GameObject.FindGameObjectWithTag("Player").transform;  //
 
-
-        if (PrevNode != null)
+        if (PrevNode != null && PrevNode.isActive == false)
         {
             _interactArea.gameObject.SetActive(false);
         }
+        MaxText.SetActive(false);
 
+        if (Money_Pref == null) Money_Pref = Resources.Load<GameObject>("Money_Pref");
     }
 
     public void CheckData()
@@ -149,19 +156,23 @@ public class Machine : MonoBehaviour
     [Button]
     public void ActiveMachine()
     {
+        GameObject _obj = Managers.Pool.Pop(Resources.Load<GameObject>("NewEffect"), transform).gameObject;
+        _obj.transform.localPosition = Vector3.zero;
+        _obj.GetComponent<ParticleSystem>().PlayAllParticle();
+        DOTween.Sequence().AppendInterval(1f).OnComplete(() => { Managers.Pool.Push(_obj.GetComponent<Poolable>()); });
+
         Child_Machine.gameObject.SetActive(true);
         if (PrevNode != null)
         {
             int count = PrevNode.MachineTable.ProductStack.Count;
             for (int i = 0; i < count; i++)
             {
-                //resource_Stack.Push(PrevNode.MachineTable.ProductStack.Pop());
                 Managers.Pool.Push(PrevNode.MachineTable.ProductStack.Pop().GetComponent<Poolable>());
 
-                //MachineTable.ProductStack.Push(PrevNode.MachineTable.ProductStack.Pop());
             }
             PrevNode.MachineTable.gameObject.SetActive(false);
             PrevNode.MachineTable.isActive = false;
+            PrevNode.MaxText.SetActive(false);
         }
     }
 
@@ -173,18 +184,28 @@ public class Machine : MonoBehaviour
 
             if (isPlayerIn)
             {
-                if (Managers.Game.Money >= UpgradePrice[Upgrade_Level] * 0.5f * Time.deltaTime && Upgrade_Level < MaxUpgrade_Level)
+                if (Managers.Game.Money >= UpgradePrice[Upgrade_Level] * 1f * Time.deltaTime && Upgrade_Level < MaxUpgrade_Level)
                 {
                     //Managers.Game.Money -= UpgradePrice[Upgrade_Level] * 0.5f * Time.deltaTime;
-                    Managers.Game.UpdateMoney(-UpgradePrice[Upgrade_Level] * 0.5f * Time.deltaTime);
-                    CurrentPrice -= UpgradePrice[Upgrade_Level] * 0.5f * Time.deltaTime;
+                    Managers.Game.UpdateMoney(-UpgradePrice[Upgrade_Level] * 1f * Time.deltaTime);
+                    CurrentPrice -= UpgradePrice[Upgrade_Level] * 1f * Time.deltaTime;
+                    Transform _momey = Managers.Pool.Pop(Money_Pref).transform;
+
+                    _momey.SetParent(_player);
+                    _momey.transform.localPosition = Vector3.zero;
+                    _momey.DOJump(transform.position, 2f, 1, 0.2f).SetEase(Ease.Linear).OnComplete(() =>
+                    {
+                        _momey.gameObject.SetActive(false);
+                        Managers.Pool.Push(_momey.GetComponent<Poolable>());
+                    });
                     if (CurrentPrice <= 0)
                     {
                         CurrentPrice = 0;
                         isPlayerIn = false;
                         UpgradeMachine();
                     }
-                    PriceText.text = $"{CurrentPrice:0}";
+                    _interactArea.UpdatePrice(CurrentPrice);
+                    //PriceText.text = $"{CurrentPrice:0}";
 
                 }
             }
@@ -247,6 +268,33 @@ public class Machine : MonoBehaviour
     [Button]
     public void UpgradeMachine()
     {
+
+        if (NextNode != null && NextNode.Upgrade_Level < NextNode.MaxUpgrade_Level)
+        {
+            NextNode._interactArea.gameObject.SetActive(true);
+            if (NextNode.isActive == false)
+                MachineTable.isActive = true;
+        }
+        else
+        {
+            MachineTable.isActive = true;
+        }
+        if (Upgrade_Level < 1)
+        {
+            Managers.Sound.Play("NewObj");
+            GameObject _obj = Managers.Pool.Pop(Resources.Load<GameObject>("NewEffect"), transform).gameObject;
+            _obj.transform.localPosition = Vector3.zero;
+            _obj.GetComponent<ParticleSystem>().PlayAllParticle();
+            DOTween.Sequence().AppendInterval(1f).OnComplete(() => { Managers.Pool.Push(_obj.GetComponent<Poolable>()); });
+        }
+        else
+        {
+            Managers.Sound.Play("UpgradeObj");
+            GameObject _obj = Managers.Pool.Pop(Resources.Load<GameObject>("UpgradeEffect"), transform).gameObject;
+            _obj.transform.localPosition = Vector3.zero;
+            _obj.GetComponent<ParticleSystem>().PlayAllParticle();
+            DOTween.Sequence().AppendInterval(1f).OnComplete(() => { Managers.Pool.Push(_obj.GetComponent<Poolable>()); });
+        }
         ActiveMachine();
         isActive = true;
 
@@ -260,20 +308,11 @@ public class Machine : MonoBehaviour
         else
         {
             CurrentPrice = UpgradePrice[Upgrade_Level];
-            PriceText.text = $"{CurrentPrice:0}";
+            _interactArea.UpdatePrice(CurrentPrice);
+            //PriceText.text = $"{CurrentPrice:0}";
 
         }
         Managers.Data.SetInt(_objectName + Machine_Num.ToString(), Upgrade_Level);
-        if (NextNode != null)
-        {
-            NextNode._interactArea.gameObject.SetActive(true);
-            if (NextNode.isActive == false)
-                MachineTable.isActive = true;
-        }
-        else
-        {
-            MachineTable.isActive = true;
-        }
         SetMesh();
 
     }
@@ -295,25 +334,29 @@ public class Machine : MonoBehaviour
                 {
                     if (MachineTable.ProductStack.Count < Max_Count)
                     {
-                        MachineTable.ProductStack.Push(_productObj);
-                        int _count = MachineTable.ProductStack.Count - 1;
+                        //MachineTable.ProductStack.Push(_productObj);
+                        int _count = MachineTable.ProductStack.Count;
                         if (_count % 2 == 0)
                         {
-                            _productObj.transform.DOJump(MachineTable.transform.position + new Vector3(-0.3f * Mathf.Sin(45), BaseUpStack_Inteval + (_count / 2) * Product_Stack_Interval, -0.3f * Mathf.Sin(45)) // positon
+                            _productObj.transform.DOJump(MachineTable.transform.position + new Vector3(-StackOffset.x * Mathf.Sin(StackOffset.y), BaseUpStack_Inteval + (_count / 2) * Product_Stack_Interval, -StackOffset.z * Mathf.Sin(StackOffset.y) - 0.5f) // positon
                             , 0.5f, 1, 0.5f) // power,jump count,duration                            
-                            .Join(_product.transform.DORotate(new Vector3(0f, 90f, 0f), 0.5f).SetEase(Ease.Linear));
+                            .Join(_product.transform.DORotate(new Vector3(0f, 90f, 0f), 0.5f).SetEase(Ease.Linear))
+                            .OnComplete(() => MachineTable.ProductStack.Push(_productObj));
+
                         }
                         else
                         {
-                            _productObj.transform.DOJump(MachineTable.transform.position + new Vector3(0.3f * Mathf.Sin(45), BaseUpStack_Inteval + (_count / 2) * Product_Stack_Interval, +0.3f * Mathf.Sin(45)) // positon
+                            _productObj.transform.DOJump(MachineTable.transform.position + new Vector3(StackOffset.x * Mathf.Sin(StackOffset.y), BaseUpStack_Inteval + (_count / 2) * Product_Stack_Interval, +StackOffset.z * Mathf.Sin(StackOffset.y) - 0.5f) // positon
                           , 0.5f, 1, 0.5f) // power,jump count,duration                            
-                            .Join(_product.transform.DORotate(new Vector3(0f, 90f, 0f), 0.5f).SetEase(Ease.Linear));
+                            .Join(_product.transform.DORotate(new Vector3(0f, 90f, 0f), 0.5f).SetEase(Ease.Linear))
+                            .OnComplete(() => MachineTable.ProductStack.Push(_productObj));
                         }
+                        MaxText.SetActive(false);
                     }
                     else
                     {
                         Managers.Pool.Push(_productObj.GetComponent<Poolable>());
-
+                        MaxText.SetActive(true);
                     }
                 }
             });

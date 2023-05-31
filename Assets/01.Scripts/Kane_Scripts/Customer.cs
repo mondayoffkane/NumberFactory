@@ -111,7 +111,7 @@ public class Customer : MonoBehaviour
                     _animator.SetBool("Walk", false);
                     _animator.SetBool("Pick", false);
                     _animator.SetBool("Charge", true);
-
+                    _chargingTable.ChargeobjectOnOff(true);
                     transform.rotation = _chargingTable.customerPos.rotation;
 
                     CustomerState = State.Charging;
@@ -136,7 +136,7 @@ public class Customer : MonoBehaviour
                         _chargingTable.isEmpty = true;
                         _animator.SetBool("Walk", true);
                         _animator.SetBool("Charge", false);
-
+                        _chargingTable.ChargeobjectOnOff(false);
                         DOTween.Sequence().AppendInterval(0.5f).OnComplete(() =>
                         CustomerState = State.Exit);
                     }

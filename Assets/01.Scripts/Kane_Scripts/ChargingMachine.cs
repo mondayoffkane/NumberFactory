@@ -66,8 +66,8 @@ public class ChargingMachine : MonoBehaviour
 
         Side_Interval = _product.transform.GetComponent<MeshFilter>().sharedMesh.bounds.size.z;
         _product.transform.DOLocalJump(
-                new Vector3(0f, _offsetCount / 2 * Stack_Interval
-                                     , (StartX + Side_Interval * (_offsetCount % 2)))
+                new Vector3(0f, _offsetCount / 4 * Stack_Interval
+                                     , (StartX + Side_Interval * (_offsetCount % 4)))
             , 1, 1, _interval).SetEase(Ease.Linear)
                                          .Join(_product.transform.DORotate(Vector3.up * 45f, _interval).SetEase(Ease.Linear));
 

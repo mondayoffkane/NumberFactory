@@ -7,12 +7,17 @@ public class FollowObj_NonRot : MonoBehaviour
     public Transform Player;
 
     [SerializeField] Vector3 Offset;
+    public bool isInit = false;
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         if (Player == null) Player = GameObject.FindGameObjectWithTag("Player").transform;
 
-        Offset = transform.position - Player.position;
+        if (isInit == false)
+        {
+            isInit = true;
+            Offset = transform.position - Player.position;
+        }
     }
 
     // Update is called once per frame

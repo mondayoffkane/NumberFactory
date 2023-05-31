@@ -31,8 +31,8 @@ public class Product : MonoBehaviour
     [SerializeField] int digit_count = 0;
     public MeshFilter[] Digit_MeshFilter;
 
-    public float Double_Pos_interval = 0.25f;
-    public float Third_Pos_interval = 0.45f;
+    public float Double_Pos_interval = 0.3f;
+    public float Third_Pos_interval = 0.55f;
 
     //public void SetMeshes()
     //{

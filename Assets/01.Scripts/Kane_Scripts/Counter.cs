@@ -4,6 +4,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Counter : MonoBehaviour
 {
@@ -19,28 +20,30 @@ public class Counter : MonoBehaviour
 
     // =====================
     public InteractArea _interactArea;
-    public Text PriceText;
+    //public Text PriceText;
     public int Upgrade_Level = 0;
     public double[] UpgradePrice = new double[4] { 100d, 200d, 500d, 1000d };
     public double CurrentPrice = 100d;
 
     public bool isPlayerIn = false;
 
-
-
+    Transform _player;
+    public GameObject Money_Pref;
     public Stack<Product> BatteryStack = new Stack<Product>();
     // ============================
     private void Start()
     {
         _interactArea = GetComponentInChildren<InteractArea>();
         _interactArea.SetTarget(this, InteractArea.TargetType.Counter);
-        PriceText = _interactArea.GetComponentInChildren<Text>();
-        _staff.SetActive(false);
+        //PriceText = _interactArea.GetComponentInChildren<Text>();
+        _player = GameObject.FindGameObjectWithTag("Player").transform;  //Managers.Game._stagemanager._player.transform;
         Upgrade_Level = Managers.Data.GetInt("Stage_" + Managers.Game._stagemanager.Stage_Num.ToString() + "_counter");
 
         Setting();
 
+        _interactArea.SetPrice(CurrentPrice);
         CurrentPrice = UpgradePrice[Upgrade_Level];
+        if (Money_Pref == null) Money_Pref = Resources.Load<GameObject>("Money_Pref");
     }
 
 
@@ -48,18 +51,28 @@ public class Counter : MonoBehaviour
     {
         if (isPlayerIn)
         {
-            if (Managers.Game.Money >= UpgradePrice[Upgrade_Level] * 0.5f * Time.deltaTime && Upgrade_Level < 1)
+            if (Managers.Game.Money >= UpgradePrice[Upgrade_Level] * 1f * Time.deltaTime && Upgrade_Level < 1)
             {
                 //Managers.Game.Money -= UpgradePrice[Upgrade_Level] * 0.5f * Time.deltaTime;
-                Managers.Game.UpdateMoney(-UpgradePrice[Upgrade_Level] * 0.5f * Time.deltaTime);
-                CurrentPrice -= UpgradePrice[Upgrade_Level] * 0.5f * Time.deltaTime;
+                Managers.Game.UpdateMoney(-UpgradePrice[Upgrade_Level] * 1f * Time.deltaTime);
+                CurrentPrice -= UpgradePrice[Upgrade_Level] * 1f * Time.deltaTime;
+                Transform _momey = Managers.Pool.Pop(Money_Pref).transform;
+
+                _momey.SetParent(_player);
+                _momey.transform.localPosition = Vector3.zero;
+                _momey.DOJump(transform.position, 2f, 1, 0.2f).SetEase(Ease.Linear).OnComplete(() =>
+                {
+                    _momey.gameObject.SetActive(false);
+                    Managers.Pool.Push(_momey.GetComponent<Poolable>());
+                });
                 if (CurrentPrice <= 0)
                 {
                     CurrentPrice = 0;
                     isPlayerIn = false;
                     Upgrade();
                 }
-                PriceText.text = $"{CurrentPrice:0}";
+                //PriceText.text = $"{CurrentPrice:0}";
+                _interactArea.UpdatePrice(CurrentPrice);
 
             }
         }
@@ -71,6 +84,11 @@ public class Counter : MonoBehaviour
         if (Upgrade_Level == 0)
         {
             _staff.SetActive(true);
+            Managers.Sound.Play("NewObj");
+        }
+        else
+        {
+            Managers.Sound.Play("UpgradeObj");
         }
         Upgrade_Level++;
         _interactArea.gameObject.SetActive(false);
@@ -82,8 +100,14 @@ public class Counter : MonoBehaviour
         if (Upgrade_Level > 0)
         {
             _staff.SetActive(true);
+            _interactArea.gameObject.SetActive(false);
         }
-        _interactArea.gameObject.SetActive(false);
+        else
+        {
+            _staff.SetActive(false);
+            _interactArea.gameObject.SetActive(true);
+        }
+
 
     }
 

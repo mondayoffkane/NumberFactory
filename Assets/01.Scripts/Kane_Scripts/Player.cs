@@ -73,12 +73,19 @@ public class Player : MonoBehaviour
         Rail_Mat.SetTextureOffset("_BaseMap", Vector2.zero);
         Rail_Mat.DOOffset(Vector2.down, RailMat_Speed).SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
         _FloatingText = Resources.Load<GameObject>("Floating");
+
+        //MaxText.transform.SetParent(null);
+        MaxText.GetComponent<FollowObj_NonRot>().Start();
+        MaxText.SetActive(false);
     }
 
     private void Update()
     {
         //StackCurve();
-
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Managers.Game.Money += 10000d;
+        }
     }
 
 
@@ -156,6 +163,7 @@ public class Player : MonoBehaviour
                     if (ProductStack.Count == 0 || ProductStack.Peek().GetComponent<Product>()._productType
                         == other.GetComponent<MachineTable>().ProductStack.Peek().GetComponent<Product>()._productType)
                     {
+                        Managers.Sound.Play("Stack");
                         Product _product = other.GetComponent<MachineTable>().ProductStack.Pop();
                         DOTween.Kill(_product);
                         ProductStack.Push(_product);
@@ -168,7 +176,7 @@ public class Player : MonoBehaviour
                         switch (_product._productType)
                         {
                             case Product.ProductType.Number:
-                                _product.transform.DOLocalJump(new Vector3(0f, 0f, 0.4f) + Vector3.up * (ProductStack.Count - 1) * Stack_Interval, 1f, 1, Move_Interval).OnComplete(() => _product.transform.localEulerAngles = new Vector3(-180f, 90f, -180f));
+                                _product.transform.DOLocalJump(new Vector3(0f, 0f, 1f) + Vector3.up * (ProductStack.Count - 1) * Stack_Interval, 1f, 1, Move_Interval).OnComplete(() => _product.transform.localEulerAngles = new Vector3(-180f, 90f, -180f));
                                 break;
 
                             case Product.ProductType.Battery:
@@ -180,6 +188,7 @@ public class Player : MonoBehaviour
                         DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() =>
                         {
                             isReady = true;
+
                             //if (ProductStack.Count >= Max_Count) MaxText.SetActive(true);
                         });
 
@@ -190,6 +199,7 @@ public class Player : MonoBehaviour
             case "Generator":
                 if (ProductStack.Count > 0 && isReady && ProductStack.Peek().GetComponent<Product>()._productType == Product.ProductType.Number)
                 {
+                    Managers.Sound.Play("Stack");
                     Product _product = ProductStack.Pop().GetComponent<Product>();
                     isReady = false;
                     other.GetComponent<Generator>().PushNum(_product);
@@ -205,6 +215,7 @@ public class Player : MonoBehaviour
             case "Counter":
                 if (isReady && ProductStack.Count > 0 && ProductStack.Peek().GetComponent<Product>()._productType == Product.ProductType.Battery)
                 {
+                    Managers.Sound.Play("Stack");
                     other.GetComponent<Counter>().PushBattery(ProductStack.Pop(), Move_Interval);
                     DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
                 }
@@ -216,6 +227,7 @@ public class Player : MonoBehaviour
             case "ChargingMachine":
                 if (isReady && ProductStack.Count > 0 && ProductStack.Peek().GetComponent<Product>()._productType == Product.ProductType.Battery)
                 {
+                    Managers.Sound.Play("Stack");
                     other.GetComponent<ChargingMachine>().PushBattery(ProductStack.Pop(), Move_Interval);
                     DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
                 }
@@ -248,6 +260,7 @@ public class Player : MonoBehaviour
             case "GarbageCan":
                 if (isReady && ProductStack.Count > 0)
                 {
+                    Managers.Sound.Play("Stack");
                     Transform _trans = ProductStack.Pop().transform;
                     _trans.SetParent(other.transform);
                     _trans.DOLocalJump(Vector3.zero, 2f, 1, Move_Interval)
@@ -301,6 +314,7 @@ public class Player : MonoBehaviour
         if (_count != 0)
         {
             StartCoroutine(Cor_GetMoney());
+            Managers.Sound.Play("Money");
         }
         IEnumerator Cor_GetMoney()
         {

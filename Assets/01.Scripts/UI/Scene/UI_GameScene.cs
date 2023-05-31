@@ -161,18 +161,18 @@ public class UI_GameScene : UI_Scene
 
         });
 
-        RV_Player_Speed_Button.AddButtonEvent(() => { });
+        RV_Player_Speed_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(0, true); });
         Buy_Player_Speed_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(0); });
-        RV_Player_Capacity_Button.AddButtonEvent(() => { });
+        RV_Player_Capacity_Button.AddButtonEvent(() => Managers.Game._stagemanager.LevelUpgrade(1, true));
         Buy_Player_Capacity_Button.AddButtonEvent(() => Managers.Game._stagemanager.LevelUpgrade(1));
-        RV_Player_Income_Button.AddButtonEvent(() => { });
+        RV_Player_Income_Button.AddButtonEvent(() => Managers.Game._stagemanager.LevelUpgrade(2, true));
         Buy_Player_Income_Button.AddButtonEvent(() => Managers.Game._stagemanager.LevelUpgrade(2));
 
-        RV_Staff_Speed_Button.AddButtonEvent(() => { });
+        RV_Staff_Speed_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(3, true); });
         Buy_Staff_Speed_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(3); });
-        RV_Staff_Capacity_Button.AddButtonEvent(() => { });
+        RV_Staff_Capacity_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(4, true); });
         Buy_Staff_Capacity_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(4); });
-        RV_Staff_Hire_Button.AddButtonEvent(() => { });
+        RV_Staff_Hire_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(5, true); });
         Buy_Staff_Hire_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(5); });
 
         PlayerHR_Close_Button.AddButtonEvent(() => { PlayerHR_Panel.SetActive(false); });

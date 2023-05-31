@@ -286,7 +286,7 @@ public class Staff : MonoBehaviour
         switch (_product._productType)
         {
             case Product.ProductType.Number:
-                _product.transform.DOLocalJump(new Vector3(0f, 0f, 0.4f) + Vector3.up * (_productStack.Count - 1) * Stack_Interval, 1f, 1, 0.5f)
+                _product.transform.DOLocalJump(new Vector3(0f, 0f, 1f) + Vector3.up * (_productStack.Count - 1) * Stack_Interval, 1f, 1, 0.5f)
               .OnComplete(() => _product.transform.localEulerAngles = new Vector3(-180f, 90f, -180f));
                 break;
 

@@ -52,7 +52,7 @@ public class StageManager : MonoBehaviour
 
     public double[] _staffSpeedPrice = new double[] { 100, 200, 500, 1000, 2000 };
     public double[] _staffCapacityPrice = new double[] { 100, 200, 500, 1000, 2000 };
-    public double[] _staffCountPrice = new double[] { 100, 200, 500, 1000, 2000 };
+    public double[] _staffHirePrice = new double[] { 100, 200, 500, 1000, 2000 };
 
     // ==================
     public bool isPlayerinCounter = false;
@@ -350,8 +350,9 @@ public class StageManager : MonoBehaviour
 
 
 
-    public void LevelUpgrade(int _num)
+    public void LevelUpgrade(int _num, bool isRV = false)
     {
+        Managers.Sound.Play("UpgradeButton");
         switch (_num)
         {
             case 0:
@@ -361,7 +362,10 @@ public class StageManager : MonoBehaviour
                     _gameUi.Player_Speed_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
                 }
 
-                _gameManager.Money -= _playerSpeedPrice[_stageData.PlayerSpeed_Level];
+                if (isRV == false)
+                {
+                    _gameManager.UpdateMoney(-_playerSpeedPrice[_stageData.PlayerSpeed_Level]);
+                }
                 _stageData.PlayerSpeed_Level++;
                 _player.UpdateStat(_stageData.PlayerSpeed_Level, _stageData.PlayerCapacity_Level, _stageData.PlayerIncome_Level);
 
@@ -371,6 +375,10 @@ public class StageManager : MonoBehaviour
                 for (int i = 0; i < _stageData.PlayerCapacity_Level + 1; i++)
                 {
                     _gameUi.Player_Capacity_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
+                }
+                if (isRV == false)
+                {
+                    _gameManager.UpdateMoney(-_playerCapacityPrice[_stageData.PlayerCapacity_Level]);
                 }
                 _stageData.PlayerCapacity_Level++;
                 _player.UpdateStat(_stageData.PlayerSpeed_Level, _stageData.PlayerCapacity_Level, _stageData.PlayerIncome_Level);
@@ -382,6 +390,10 @@ public class StageManager : MonoBehaviour
                 {
                     _gameUi.Player_Income_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
                 }
+                if (isRV == false)
+                {
+                    _gameManager.UpdateMoney(-_playerIncomePrice[_stageData.PlayerIncome_Level]);
+                }
                 _stageData.PlayerIncome_Level++;
                 _player.UpdateStat(_stageData.PlayerSpeed_Level, _stageData.PlayerCapacity_Level, _stageData.PlayerIncome_Level);
 
@@ -391,6 +403,10 @@ public class StageManager : MonoBehaviour
                 for (int i = 0; i < _stageData.StaffSpeed_Level + 1; i++)
                 {
                     _gameUi.Staff_Speed_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
+                }
+                if (isRV == false)
+                {
+                    _gameManager.UpdateMoney(-_staffSpeedPrice[_stageData.StaffSpeed_Level]);
                 }
                 _stageData.StaffSpeed_Level++;
                 StaffUpdateStat();
@@ -402,6 +418,10 @@ public class StageManager : MonoBehaviour
                 {
                     _gameUi.Staff_Capacity_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
                 }
+                if (isRV == false)
+                {
+                    _gameManager.UpdateMoney(-_staffCapacityPrice[_stageData.StaffCapacity_Level]);
+                }
                 _stageData.StaffCapacity_Level++;
                 StaffUpdateStat();
 
@@ -412,7 +432,10 @@ public class StageManager : MonoBehaviour
                 {
                     _gameUi.Staff_Hire_Level_Group.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
                 }
-
+                if (isRV == false)
+                {
+                    _gameManager.UpdateMoney(-_staffHirePrice[_stageData.StaffHire_Level]);
+                }
 
                 AddStaff();
 
@@ -421,6 +444,8 @@ public class StageManager : MonoBehaviour
         }
 
         CheckButton();
+
+        SaveData();
     }
 
     public void StaffUpdateStat()
@@ -438,39 +463,37 @@ public class StageManager : MonoBehaviour
 
 
 
-
-
-
-
-
-
-
         //============ Player Upgrade
         if (_stageData.PlayerSpeed_Level < 5)
         {
             Managers.GameUI.RV_Player_Speed_Button.interactable = true;
-            if (_gameManager.Money >= _playerSpeedPrice[_stageData.PlayerSpeed_Level])
-            {
-                Managers.GameUI.Buy_Player_Speed_Button.interactable = true;
-                Managers.GameUI.PlayerSpeedPriceText.text = $"{Managers.ToCurrencyString(_playerSpeedPrice[_stageData.PlayerSpeed_Level])}";
-            }
+            Managers.GameUI.PlayerSpeedPriceText.text = $"{Managers.ToCurrencyString(_playerSpeedPrice[_stageData.PlayerSpeed_Level])}";
+
+            Managers.GameUI.Buy_Player_Speed_Button.interactable = _gameManager.Money >= _playerSpeedPrice[_stageData.PlayerSpeed_Level] ? true : false;
+
+            //if (_gameManager.Money >= _playerSpeedPrice[_stageData.PlayerSpeed_Level])
+            //{
+            //    Managers.GameUI.Buy_Player_Speed_Button.interactable = true;
+            //}
+            //else
+            //{
+            //    Managers.GameUI.Buy_Player_Speed_Button.interactable = false;
+            //}
         }
         else
         {
             Managers.GameUI.Buy_Player_Speed_Button.interactable = false;
             Managers.GameUI.RV_Player_Speed_Button.interactable = false;
-
             Managers.GameUI.Buy_Player_Speed_Button.GetComponentInChildren<Text>().text = "Max";
         }
 
         if (_stageData.PlayerCapacity_Level < 5)
         {
             Managers.GameUI.RV_Player_Capacity_Button.interactable = true;
-            if (_gameManager.Money >= _playerCapacityPrice[_stageData.PlayerCapacity_Level])
-            {
-                Managers.GameUI.Buy_Player_Capacity_Button.interactable = true;
-                Managers.GameUI.PlayerCapacityPriceText.text = $"{Managers.ToCurrencyString(_playerCapacityPrice[_stageData.PlayerCapacity_Level])}";
-            }
+            Managers.GameUI.PlayerCapacityPriceText.text = $"{Managers.ToCurrencyString(_playerCapacityPrice[_stageData.PlayerCapacity_Level])}";
+
+            Managers.GameUI.Buy_Player_Capacity_Button.interactable = _gameManager.Money >= _playerCapacityPrice[_stageData.PlayerCapacity_Level] ? true : false;
+
         }
         else
         {
@@ -482,11 +505,9 @@ public class StageManager : MonoBehaviour
         if (_stageData.PlayerIncome_Level < 5)
         {
             Managers.GameUI.RV_Player_Income_Button.interactable = true;
-            if (_gameManager.Money >= _playerIncomePrice[_stageData.PlayerIncome_Level])
-            {
-                Managers.GameUI.Buy_Player_Income_Button.interactable = true;
-                Managers.GameUI.PlayerIncomePriceText.text = $"{Managers.ToCurrencyString(_playerIncomePrice[_stageData.PlayerIncome_Level])}";
-            }
+            Managers.GameUI.PlayerIncomePriceText.text = $"{Managers.ToCurrencyString(_playerIncomePrice[_stageData.PlayerIncome_Level])}";
+
+            Managers.GameUI.Buy_Player_Income_Button.interactable = _gameManager.Money >= _playerIncomePrice[_stageData.PlayerIncome_Level] ? true : false;
         }
         else
         {
@@ -497,15 +518,13 @@ public class StageManager : MonoBehaviour
 
         // =======Staff Upgrade
 
-
         if (_stageData.StaffSpeed_Level < 5)
         {
             Managers.GameUI.RV_Staff_Speed_Button.interactable = true;
-            if (_gameManager.Money >= _staffSpeedPrice[_stageData.StaffSpeed_Level])
-            {
-                Managers.GameUI.Buy_Staff_Speed_Button.interactable = true;
-                Managers.GameUI.StaffSpeedPriceText.text = $"{Managers.ToCurrencyString(_staffSpeedPrice[_stageData.StaffSpeed_Level])}";
-            }
+            Managers.GameUI.StaffSpeedPriceText.text = $"{Managers.ToCurrencyString(_staffSpeedPrice[_stageData.StaffSpeed_Level])}";
+
+            Managers.GameUI.Buy_Staff_Speed_Button.interactable = _gameManager.Money >= _staffSpeedPrice[_stageData.StaffSpeed_Level] ? true : false;
+
         }
         else
         {
@@ -517,11 +536,10 @@ public class StageManager : MonoBehaviour
         if (_stageData.StaffCapacity_Level < 5)
         {
             Managers.GameUI.RV_Staff_Capacity_Button.interactable = true;
-            if (_gameManager.Money >= _staffCapacityPrice[_stageData.StaffCapacity_Level])
-            {
-                Managers.GameUI.Buy_Staff_Capacity_Button.interactable = true;
-                Managers.GameUI.StaffCapacityPriceText.text = $"{Managers.ToCurrencyString(_staffCapacityPrice[_stageData.StaffCapacity_Level])}";
-            }
+            Managers.GameUI.StaffCapacityPriceText.text = $"{Managers.ToCurrencyString(_staffCapacityPrice[_stageData.StaffCapacity_Level])}";
+
+            Managers.GameUI.Buy_Staff_Capacity_Button.interactable = _gameManager.Money >= _staffCapacityPrice[_stageData.StaffCapacity_Level] ? true : false;
+
         }
         else
         {
@@ -533,12 +551,10 @@ public class StageManager : MonoBehaviour
         if (_stageData.StaffHire_Level < 5)
         {
             Managers.GameUI.RV_Staff_Hire_Button.interactable = true;
-            if (_gameManager.Money >= _staffCountPrice[_stageData.StaffHire_Level])
-            {
-                Managers.GameUI.Buy_Staff_Hire_Button.interactable = true;
+            Managers.GameUI.StaffHirePriceText.text = $"{Managers.ToCurrencyString(_staffHirePrice[_stageData.StaffHire_Level])}";
 
-                Managers.GameUI.StaffHirePriceText.text = $"{Managers.ToCurrencyString(_staffCountPrice[_stageData.StaffHire_Level])}";
-            }
+            Managers.GameUI.Buy_Staff_Hire_Button.interactable = _gameManager.Money >= _staffHirePrice[_stageData.StaffHire_Level] ? true : false;
+
         }
         else
         {

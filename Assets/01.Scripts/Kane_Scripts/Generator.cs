@@ -45,7 +45,7 @@ public class Generator : MonoBehaviour
     public float BaseSide_Interval = 0.09f;
 
     float _initY;
-
+    public GameObject MaxText;
     // ====================================
     public bool isSpawn = true;
 
@@ -66,7 +66,7 @@ public class Generator : MonoBehaviour
 
         MoneyUi_Update();
 
-
+        MaxText.SetActive(false);
     }
 
 
@@ -104,6 +104,11 @@ public class Generator : MonoBehaviour
                         _battery.position = StackPoint.transform.position + new Vector3(BaseSide_Interval * Mathf.Sin(45), BaseUp_Interval + Stack_Interval * (_count / 2), BaseSide_Interval * Mathf.Sin(45));
                     });
                 }
+                MaxText.SetActive(false);
+            }
+            else if (StackPoint.ProductStack.Count >= Max_Count)
+            {
+                MaxText.SetActive(true);
             }
         }
     }

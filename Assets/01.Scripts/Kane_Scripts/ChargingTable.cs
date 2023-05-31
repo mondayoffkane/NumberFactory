@@ -27,6 +27,8 @@ public class ChargingTable : MonoBehaviour
     public Transform customerPos;
     public InteractArea _interactArea;
 
+    Transform _player;
+
 
 
     // ===== Values
@@ -44,8 +46,10 @@ public class ChargingTable : MonoBehaviour
     public float vertical_inteval = 0.6f;
     public float height_interval = 0.1f;
     // =============================
-    public Text PriceText;
+    //public Text PriceText;
     public bool isPlayerIn = false;
+    public MeshFilter _chargeObj;
+    public Mesh[] _chargeobjMeshes;
 
     Renderer _renderer;
     // ==================
@@ -55,17 +59,18 @@ public class ChargingTable : MonoBehaviour
 
         _interactArea = GetComponentInChildren<InteractArea>();
         _interactArea.SetTarget(this, InteractArea.TargetType.Table);
-        PriceText = _interactArea.GetComponentInChildren<Text>();
+        //PriceText = _interactArea.GetComponentInChildren<Text>();
         _renderer = GetComponent<Renderer>();
         _renderer.enabled = false;
         GetComponent<SphereCollider>().isTrigger = true;
-
+        _player = GameObject.FindGameObjectWithTag("Player").transform;  //
         isActive = Managers.Data.GetBool(_objectName + Table_Num.ToString());
 
 
         Current_Price = Upgrade_Price;
-        PriceText.text = $"{Current_Price:0}";
-        CheckActive();
+        _interactArea.SetPrice(Current_Price);
+        //PriceText.text = $"{Current_Price:0}";
+        CheckActive(true);
 
         StartCoroutine(Cor_Update());
     }
@@ -81,21 +86,31 @@ public class ChargingTable : MonoBehaviour
             {
                 if (isPlayerIn)
                 {
-                    if (Managers.Game.Money >= Upgrade_Price * 0.5f * Time.deltaTime)
+                    if (Managers.Game.Money >= Upgrade_Price * 1f * Time.deltaTime)
                     {
                         //Managers.Game.Money -= UpgradePrice[Upgrade_Level] * 0.5f * Time.deltaTime;
-                        Managers.Game.UpdateMoney(-Upgrade_Price * 0.5f * Time.deltaTime);
-                        Current_Price -= Upgrade_Price * 0.5f * Time.deltaTime;
+                        Managers.Game.UpdateMoney(-Upgrade_Price * 1f * Time.deltaTime);
+                        Current_Price -= Upgrade_Price * 1f * Time.deltaTime;
+                        Transform _momey = Managers.Pool.Pop(Money_Pref).transform;
+
+                        _momey.SetParent(_player);
+                        _momey.transform.localPosition = Vector3.zero;
+                        _momey.DOJump(transform.position, 2f, 1, 0.2f).SetEase(Ease.Linear).OnComplete(() =>
+                        {
+                            _momey.gameObject.SetActive(false);
+                            Managers.Pool.Push(_momey.GetComponent<Poolable>());
+                        });
                         if (Current_Price <= 0)
                         {
                             Current_Price = 0;
                             isPlayerIn = false;
                             isActive = true;
                             CheckActive();
-                            Managers.Data.SetBool(_objectName + Table_Num.ToString(),true);
+                            Managers.Data.SetBool(_objectName + Table_Num.ToString(), true);
                             // add save data
                         }
-                        PriceText.text = $"{Current_Price:0}";
+                        //PriceText.text = $"{Current_Price:0}";
+                        _interactArea.UpdatePrice(Current_Price);
 
                     }
                 }
@@ -111,11 +126,23 @@ public class ChargingTable : MonoBehaviour
     }
 
 
-    void CheckActive()
+    void CheckActive(bool isInit = false)
     {
         _renderer.enabled = isActive;
         _interactArea.gameObject.SetActive(!isActive);
         GetComponent<SphereCollider>().isTrigger = !isActive;
+
+        if (isActive)
+        {
+            if (isInit == false)
+            {
+                Managers.Sound.Play("NewObj");
+                GameObject _obj = Managers.Pool.Pop(Resources.Load<GameObject>("NewEffect"), transform).gameObject;
+                _obj.transform.localPosition = Vector3.zero;
+                _obj.GetComponent<ParticleSystem>().PlayAllParticle();
+                DOTween.Sequence().AppendInterval(1f).OnComplete(() => { Managers.Pool.Push(_obj.GetComponent<Poolable>()); });
+            }
+        }
     }
 
 
@@ -176,5 +203,23 @@ public class ChargingTable : MonoBehaviour
         else { return null; }
     }
 
+
+    public void ChargeobjectOnOff(bool isOn)
+    {
+
+        if (isOn)
+        {
+            //_chargeObj.gameObject.SetActive(true);
+            _chargeObj.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.InOutCubic);
+            _chargeObj.sharedMesh = _chargeobjMeshes[Random.Range(0, _chargeobjMeshes.Length)];
+        }
+        else
+        {
+            _chargeObj.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InOutCubic);
+            //_chargeObj.gameObject.SetActive(false);
+        }
+
+
+    }
 
 }
