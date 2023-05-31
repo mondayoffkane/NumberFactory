@@ -32,19 +32,37 @@ MonoBehaviour:
     assemblyNames:
     - ACTk.Editor
     - ACTk.Runtime
+    - AdvertyPlatformSpecific
+    - Amazon.Editor
+    - Amazon.Scripts
     - Assembly-CSharp
     - Assembly-CSharp-firstpass
     - Cinemachine
     - CodeStage.Maintainer.Editor
     - Coffee.UIParticle
     - Coffee.UIParticle.Editor
+    - Everyday
+    - Everyday.Editor
+    - Everyday.Events
+    - Everyday.Events.Editor
+    - Everyday.IAP
+    - Google.Android.AppBundle.Editor
+    - Google.Play.Common
+    - Google.Play.Core
+    - Google.Play.Review
+    - JsonDotNet
     - LeTai.TrueShadow
     - LeTai.TrueShadow.Editor
     - Lofelt.NiceVibrations
     - Lofelt.NiceVibrations.Editor
+    - MaxSdk.Scripts
+    - MaxSdk.Scripts.Editor
+    - MaxSdk.Scripts.IntegrationManager.Editor
     - Nementic.SelectionUtility.Editor
     - Nementic.SelectionUtility.Runtime
+    - PlayOn
     - PPv2URPConverters
+    - SingularSDK
     - Sirenix.OdinInspector.CompatibilityLayer
     - Sirenix.OdinInspector.CompatibilityLayer.Editor
     - Sirenix.OdinInspector.Modules.UnityMathematics

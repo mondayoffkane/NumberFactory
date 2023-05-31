@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0da90100806d46409dc5f2bb6272482, type: 3}
+  m_Name: EverydaySettings
+  m_EditorClassIdentifier: 
+  logLevel: 4
+  isTestMode: 0
+  adSettings:
+    initializeOnLoad: 1
+    showBannerOnLoad: 1
+    adInitializationOrder: 84
+    adInitializationDelay: 2
+    interstitialInterval: 30
+    resetTimerOnRewarded: 1
+    bannerPosition: 7
+    AOS_IS_AdUnitID: 
+    AOS_RV_AdUnitID: 
+    AOS_BN_AdUnitID: 
+    AOS_IS_Backup_AdUnitID: 
+    AOS_RV_Backup_AdUnitID: 
+    AOS_BN_Backup_AdUnitID: 
+    AOS_APS_AppID: 
+    AOS_APS_IS_SlotID: 
+    AOS_APS_RV_SlotID: 
+    AOS_APS_BN_SlotID: 
+    AOS_PlayOnApiKey: 
+    AOS_AdvertyApiKey: 
+    iOS_IS_AdUnitID: 
+    iOS_RV_AdUnitID: 
+    iOS_BN_AdUnitID: 
+    iOS_IS_Backup_AdUnitID: 
+    iOS_RV_Backup_AdUnitID: 
+    iOS_BN_Backup_AdUnitID: 
+    iOS_APS_AppID: 
+    iOS_APS_IS_SlotID: 
+    iOS_APS_RV_SlotID: 
+    iOS_APS_BN_SlotID: 
+    iOS_PlayOnApiKey: 
+    iOS_storeID: 
+    iOS_AdvertyApiKey: 
+    showPlayOnAfterInterstitial: 1
+    playOnInterstitialCount: 2
+    playOnPosition:
+      useScreenPositioning: 0
+      playOnLogoAnchor: 0
+      playOnLogoOffset: {x: 0, y: 150}
+      playOnLogoSize: 64
+    initializeAdvertyOnAwake: 1
+  appId: 
+  companyLogo: {fileID: 0}
+  gameSceneName: 
