@@ -90,6 +90,7 @@ public class DataManager
 
     public void SaveData(StageData _tempdata, int _stagenum)
     {
+        //if(_stageData.isd)
         SetDouble("Money", Managers.Game.Money);
         _stageData[_stagenum] = _tempdata;
         ES3.Save<StageData>("StageData" + _stagenum.ToString(), _stageData[_stagenum]);
@@ -125,6 +126,8 @@ public class StageData
     public int StaffHire_Level = 0;
 
     public int[] MachineLevels = new int[6] { 0, 0, 0, 0, 0, 0 };
+
+    public bool isFirst = true;
 
 }
 

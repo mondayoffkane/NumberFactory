@@ -66,10 +66,10 @@ public class ChargingMachine : MonoBehaviour
         while (true)
         {
             yield return null;
-            
+
             if (isPlayerIn)
             {
-            
+
                 if (Managers.Game.Money >= UpgradePrice * 1f * Time.deltaTime)
                 {
                     //Managers.Game.Money -= UpgradePrice[Upgrade_Level] * 0.5f * Time.deltaTime;
@@ -108,6 +108,12 @@ public class ChargingMachine : MonoBehaviour
     {
         Managers.Sound.Play("NewObj");
         Setting();
+
+        Managers.Sound.Play("NewObj");
+        GameObject _obj = Managers.Pool.Pop(Resources.Load<GameObject>("NewEffect"), transform).gameObject;
+        _obj.transform.localPosition = Vector3.zero;
+        _obj.GetComponent<ParticleSystem>().PlayAllParticle();
+        DOTween.Sequence().AppendInterval(1f).OnComplete(() => { Managers.Pool.Push(_obj.GetComponent<Poolable>()); });
 
         Managers.Data.SetBool("Stage_" + Managers.Game._stagemanager.Stage_Num.ToString() + "_charginemachine", true);
     }

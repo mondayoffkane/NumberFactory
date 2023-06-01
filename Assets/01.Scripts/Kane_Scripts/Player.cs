@@ -77,6 +77,11 @@ public class Player : MonoBehaviour
         //MaxText.transform.SetParent(null);
         MaxText.GetComponent<FollowObj_NonRot>().Start();
         MaxText.SetActive(false);
+
+        if (Managers.Game._stagemanager._stageData.isFirst)
+        {
+            transform.position = new Vector3(27f, 0f, -22f);
+        }
     }
 
     private void Update()

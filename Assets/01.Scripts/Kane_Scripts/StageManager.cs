@@ -61,7 +61,7 @@ public class StageManager : MonoBehaviour
 
     // =============================
     [ShowInInspector]
-    [SerializeField] StageData _stageData;
+   public StageData _stageData;
 
     [SerializeField] GameManager _gameManager;
     [SerializeField] UI_GameScene _gameUi;

@@ -29,13 +29,21 @@ public class StartMoney : MonoBehaviour
         GetComponent<Renderer>().enabled = false;
         if (Money_Pref == null) Money_Pref = Resources.Load<GameObject>("Money_Pref");
 
-        if (Managers.Game.Money == 0)
+        StartCoroutine(Cor_Start());
+    }
+
+    IEnumerator Cor_Start()
+    {
+        yield return null;
+        if (Managers.Game._stagemanager._stageData.isFirst)
         {
             SpawnMoney(200);
 
         }
 
+
     }
+
 
     [Button]
     public void SpawnMoney(int _popCount = 100)
