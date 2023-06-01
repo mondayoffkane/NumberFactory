@@ -125,6 +125,10 @@ public class Player : MonoBehaviour
 
                 break;
 
+            case "StartMoney":
+                GetMoney2(other.GetComponent<StartMoney>().MoneyStack);
+                break;
+
             case "Counter":
                 Managers.Game._stagemanager.isPlayerinCounter = true;
                 break;

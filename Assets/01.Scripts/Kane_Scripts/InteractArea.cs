@@ -17,7 +17,8 @@ public class InteractArea : MonoBehaviour
         Machine,
         Table,
         Park,
-        Counter
+        Counter,
+        ChargingMachine
     }
     public TargetType _targetType;
 
@@ -27,6 +28,7 @@ public class InteractArea : MonoBehaviour
     [SerializeField] ChargingTable _table;
     [SerializeField] ChargingPark _park;
     [SerializeField] Counter _counter;
+    [SerializeField] ChargingMachine _chargingmachine;
 
     public double Max_Price;
     public double Current_Price;
@@ -72,6 +74,10 @@ public class InteractArea : MonoBehaviour
             case TargetType.Counter:
                 _counter = (Counter)_target;
                 break;
+
+            case TargetType.ChargingMachine:
+                _chargingmachine = (ChargingMachine)_target;
+                break;
         }
 
 
@@ -100,6 +106,11 @@ public class InteractArea : MonoBehaviour
                 case TargetType.Counter:
                     _counter.isPlayerIn = true;
                     break;
+
+                case TargetType.ChargingMachine:
+                    _chargingmachine.isPlayerIn = true;
+
+                    break;
             }
         }
     }
@@ -125,6 +136,10 @@ public class InteractArea : MonoBehaviour
 
                 case TargetType.Counter:
                     _counter.isPlayerIn = false;
+                    break;
+
+                case TargetType.ChargingMachine:
+                    _chargingmachine.isPlayerIn = false;
                     break;
             }
         }

@@ -104,7 +104,7 @@ public class DataManager
         }
 
         Managers.Game.Money = GetDouble("Money");
-        if (Managers.Game.Money < 500) Managers.Game.Money = 500;
+        //if (Managers.Game.Money < 500) Managers.Game.Money = 500;
         _stageData[_stagenum] = ES3.Load<StageData>("StageData" + _stagenum.ToString(), new StageData());
 
         return _stageData[_stagenum];

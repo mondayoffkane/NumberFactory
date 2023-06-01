@@ -17,6 +17,7 @@ TagManager:
   - GarbageCan
   - PlayerHR
   - StaffHR
+  - StartMoney
   layers:
   - Default
   - TransparentFX

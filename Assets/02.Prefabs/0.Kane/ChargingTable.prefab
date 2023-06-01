@@ -227,7 +227,6 @@ MonoBehaviour:
   horizontal_interval: 0.3
   vertical_inteval: 0.6
   height_interval: 0.1
-  PriceText: {fileID: 0}
   isPlayerIn: 0
   _chargeObj: {fileID: 8801730863519286579}
   _chargeobjMeshes:

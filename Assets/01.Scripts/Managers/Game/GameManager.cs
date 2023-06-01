@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     public void Init()
     {
         Money = Managers.Data.GetDouble("Money");
-        if (Money < 100) Money = 100;
+        //if (Money < 100) Money = 100;
         if (_stagemanager == null) _stagemanager = GameObject.Find("Stage1_Manager").GetComponent<StageManager>();
 
 
@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
         }
 
         Money += _value;
+        _stagemanager.SaveData();
         Managers.GameUI.Money_Text.text = $"{ToCurrencyString(Money)}";
         _stagemanager.CheckButton();
     }

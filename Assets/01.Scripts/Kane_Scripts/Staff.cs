@@ -100,6 +100,10 @@ public class Staff : MonoBehaviour
             _agent.velocity = Vector3.zero;
             switch (_staffState)
             {
+                case StaffState.Idle:
+                    ReFind();
+                    break;
+
                 case StaffState.Move1:
                     _animator.SetBool("Walk", false);
                     _animator.SetBool("Pick", true);
@@ -129,7 +133,7 @@ public class Staff : MonoBehaviour
                             {
                                 case 0:
                                     _targetPlace = _stageManager._counter;
-                                    _agent.destination = _stageManager._counter.transform.position;
+                                    _agent.destination = _stageManager._counter.StackPoint.transform.position;
 
                                     break;
 
@@ -207,7 +211,7 @@ public class Staff : MonoBehaviour
         switch (_rand)
         {
             case 0:
-                if (_stageManager._chargingMachine.BatteryStack.Count < 5)
+                if (_stageManager._chargingMachine.BatteryStack.Count < 5 && _stageManager._chargingMachine.isActive)
                 {
                     _agent.destination = _stageManager._generator.StackPoint.transform.position;
                     _targetPlace = _stageManager._generator.StackPoint;
@@ -216,7 +220,7 @@ public class Staff : MonoBehaviour
                     _staffState = StaffState.Move1;
                     _targetNum = 1;
                 }
-                else
+                else if (_stageManager._counter.isActive)
                 {
                     _agent.destination = _stageManager._generator.StackPoint.transform.position;
                     _targetPlace = (MachineTable)(_stageManager._generator.StackPoint);
@@ -224,12 +228,16 @@ public class Staff : MonoBehaviour
                     _animator.SetBool("Pick", false);
                     _staffState = StaffState.Move1;
                     _targetNum = 0;
+                }
+                else
+                {
+                    ReFind();
                 }
 
                 break;
 
             case 1:
-                if (_stageManager._counter.BatteryStack.Count < 5)
+                if (_stageManager._counter.BatteryStack.Count < 5 && _stageManager._counter.isActive)
                 {
                     _agent.destination = _stageManager._generator.StackPoint.transform.position;
                     _targetPlace = (MachineTable)(_stageManager._generator.StackPoint);
@@ -238,7 +246,7 @@ public class Staff : MonoBehaviour
                     _staffState = StaffState.Move1;
                     _targetNum = 0;
                 }
-                else
+                else if (_stageManager._chargingMachine.isActive)
                 {
                     _agent.destination = _stageManager._generator.StackPoint.transform.position;
                     _targetPlace = _stageManager._generator.StackPoint;
@@ -246,6 +254,10 @@ public class Staff : MonoBehaviour
                     _animator.SetBool("Pick", false);
                     _staffState = StaffState.Move1;
                     _targetNum = 1;
+                }
+                else
+                {
+                    ReFind();
                 }
 
                 break;

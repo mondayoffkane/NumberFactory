@@ -167,14 +167,23 @@ public class Machine : MonoBehaviour
             int count = PrevNode.MachineTable.ProductStack.Count;
             for (int i = 0; i < count; i++)
             {
-                Managers.Pool.Push(PrevNode.MachineTable.ProductStack.Pop().GetComponent<Poolable>());
+                Poolable _trans = PrevNode.MachineTable.ProductStack.Pop().GetComponent<Poolable>();
+                _trans.gameObject.SetActive(false);
+                Managers.Pool.Push(_trans);
 
             }
             PrevNode.MachineTable.gameObject.SetActive(false);
             PrevNode.MachineTable.isActive = false;
             PrevNode.MaxText.SetActive(false);
         }
+
+        if (NextNode == null)
+        {
+            MachineTable.isActive = true;
+        }
     }
+
+
 
     IEnumerator Cor_Update()
     {
@@ -275,7 +284,7 @@ public class Machine : MonoBehaviour
             if (NextNode.isActive == false)
                 MachineTable.isActive = true;
         }
-        else
+        else if (NextNode == null)
         {
             MachineTable.isActive = true;
         }

@@ -213,12 +213,14 @@ public class Generator : MonoBehaviour
             {
                 case 0:
                     Dot_Obj.gameObject.SetActive(true);
-                    Dot_Obj.transform.position = Digit_MeshFilter[0].transform.position + Vector3.right * 0.85f;
+                    float _val = MathF.Abs((Digit_MeshFilter[0].transform.position.x - Digit_MeshFilter[1].transform.position.x) * 0.5f);
+                    Dot_Obj.transform.position = Digit_MeshFilter[0].transform.position + Vector3.right * _val;
                     break;
 
                 case 1:
                     Dot_Obj.gameObject.SetActive(true);
-                    Dot_Obj.transform.position = Digit_MeshFilter[1].transform.position + Vector3.right * 0.85f;
+                    float _val2 = MathF.Abs((Digit_MeshFilter[1].transform.position.x - Digit_MeshFilter[2].transform.position.x) * 0.5f);
+                    Dot_Obj.transform.position = Digit_MeshFilter[1].transform.position + Vector3.right * _val2;
                     break;
 
                 case 2:

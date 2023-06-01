@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Customer : MonoBehaviour
 {
@@ -32,6 +33,8 @@ public class Customer : MonoBehaviour
 
     [SerializeField] Vector3 Init_StackPointPos;
 
+    public GameObject _panel;
+    public Text _countText;
 
 
     public enum State
@@ -59,13 +62,20 @@ public class Customer : MonoBehaviour
         CustomerState = State.Init;
         OrderCount = _setbatterycount;
 
+        if (_panel == null) _panel = GetComponentInChildren<Canvas>().gameObject;
+        if (_countText == null) _countText = GetComponentInChildren<Text>();
+
+
         if (_animator == null) _animator = GetComponent<Animator>();
         _animator.SetBool("Walk", true);
         _animator.SetBool("Pick", false);
+
+        _countText.text = $"{OrderCount}";
     }
 
     public void SetDest(Vector3 _destiny)
     {
+        _panel.SetActive(false);
         _animator.SetBool("Walk", true);
         _agent.destination = _destiny;
         isArrive = false;
@@ -167,6 +177,7 @@ public class Customer : MonoBehaviour
                                          {
                                              BatteryStack.Push(_product);
                                              OrderCount--;
+                                             _countText.text = $"{OrderCount}";
                                              _product.transform.localEulerAngles = Vector3.zero; // new Vector3(-90f, 0f, 0f);
                                              // if (OrderCount <= 0) CustomerState = State.Wait;
 

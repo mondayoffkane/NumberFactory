@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
+using DG.Tweening;
 
 
 
@@ -22,6 +24,10 @@ public class CustomerCar : MonoBehaviour
     public ChargingPark _chargingPark;
     public ChargingMachine _chargingMachine;
 
+    public GameObject _canvas;
+    public Image _fillImg;
+
+
     public enum State
     {
         Init,
@@ -31,6 +37,16 @@ public class CustomerCar : MonoBehaviour
         Exit
     }
     public State CustomerCarState;
+
+    // =======================================
+
+    private void Start()
+    {
+        if (_canvas == null) _canvas = GetComponentInChildren<Canvas>().gameObject;
+        if (_fillImg == null) _fillImg = transform.Find("Fill").GetComponent<Image>();
+
+        _canvas.SetActive(false);
+    }
 
 
     public void SetInit(StageManager _stagemanager, ChargingMachine _chargingmachine, int _ordercount = 5, int _Carnum = 0)
@@ -76,25 +92,31 @@ public class CustomerCar : MonoBehaviour
                     break;
 
                 case State.Move:
+                    _canvas.SetActive(true);
                     CustomerCarState = State.Charging;
 
                     break;
 
                 case State.Charging:
-                    if (CurrentCount > 0)
+                    if (CurrentCount > 0 && _chargingMachine.BatteryStack.Count > 0)
                     {
                         Current_ChargingTime += Time.deltaTime;
                         if (Current_ChargingTime >= 1f)
                         {
                             _chargingMachine.SpawnMoney();
+                            //_chargingMachine.
                             Current_ChargingTime = 0f;
                             CurrentCount--;
+                            _fillImg.DOFillAmount((float)((float)(OrderCount - CurrentCount) / (float)OrderCount), 0.2f);
+
                         }
                     }
                     else
                     {
                         SetDest(StageManager.CarMovePos[2].position);
                         _chargingPark.isEmpty = true;
+
+                        _canvas.SetActive(false);
                         CustomerCarState = State.Exit;
 
                     }

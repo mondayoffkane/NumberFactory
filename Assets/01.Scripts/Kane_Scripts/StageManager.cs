@@ -57,7 +57,7 @@ public class StageManager : MonoBehaviour
     // ==================
     public bool isPlayerinCounter = false;
 
-
+    public float _spawnInterval = 1f;
 
     // =============================
     [ShowInInspector]
@@ -156,7 +156,7 @@ public class StageManager : MonoBehaviour
     }
     public void AddCustomer_Car()
     {
-        if (List_Cars.Count < 10)
+        if (List_Cars.Count < 10 && _chargingMachine.isActive)
         {
             Transform _car = Managers.Pool.Pop(Customer_Car, transform).transform;
             CustomerCar _customerCar = _car.GetComponent<CustomerCar>();
@@ -174,17 +174,20 @@ public class StageManager : MonoBehaviour
 
     IEnumerator Cor_Order()
     {
-        WaitForSeconds _interval = new WaitForSeconds(0.5f);
+        WaitForSeconds _interval = new WaitForSeconds(_spawnInterval);
         while (true)
         {
             yield return _interval;
 
-            if (List_Humans.Count > 0 && (isPlayerinCounter || _counter.Upgrade_Level > 0))
+            if (List_Humans.Count > 0 && (isPlayerinCounter || _counter.isActive))
             {
                 Customer _customer = List_Humans[0];
 
                 if (_customer.CustomerState == Customer.State.Wait && _customer.isArrive)
+                {
                     _customer.CustomerState = Customer.State.Order;
+                    _customer._panel.SetActive(true);
+                }
 
                 if (_customer.CustomerState == Customer.State.Order)
                 {
@@ -219,12 +222,9 @@ public class StageManager : MonoBehaviour
                     case CustomerCar.State.Wait:
                         if (_customercar.OrderCount > 0 && _chargingMachine.BatteryStack.Count > 0)
                         {
-                            _chargingMachine.BatteryStack.Pop().gameObject.SetActive(false);
-                            _customercar.OrderCount--;
-                            _customercar.CurrentCount++;
-                        }
-                        if (_customercar.OrderCount <= 0)
-                        {
+                            _customercar.CurrentCount = _customercar.OrderCount;
+                            //_customercar.OrderCount = 0;
+
                             ChargingPark _park = FindPark();
                             if (_park != null)
                             {
