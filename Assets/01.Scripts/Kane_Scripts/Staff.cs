@@ -98,6 +98,7 @@ public class Staff : MonoBehaviour
         {
             //_agent.isStopped = true;
             _agent.velocity = Vector3.zero;
+
             switch (_staffState)
             {
                 case StaffState.Idle:

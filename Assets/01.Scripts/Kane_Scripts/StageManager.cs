@@ -167,17 +167,22 @@ public class StageManager : MonoBehaviour
     {
         if (List_Cars.Count < 10 && _chargingMachine.isActive)
         {
-            Transform _car = Managers.Pool.Pop(Customer_Car, transform).transform;
-            CustomerCar _customerCar = _car.GetComponent<CustomerCar>();
-            _customerCar.SetInit(this, _chargingMachine, Random.Range(Min_Count, Max_Count));
-
-            _car.position = CarMovePos[0].position;
-            _car.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(CarMovePos[0].position);
-            List_Cars.Add(_customerCar);
-            MoveCustomerCar();
+            AddCar();
 
 
         }
+    }
+
+    public void AddCar()
+    {
+        Transform _car = Managers.Pool.Pop(Customer_Car, transform).transform;
+        CustomerCar _customerCar = _car.GetComponent<CustomerCar>();
+        _customerCar.SetInit(this, _chargingMachine, Random.Range(Min_Count * 2, Max_Count * 2));
+
+        _car.position = CarMovePos[0].position;
+        _car.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(CarMovePos[0].position);
+        List_Cars.Add(_customerCar);
+        MoveCustomerCar();
     }
 
 
@@ -373,7 +378,8 @@ public class StageManager : MonoBehaviour
 
                 if (isRV == false)
                 {
-                    _gameManager.UpdateMoney(-_playerSpeedPrice[_stageData.PlayerSpeed_Level]);
+                    if (_stageData.isFirst == false)
+                        _gameManager.UpdateMoney(-_playerSpeedPrice[_stageData.PlayerSpeed_Level]);
                 }
                 if (isRV == false && _stageData.isFirst == true)
                 {
@@ -452,7 +458,8 @@ public class StageManager : MonoBehaviour
                 }
                 if (isRV == false)
                 {
-                    _gameManager.UpdateMoney(-_staffHirePrice[_stageData.StaffHire_Level]);
+                    if (_stageData.isFirst == false)
+                        _gameManager.UpdateMoney(-_staffHirePrice[_stageData.StaffHire_Level]);
                 }
 
                 if (isRV == false && _stageData.isFirst == true)

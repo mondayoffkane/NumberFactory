@@ -112,7 +112,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Money_Pref: {fileID: 1844723689555679029, guid: ed2c74215353649d687cef36cf71603f,
     type: 3}
-  Price: 500
+  Count: 700
   Stack_Interval: 0.2
   Update_Interval: 1
   BaseUp_Interval: 0.5

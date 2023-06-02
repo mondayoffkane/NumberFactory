@@ -1200,8 +1200,9 @@ MonoBehaviour:
   Capacity_Level: 0
   base_Speed: 2
   base_Capacity: 4
-  currentSpeed: 0
-  currentCapacity: 0
+  add_Speed: 1
+  add_Capacity: 1
+  max_Capacity: 0
   PickUp_Interval: 0.5
   _stageManager: {fileID: 0}
   _staffState: 0
@@ -1209,6 +1210,7 @@ MonoBehaviour:
   _targetNum: 0
   _rand: 0
   _list: []
+  remainDistance: 0
 --- !u!95 &7957324049801573451
 Animator:
   serializedVersion: 5

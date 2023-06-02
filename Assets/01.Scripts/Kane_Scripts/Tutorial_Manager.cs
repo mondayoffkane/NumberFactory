@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine.UI;
 
 
 public class Tutorial_Manager : MonoBehaviour
@@ -19,6 +20,7 @@ public class Tutorial_Manager : MonoBehaviour
 
     public GameObject[] _cineCams;
 
+    public Text _tutoText;
 
     // ===============================================
 
@@ -27,7 +29,7 @@ public class Tutorial_Manager : MonoBehaviour
     public void SetTutorial(bool isfirst, StageManager _manager)
     {
         _stageManager = _manager;
-
+        _tutoText = Managers.GameUI.TutorialText;
         for (int i = 0; i < _cineCams.Length; i++)
         {
             _cineCams[i].SetActive(false);
@@ -42,6 +44,8 @@ public class Tutorial_Manager : MonoBehaviour
             _stageManager._generatorGroup.SetActive(false);
             _stageManager._playerHR.SetActive(false);
             _stageManager._staffHR.SetActive(false);
+            _tutoText.gameObject.SetActive(true);
+            _tutoText.text = "Get Moneys!";
 
             foreach (ChargingTable _table in _stageManager.Tables)
             {
@@ -54,12 +58,10 @@ public class Tutorial_Manager : MonoBehaviour
                 Lock_Imgs[i].SetActive(true);
             }
 
-
-
-
         }
         else
         {
+            _tutoText.gameObject.SetActive(false);
             _arrow.gameObject.SetActive(false);
             for (int i = 0; i < Lock_Imgs.Length; i++)
             {
@@ -81,7 +83,7 @@ public class Tutorial_Manager : MonoBehaviour
                 _stageManager.Machines[0].gameObject.SetActive(true);
 
                 CamOn(0, 1f);
-
+                _tutoText.text = "Unlock the Machine!";
                 break;
 
             case 1: // Open machine => generator open
@@ -92,7 +94,7 @@ public class Tutorial_Manager : MonoBehaviour
                 _stageManager.Machines[1]._interactArea.gameObject.SetActive(false);
 
                 CamOn(1);
-
+                _tutoText.text = "Delivery to Number!";
                 break;
 
             case 2: // push to generator => unlock charging machin
@@ -103,13 +105,14 @@ public class Tutorial_Manager : MonoBehaviour
 
                 CamOn(2);
 
-
+                _tutoText.text = "Unlock the ChargeMachine!";
                 break;
 
             case 3: // open chargingmachine => enter customer car
                 _arrow.position = _stageManager._generator.StackPoint.transform.position;
                 CamOn(3, 0.5f, 3f);
 
+                _tutoText.text = "Delivery to Battery!";
                 break;
 
             case 4: // push to chargingmacine => unlock counter
@@ -118,7 +121,7 @@ public class Tutorial_Manager : MonoBehaviour
                 _arrow.position = _stageManager._counter._interactArea.transform.position;
                 CamOn(4);
 
-
+                _tutoText.text = "Unlock the Counter!";
                 break;
 
             case 5: // open counter => unlock tables1                
@@ -126,14 +129,14 @@ public class Tutorial_Manager : MonoBehaviour
                 _stageManager.Tables[1].gameObject.SetActive(true);
 
                 _arrow.position = _stageManager._generator.StackPoint.transform.position;
-
+                _tutoText.text = "Delivery to Battery!";
                 break;
 
             case 6:
                 _arrow.position = _stageManager.Tables[1].transform.position;
 
                 Lock_Imgs[4].SetActive(false);
-
+                _tutoText.text = "Unlock the Table!";
                 break;
 
             case 7: // open table 1 => unlock Player HR
@@ -143,7 +146,7 @@ public class Tutorial_Manager : MonoBehaviour
                 Lock_Imgs[5].SetActive(false);
                 CamOn(5);
 
-
+                _tutoText.text = "Hire Staff";
                 break;
 
 
@@ -152,6 +155,7 @@ public class Tutorial_Manager : MonoBehaviour
                 _arrow.position = _stageManager._playerHR.transform.position;
                 _stageManager._playerHR.SetActive(true);
                 Lock_Imgs[6].SetActive(false);
+                _tutoText.text = "Upgrade Player Speed!";
                 break;
 
             case 9:
@@ -177,6 +181,8 @@ public class Tutorial_Manager : MonoBehaviour
                 _stageManager._stageData.isFirst = false;
                 _stageManager.SaveData();
 
+                _tutoText.text = "Feel Free To Enjoy It!";
+                StartCoroutine(Cor_End());
                 break;
         }
         _tutorial_num++;
@@ -197,6 +203,12 @@ public class Tutorial_Manager : MonoBehaviour
         }
     }
 
+
+    IEnumerator Cor_End()
+    {
+        yield return new WaitForSeconds(3f);
+        _tutoText.gameObject.SetActive(false);
+    }
 
 
 }

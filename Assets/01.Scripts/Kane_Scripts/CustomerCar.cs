@@ -107,7 +107,7 @@ public class CustomerCar : MonoBehaviour
                             //_chargingMachine.
                             Current_ChargingTime = 0f;
                             CurrentCount--;
-                            _fillImg.DOFillAmount((float)((float)(OrderCount - CurrentCount) / (float)OrderCount), 0.2f);
+                            _fillImg.DOFillAmount((float)((float)(OrderCount - CurrentCount + 1) / (float)OrderCount), 0.2f);
 
                         }
                     }

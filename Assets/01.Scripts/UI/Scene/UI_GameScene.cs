@@ -42,7 +42,8 @@ public class UI_GameScene : UI_Scene
         PlayerIncomePriceText,
         StaffSpeedPriceText,
         StaffCapacityPriceText,
-        StaffHirePriceText
+        StaffHirePriceText,
+        TutorialText
 
     }
 
@@ -69,7 +70,7 @@ public class UI_GameScene : UI_Scene
     public Button Setting_Button, Sound_Button, Vibe_Button, RV_Player_Speed_Button, Buy_Player_Speed_Button, RV_Player_Capacity_Button, Buy_Player_Capacity_Button, RV_Staff_Speed_Button, Buy_Staff_Speed_Button, RV_Staff_Capacity_Button, Buy_Staff_Capacity_Button, RV_Staff_Hire_Button, Buy_Staff_Hire_Button, RV_Player_Income_Button, Buy_Player_Income_Button, PlayerHR_Close_Button,
         StaffHR_Close_Button;
     public Text Money_Text, StageGuage_Text, PlayerSpeedPriceText,
-        PlayerCapacityPriceText, PlayerIncomePriceText, StaffSpeedPriceText, StaffCapacityPriceText, StaffHirePriceText;
+        PlayerCapacityPriceText, PlayerIncomePriceText, StaffSpeedPriceText, StaffCapacityPriceText, StaffHirePriceText, TutorialText;
     public GameObject Base_Panel, Setting_Panel,
         PlayerHR_Panel, Player_Speed_Level_Group, Player_Capacity_Level_Group, Player_Income_Level_Group,
         StaffHR_Panel, Staff_Speed_Level_Group, Staff_Capacity_Level_Group, Staff_Hire_Level_Group;
@@ -121,7 +122,7 @@ public class UI_GameScene : UI_Scene
         StaffSpeedPriceText = GetText(Texts.StaffSpeedPriceText);
         StaffCapacityPriceText = GetText(Texts.StaffCapacityPriceText);
         StaffHirePriceText = GetText(Texts.StaffHirePriceText);
-
+        TutorialText = GetText(Texts.TutorialText);
 
 
         Base_Panel = GetObject(GameObjects.Base_Panel);

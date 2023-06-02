@@ -1915,6 +1915,7 @@ MonoBehaviour:
   _chargingTable: {fileID: 0}
   OrderCount: 5
   StackPos: {fileID: 957633923183952273}
+  _chargInterval: 4
   Stack_Interval: 1.2
   BaseUp_Interval: 0.5
   Init_StackPointPos: {x: 0, y: 0, z: 0}
