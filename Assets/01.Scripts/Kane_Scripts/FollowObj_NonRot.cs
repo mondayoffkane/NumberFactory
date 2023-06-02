@@ -21,8 +21,8 @@ public class FollowObj_NonRot : MonoBehaviour
             isInit = true;
             Offset = transform.position - Player.position;
         }
-
         _Rot = transform.eulerAngles;
+
     }
 
     // Update is called once per frame

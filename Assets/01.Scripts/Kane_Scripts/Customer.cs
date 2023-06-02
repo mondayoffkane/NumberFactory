@@ -24,6 +24,7 @@ public class Customer : MonoBehaviour
     public Transform StackPos;
 
     // ==== values
+    public float _chargInterval = 2f;
     public float Stack_Interval = 0.2f;
 
     public float BaseUp_Interval = 0.5f;
@@ -34,6 +35,7 @@ public class Customer : MonoBehaviour
     [SerializeField] Vector3 Init_StackPointPos;
 
     public GameObject _panel;
+    public GameObject _chargePanel;
     public Text _countText;
 
 
@@ -62,8 +64,11 @@ public class Customer : MonoBehaviour
         CustomerState = State.Init;
         OrderCount = _setbatterycount;
 
-        if (_panel == null) _panel = GetComponentInChildren<Canvas>().gameObject;
-        if (_countText == null) _countText = GetComponentInChildren<Text>();
+        if (_panel == null) _panel = transform.Find("OrderPanel").gameObject;
+        //GetComponentInChildren<Canvas>().gameObject;
+        if (_chargePanel == null) _chargePanel = transform.Find("OrderPanel").gameObject;
+
+        if (_countText == null) _countText = _panel.GetComponentInChildren<Text>();
 
 
         if (_animator == null) _animator = GetComponent<Animator>();
@@ -76,6 +81,7 @@ public class Customer : MonoBehaviour
     public void SetDest(Vector3 _destiny)
     {
         _panel.SetActive(false);
+        _chargePanel.SetActive(false);
         _animator.SetBool("Walk", true);
         _agent.destination = _destiny;
         isArrive = false;
@@ -124,6 +130,7 @@ public class Customer : MonoBehaviour
                     _chargingTable.ChargeobjectOnOff(true);
                     transform.rotation = _chargingTable.customerPos.rotation;
 
+                    _chargePanel.SetActive(true);
                     CustomerState = State.Charging;
                     break;
 
@@ -132,7 +139,7 @@ public class Customer : MonoBehaviour
                     {
 
                         Current_ChargingTime += Time.deltaTime;
-                        if (Current_ChargingTime >= /*Total_ChargingTime*/ 1f)
+                        if (Current_ChargingTime >= /*Total_ChargingTime*/ _chargInterval)
                         {
                             _chargingTable.SpawnMoney();
                             Current_ChargingTime = 0;
@@ -149,6 +156,7 @@ public class Customer : MonoBehaviour
                         _chargingTable.ChargeobjectOnOff(false);
                         DOTween.Sequence().AppendInterval(0.5f).OnComplete(() =>
                         CustomerState = State.Exit);
+                        _chargePanel.SetActive(false);
                     }
                     break;
 

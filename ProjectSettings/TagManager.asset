@@ -18,6 +18,7 @@ TagManager:
   - PlayerHR
   - StaffHR
   - StartMoney
+  - Tutorial
   layers:
   - Default
   - TransparentFX

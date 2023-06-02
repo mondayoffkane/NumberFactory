@@ -220,7 +220,7 @@ public class Staff : MonoBehaviour
                     _staffState = StaffState.Move1;
                     _targetNum = 1;
                 }
-                else if (_stageManager._counter.isActive)
+                else if (_stageManager._counter.UpgradeLevel > 0)
                 {
                     _agent.destination = _stageManager._generator.StackPoint.transform.position;
                     _targetPlace = (MachineTable)(_stageManager._generator.StackPoint);
@@ -237,7 +237,7 @@ public class Staff : MonoBehaviour
                 break;
 
             case 1:
-                if (_stageManager._counter.BatteryStack.Count < 5 && _stageManager._counter.isActive)
+                if (_stageManager._counter.BatteryStack.Count < 5 && _stageManager._counter.UpgradeLevel > 0)
                 {
                     _agent.destination = _stageManager._generator.StackPoint.transform.position;
                     _targetPlace = (MachineTable)(_stageManager._generator.StackPoint);

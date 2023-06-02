@@ -41,6 +41,7 @@ public class InteractArea : MonoBehaviour
         Max_Price = _value;
         Current_Price = Max_Price;
         _priceText.text = $"{Managers.ToCurrencyString(Current_Price)}";
+        _fillImg.fillAmount = (float)((Max_Price - Current_Price) / Max_Price);
 
     }
     public void UpdatePrice(double _value)

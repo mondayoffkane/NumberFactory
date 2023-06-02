@@ -56,7 +56,6 @@ public class Generator : MonoBehaviour
 
         transform.DOScaleY(1.2f, 0.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
         Battery = Resources.Load<GameObject>("Battery");
-        StartCoroutine(Cor_Update());
         Stack_Interval = Battery.GetComponent<MeshFilter>().sharedMesh.bounds.size.y;
         BaseSide_Interval = Battery.GetComponent<MeshFilter>().sharedMesh.bounds.size.x * 0.5f;
         _initY = Digit_MeshFilter[0].transform.localPosition.y;
@@ -70,6 +69,11 @@ public class Generator : MonoBehaviour
     }
 
 
+    private void OnEnable()
+    {
+        StartCoroutine(Cor_Update());
+
+    }
 
     IEnumerator Cor_Update()
     {

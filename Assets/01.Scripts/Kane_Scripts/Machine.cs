@@ -23,7 +23,7 @@ public class Machine : MonoBehaviour
     [SerializeField] MeshFilter Child_Machine;
     [SerializeField] MeshFilter Sample_Product;
 
-    [SerializeField] MachineTable MachineTable;
+    public MachineTable MachineTable;
     [SerializeField] Transform StartBelt, EndBelt;
     Transform _player;
     public GameObject Money_Pref;
@@ -112,7 +112,7 @@ public class Machine : MonoBehaviour
 
     }
 
-    public void SetStart()
+    public void OnEnable() //SetStart()
     {
         SetObj();
         Sample_Product.transform.rotation = Quaternion.Euler(SampleRot);
@@ -147,9 +147,16 @@ public class Machine : MonoBehaviour
         if (Money_Pref == null) Money_Pref = Resources.Load<GameObject>("Money_Pref");
     }
 
+    //private void OnEnable()
+    //{
+
+    //}
+
     public void CheckData()
     {
-        Managers.Data.SetInt(_objectName + Machine_Num.ToString(), Upgrade_Level); // Set Upgrade Num
+        if (Managers.Game._stagemanager._stageData.isFirst == false)
+            SaveData();
+
 
     }
 
@@ -295,6 +302,7 @@ public class Machine : MonoBehaviour
             _obj.transform.localPosition = Vector3.zero;
             _obj.GetComponent<ParticleSystem>().PlayAllParticle();
             DOTween.Sequence().AppendInterval(1f).OnComplete(() => { Managers.Pool.Push(_obj.GetComponent<Poolable>()); });
+            if (Machine_Num == 0) Managers.Game._stagemanager._tutorial.LockOff();
         }
         else
         {
@@ -321,7 +329,11 @@ public class Machine : MonoBehaviour
             //PriceText.text = $"{CurrentPrice:0}";
 
         }
-        Managers.Data.SetInt(_objectName + Machine_Num.ToString(), Upgrade_Level);
+        if (Managers.Game._stagemanager._stageData.isFirst == false)
+        {
+            SaveData();
+
+        }
         SetMesh();
 
     }
@@ -395,6 +407,9 @@ public class Machine : MonoBehaviour
 
     }
 
-
+    public void SaveData()
+    {
+        Managers.Data.SetInt(_objectName + Machine_Num.ToString(), Upgrade_Level); // Set Upgrade Num
+    }
 
 }

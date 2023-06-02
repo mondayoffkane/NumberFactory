@@ -4,6 +4,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using DG.Tweening;
 using UnityEngine.UI;
+using Adverty;
 
 
 public class ChargingTable : MonoBehaviour
@@ -72,9 +73,14 @@ public class ChargingTable : MonoBehaviour
         //PriceText.text = $"{Current_Price:0}";
         CheckActive(true);
 
-        StartCoroutine(Cor_Update());
     }
 
+
+    private void OnEnable()
+    {
+        StartCoroutine(Cor_Update());
+
+    }
 
     IEnumerator Cor_Update()
     {
@@ -106,7 +112,11 @@ public class ChargingTable : MonoBehaviour
                             isPlayerIn = false;
                             isActive = true;
                             CheckActive();
-                            Managers.Data.SetBool(_objectName + Table_Num.ToString(), true);
+                            if (Managers.Game._stagemanager._stageData.isFirst == false)
+                            {
+                                SaveData();
+
+                            }
                             // add save data
                         }
                         //PriceText.text = $"{Current_Price:0}";
@@ -141,6 +151,9 @@ public class ChargingTable : MonoBehaviour
                 _obj.transform.localPosition = Vector3.zero;
                 _obj.GetComponent<ParticleSystem>().PlayAllParticle();
                 DOTween.Sequence().AppendInterval(1f).OnComplete(() => { Managers.Pool.Push(_obj.GetComponent<Poolable>()); });
+
+                if (Managers.Game._stagemanager._tutorial._tutorial_num == 7)
+                    Managers.Game._stagemanager._tutorial.LockOff();
             }
         }
     }
@@ -220,6 +233,11 @@ public class ChargingTable : MonoBehaviour
         }
 
 
+    }
+
+    public void SaveData()
+    {
+        Managers.Data.SetBool(_objectName + Table_Num.ToString(), true);
     }
 
 }

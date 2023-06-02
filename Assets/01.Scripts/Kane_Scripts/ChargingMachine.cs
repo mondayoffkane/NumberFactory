@@ -57,8 +57,14 @@ public class ChargingMachine : MonoBehaviour
         _player = GameObject.FindGameObjectWithTag("Player").transform;
 
         Setting();
-        StartCoroutine(Cor_Update());
     }
+
+    private void OnEnable()
+    {
+        StartCoroutine(Cor_Update());
+
+    }
+
 
     IEnumerator Cor_Update()
     {
@@ -109,13 +115,16 @@ public class ChargingMachine : MonoBehaviour
         Managers.Sound.Play("NewObj");
         Setting();
 
-        Managers.Sound.Play("NewObj");
         GameObject _obj = Managers.Pool.Pop(Resources.Load<GameObject>("NewEffect"), transform).gameObject;
         _obj.transform.localPosition = Vector3.zero;
         _obj.GetComponent<ParticleSystem>().PlayAllParticle();
         DOTween.Sequence().AppendInterval(1f).OnComplete(() => { Managers.Pool.Push(_obj.GetComponent<Poolable>()); });
-
-        Managers.Data.SetBool("Stage_" + Managers.Game._stagemanager.Stage_Num.ToString() + "_charginemachine", true);
+        if (Managers.Game._stagemanager._stageData.isFirst == false)
+        {
+            SaveData();
+            
+        }
+        Managers.Game._stagemanager._tutorial.LockOff();
     }
     public void Setting()
     {
@@ -192,5 +201,8 @@ public class ChargingMachine : MonoBehaviour
         else { return null; }
     }
 
-
+    public void SaveData()
+    {
+        Managers.Data.SetBool("Stage_" + Managers.Game._stagemanager.Stage_Num.ToString() + "_charginemachine", true);
+    }
 }

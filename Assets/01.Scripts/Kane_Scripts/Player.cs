@@ -81,6 +81,11 @@ public class Player : MonoBehaviour
         if (Managers.Game._stagemanager._stageData.isFirst)
         {
             transform.position = new Vector3(27f, 0f, -22f);
+            transform.Find("Look").gameObject.SetActive(true);
+        }
+        else
+        {
+            transform.Find("Look").gameObject.SetActive(false);
         }
     }
 
@@ -114,10 +119,20 @@ public class Player : MonoBehaviour
         {
             case "PlayerHR":
                 Managers.GameUI.PlayerHR_Panel.SetActive(true);
+                if (Managers.Game._stagemanager._tutorial._tutorial_num == 8)
+                {
+                    Managers.Game._stagemanager._tutorial._arrow.position = Vector3.one * 1000;
+                    transform.Find("Look").gameObject.SetActive(false);
+                }
                 break;
 
             case "StaffHR":
                 Managers.GameUI.StaffHR_Panel.SetActive(true);
+                if (Managers.Game._stagemanager._tutorial._tutorial_num == 8)
+                {
+                    Managers.Game._stagemanager._tutorial._arrow.position = Vector3.one * 1000;
+                    transform.Find("Look").gameObject.SetActive(false);
+                }
                 break;
 
             case "ChargingTable":
@@ -132,6 +147,8 @@ public class Player : MonoBehaviour
 
             case "StartMoney":
                 GetMoney2(other.GetComponent<StartMoney>().MoneyStack);
+                Managers.Game._stagemanager._tutorial.LockOff();
+                other.gameObject.SetActive(false);
                 break;
 
             case "Counter":
@@ -186,10 +203,30 @@ public class Player : MonoBehaviour
                         {
                             case Product.ProductType.Number:
                                 _product.transform.DOLocalJump(new Vector3(0f, 0f, 1f) + Vector3.up * (ProductStack.Count - 1) * Stack_Interval, 1f, 1, Move_Interval).OnComplete(() => _product.transform.localEulerAngles = new Vector3(-180f, 90f, -180f));
+
+                                if (Managers.Game._stagemanager._tutorial._tutorial_num == 2)
+                                {
+                                    Managers.Game._stagemanager._tutorial._arrow.position =
+                                        Managers.Game._stagemanager._generator.transform.position + Vector3.left * 4.6f;
+                                }
                                 break;
 
                             case Product.ProductType.Battery:
                                 _product.transform.DOLocalJump(Vector3.up * (ProductStack.Count - 1) * Stack_Interval, 1f, 1, Move_Interval).OnComplete(() => _product.transform.localEulerAngles = Vector3.zero);
+
+                                if (Managers.Game._stagemanager._tutorial._tutorial_num == 4)
+                                {
+                                    Managers.Game._stagemanager._tutorial._arrow.position =
+                                        Managers.Game._stagemanager._chargingMachine.StackPoint.transform.position;
+                                }
+
+                                if (Managers.Game._stagemanager._tutorial._tutorial_num == 6)
+                                {
+                                    Managers.Game._stagemanager._tutorial._arrow.position =
+                                        Managers.Game._stagemanager._counter.StackPoint.transform.position;
+                                }
+
+
                                 break;
                         }
 
@@ -214,6 +251,11 @@ public class Player : MonoBehaviour
                     other.GetComponent<Generator>().PushNum(_product);
 
                     DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
+                    if (Managers.Game._stagemanager._tutorial._tutorial_num == 2)
+                    {
+                        Managers.Game._stagemanager._tutorial.LockOff();
+                    }
+
                 }
                 else if (ProductStack.Count <= 0) _animator.SetBool("Pick", false);
 
@@ -227,6 +269,12 @@ public class Player : MonoBehaviour
                     Managers.Sound.Play("Stack");
                     other.GetComponent<Counter>().PushBattery(ProductStack.Pop(), Move_Interval);
                     DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
+
+                    if (Managers.Game._stagemanager._tutorial._tutorial_num == 6)
+                    {
+                        Managers.Game._stagemanager._tutorial._arrow.position =
+                            Managers.Game._stagemanager._counter._interactArea.transform.position;
+                    }
                 }
                 else if (ProductStack.Count <= 0) _animator.SetBool("Pick", false);
 
@@ -239,6 +287,13 @@ public class Player : MonoBehaviour
                     Managers.Sound.Play("Stack");
                     other.GetComponent<ChargingMachine>().PushBattery(ProductStack.Pop(), Move_Interval);
                     DOTween.Sequence(isReady = false).AppendInterval(Pickup_Interval).OnComplete(() => isReady = true);
+
+                    if (Managers.Game._stagemanager._tutorial._tutorial_num == 4)
+                    {
+                        Managers.Game._stagemanager._tutorial._arrow.position =
+                            Managers.Game._stagemanager._chargingMachine.StackPoint.transform.position;
+                        Managers.Game._stagemanager._tutorial.LockOff();
+                    }
                 }
                 else if (ProductStack.Count <= 0) _animator.SetBool("Pick", false);
 

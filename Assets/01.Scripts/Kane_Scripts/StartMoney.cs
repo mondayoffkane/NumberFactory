@@ -7,7 +7,7 @@ using System.IO;
 public class StartMoney : MonoBehaviour
 {
     public GameObject Money_Pref;
-    public double Price = 500d;
+    public int Count = 300;
     public Stack<Transform> MoneyStack = new Stack<Transform>();
     // ===== Values
     public float Stack_Interval = 0.2f;
@@ -37,7 +37,7 @@ public class StartMoney : MonoBehaviour
         yield return null;
         if (Managers.Game._stagemanager._stageData.isFirst)
         {
-            SpawnMoney(200);
+            SpawnMoney(Count);
 
         }
 
