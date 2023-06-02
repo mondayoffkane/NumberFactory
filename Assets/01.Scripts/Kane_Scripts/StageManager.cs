@@ -234,7 +234,7 @@ public class StageManager : MonoBehaviour
                 switch (_customercar.CustomerCarState)
                 {
                     case CustomerCar.State.Wait:
-                        if (_customercar.OrderCount > 0 && _chargingMachine.BatteryStack.Count > 0)
+                        if (_customercar.OrderCount > 0 /*&& _chargingMachine.BatteryStack.Count > 0*/)
                         {
                             _customercar.CurrentCount = _customercar.OrderCount;
                             //_customercar.OrderCount = 0;
@@ -246,8 +246,8 @@ public class StageManager : MonoBehaviour
                                 _customercar.SetDest(_park.ParkPos.position);
                                 _customercar._chargingPark = _park;
                                 List_Cars.Remove(_customercar);
+                                _customercar.CustomerCarState = CustomerCar.State.Move;
                             }
-                            _customercar.CustomerCarState = CustomerCar.State.Move;
                         }
                         break;
                 }

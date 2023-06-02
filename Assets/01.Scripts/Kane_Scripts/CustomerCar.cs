@@ -66,6 +66,7 @@ public class CustomerCar : MonoBehaviour
         _chargingMachine = _chargingmachine;
         CustomerCarState = State.Init;
         OrderCount = _ordercount;
+        _fillImg.fillAmount = 0f;
     }
 
     public void SetDest(Vector3 _destiny)
@@ -98,17 +99,20 @@ public class CustomerCar : MonoBehaviour
                     break;
 
                 case State.Charging:
-                    if (CurrentCount > 0 && _chargingMachine.BatteryStack.Count > 0)
+                    if (CurrentCount > 0)
                     {
-                        Current_ChargingTime += Time.deltaTime;
-                        if (Current_ChargingTime >= 1f)
+                        if (_chargingMachine.BatteryStack.Count > 0)
                         {
-                            _chargingMachine.SpawnMoney();
-                            //_chargingMachine.
-                            Current_ChargingTime = 0f;
-                            CurrentCount--;
-                            _fillImg.DOFillAmount((float)((float)(OrderCount - CurrentCount + 1) / (float)OrderCount), 0.2f);
+                            Current_ChargingTime += Time.deltaTime;
+                            if (Current_ChargingTime >= 1f)
+                            {
+                                _chargingMachine.SpawnMoney();
+                                //_chargingMachine.
+                                Current_ChargingTime = 0f;
+                                CurrentCount--;
+                                _fillImg.DOFillAmount((float)((float)(OrderCount - CurrentCount + 1) / (float)OrderCount), 0.2f);
 
+                            }
                         }
                     }
                     else
