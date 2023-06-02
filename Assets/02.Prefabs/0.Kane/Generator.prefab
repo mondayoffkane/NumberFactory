@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 2314121819391599231}
   m_LocalRotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
   m_LocalPosition: {x: -0.13, y: 1, z: 3.97}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8000001, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2852978642413815000}
@@ -149,7 +149,7 @@ MonoBehaviour:
   StackPoint: {fileID: 0}
   Double_Pos_interval: 0.75
   Third_Pos_interval: 1.5
-  Spawn_Interval: 0.2
+  Spawn_Interval: 2
   Stack_Interval: 0.24
   Stack_MoveInterval: 0.5
   Max_Count: 20
@@ -192,7 +192,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 5162dbc4ef10f49878ffd350a29010a8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5162dbc4ef10f49878ffd350a29010a8,
         type: 3}
@@ -314,7 +314,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 5162dbc4ef10f49878ffd350a29010a8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5162dbc4ef10f49878ffd350a29010a8,
         type: 3}
@@ -557,7 +557,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 5162dbc4ef10f49878ffd350a29010a8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5162dbc4ef10f49878ffd350a29010a8,
         type: 3}

@@ -95,18 +95,18 @@ public class UI_GameScene : UI_Scene
         Setting_Button = GetButton(Buttons.Setting_Button);
         Sound_Button = GetButton(Buttons.Sound_Button);
         Vibe_Button = GetButton(Buttons.Vibe_Button);
-        RV_Player_Speed_Button = GetButton(Buttons.RV_Player_Speed_Button);
+        //RV_Player_Speed_Button = GetButton(Buttons.RV_Player_Speed_Button);
         Buy_Player_Speed_Button = GetButton(Buttons.Buy_Player_Speed_Button);
-        RV_Player_Capacity_Button = GetButton(Buttons.RV_Player_Capacity_Button);
+        //RV_Player_Capacity_Button = GetButton(Buttons.RV_Player_Capacity_Button);
         Buy_Player_Capacity_Button = GetButton(Buttons.Buy_Player_Capacity_Button);
-        RV_Player_Income_Button = GetButton(Buttons.RV_Player_Income_Button);
+        //RV_Player_Income_Button = GetButton(Buttons.RV_Player_Income_Button);
         Buy_Player_Income_Button = GetButton(Buttons.Buy_Player_Income_Button);
 
-        RV_Staff_Speed_Button = GetButton(Buttons.RV_Staff_Speed_Button);
+        //RV_Staff_Speed_Button = GetButton(Buttons.RV_Staff_Speed_Button);
         Buy_Staff_Speed_Button = GetButton(Buttons.Buy_Staff_Speed_Button);
-        RV_Staff_Capacity_Button = GetButton(Buttons.RV_Staff_Capacity_Button);
+        //RV_Staff_Capacity_Button = GetButton(Buttons.RV_Staff_Capacity_Button);
         Buy_Staff_Capacity_Button = GetButton(Buttons.Buy_Staff_Capacity_Button);
-        RV_Staff_Hire_Button = GetButton(Buttons.RV_Staff_Hire_Button);
+        //RV_Staff_Hire_Button = GetButton(Buttons.RV_Staff_Hire_Button);
         Buy_Staff_Hire_Button = GetButton(Buttons.Buy_Staff_Hire_Button);
         PlayerHR_Close_Button = GetButton(Buttons.PlayerHR_Close_Button);
         StaffHR_Close_Button = GetButton(Buttons.StaffHR_Close_Button);
@@ -154,26 +154,24 @@ public class UI_GameScene : UI_Scene
             Vibe_Button.transform.GetChild(1).gameObject.SetActive(!Managers.Data.UseHaptic);
         });
 
-        RV_Player_Speed_Button.AddButtonEvent(() => { });
+        //RV_Player_Speed_Button.AddButtonEvent(() => { });
         Buy_Player_Speed_Button.AddButtonEvent(() =>
         {
-
             Managers.Game._stagemanager.LevelUpgrade(0);
-
         });
 
-        RV_Player_Speed_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(0, true); });
+        //RV_Player_Speed_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(0, true); });
         Buy_Player_Speed_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(0); });
-        RV_Player_Capacity_Button.AddButtonEvent(() => Managers.Game._stagemanager.LevelUpgrade(1, true));
+        //RV_Player_Capacity_Button.AddButtonEvent(() => Managers.Game._stagemanager.LevelUpgrade(1, true));
         Buy_Player_Capacity_Button.AddButtonEvent(() => Managers.Game._stagemanager.LevelUpgrade(1));
-        RV_Player_Income_Button.AddButtonEvent(() => Managers.Game._stagemanager.LevelUpgrade(2, true));
+        //RV_Player_Income_Button.AddButtonEvent(() => Managers.Game._stagemanager.LevelUpgrade(2, true));
         Buy_Player_Income_Button.AddButtonEvent(() => Managers.Game._stagemanager.LevelUpgrade(2));
 
-        RV_Staff_Speed_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(3, true); });
+        //RV_Staff_Speed_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(3, true); });
         Buy_Staff_Speed_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(3); });
-        RV_Staff_Capacity_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(4, true); });
+        //RV_Staff_Capacity_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(4, true); });
         Buy_Staff_Capacity_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(4); });
-        RV_Staff_Hire_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(5, true); });
+        //RV_Staff_Hire_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(5, true); });
         Buy_Staff_Hire_Button.AddButtonEvent(() => { Managers.Game._stagemanager.LevelUpgrade(5); });
 
         PlayerHR_Close_Button.AddButtonEvent(() => { PlayerHR_Panel.SetActive(false); });

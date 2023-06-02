@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
+//using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class ChargingMachine : MonoBehaviour
 {
@@ -122,7 +122,7 @@ public class ChargingMachine : MonoBehaviour
         if (Managers.Game._stagemanager._stageData.isFirst == false)
         {
             SaveData();
-            
+
         }
         Managers.Game._stagemanager._tutorial.LockOff();
     }

@@ -905,6 +905,11 @@ PrefabInstance:
       propertyPath: Table_Num
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 4395306300852843375, guid: 1ae89308c187943c7b21d63b1f015b1e,
+        type: 3}
+      propertyPath: Upgrade_Price
+      value: 2000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ae89308c187943c7b21d63b1f015b1e, type: 3}
 --- !u!1 &108927493 stripped
@@ -1689,6 +1694,11 @@ PrefabInstance:
       propertyPath: Table_Num
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 4395306300852843375, guid: 1ae89308c187943c7b21d63b1f015b1e,
+        type: 3}
+      propertyPath: Upgrade_Price
+      value: 2000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ae89308c187943c7b21d63b1f015b1e, type: 3}
 --- !u!4 &316579955 stripped
@@ -2362,6 +2372,11 @@ PrefabInstance:
         type: 3}
       propertyPath: Table_Num
       value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4395306300852843375, guid: 1ae89308c187943c7b21d63b1f015b1e,
+        type: 3}
+      propertyPath: Upgrade_Price
+      value: 4000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ae89308c187943c7b21d63b1f015b1e, type: 3}
@@ -3939,6 +3954,11 @@ PrefabInstance:
       propertyPath: Table_Num
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 4395306300852843375, guid: 1ae89308c187943c7b21d63b1f015b1e,
+        type: 3}
+      propertyPath: Upgrade_Price
+      value: 2000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ae89308c187943c7b21d63b1f015b1e, type: 3}
 --- !u!1 &674360500
@@ -4089,6 +4109,11 @@ PrefabInstance:
         type: 3}
       propertyPath: Table_Num
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4395306300852843375, guid: 1ae89308c187943c7b21d63b1f015b1e,
+        type: 3}
+      propertyPath: Upgrade_Price
+      value: 4000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ae89308c187943c7b21d63b1f015b1e, type: 3}
@@ -5828,6 +5853,11 @@ PrefabInstance:
         type: 3}
       propertyPath: Table_Num
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4395306300852843375, guid: 1ae89308c187943c7b21d63b1f015b1e,
+        type: 3}
+      propertyPath: Upgrade_Price
+      value: 2000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ae89308c187943c7b21d63b1f015b1e, type: 3}
@@ -8744,6 +8774,11 @@ PrefabInstance:
         type: 3}
       propertyPath: Table_Num
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4395306300852843375, guid: 1ae89308c187943c7b21d63b1f015b1e,
+        type: 3}
+      propertyPath: Upgrade_Price
+      value: 4000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ae89308c187943c7b21d63b1f015b1e, type: 3}
@@ -13095,6 +13130,56 @@ PrefabInstance:
       propertyPath: MaxUpgrade_Level
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[0]
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[1]
+      value: 4000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[2]
+      value: 8000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[3]
+      value: 16000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[4]
+      value: 32000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[5]
+      value: 48000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[6]
+      value: 60000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[7]
+      value: 72000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[8]
+      value: 84000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[9]
+      value: 100000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5503c506ff95441e0b7802d16c26ae85, type: 3}
 --- !u!1 &1828287763 stripped
@@ -13276,40 +13361,40 @@ MonoBehaviour:
   _player: {fileID: 0}
   _playerSpeedPrice:
   - 100
-  - 200
   - 500
   - 1000
   - 2000
+  - 4000
   _playerCapacityPrice:
   - 100
-  - 200
-  - 500
-  - 1000
-  - 2000
+  - 400
+  - 800
+  - 1600
+  - 3200
   _playerIncomePrice:
   - 100
-  - 200
-  - 500
-  - 1000
-  - 2000
+  - 700
+  - 1500
+  - 3000
+  - 4500
   _staffSpeedPrice:
   - 100
-  - 200
   - 500
   - 1000
   - 2000
+  - 4000
   _staffCapacityPrice:
   - 100
-  - 200
-  - 500
-  - 1000
-  - 2000
+  - 700
+  - 1500
+  - 3000
+  - 4500
   _staffHirePrice:
   - 100
-  - 200
-  - 500
   - 1000
   - 2000
+  - 4000
+  - 8000
   isPlayerinCounter: 0
   _spawnInterval: 1
   _generatorGroup: {fileID: 1083413842}
@@ -14629,6 +14714,11 @@ PrefabInstance:
       propertyPath: Table_Num
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 4395306300852843375, guid: 1ae89308c187943c7b21d63b1f015b1e,
+        type: 3}
+      propertyPath: Upgrade_Price
+      value: 4000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ae89308c187943c7b21d63b1f015b1e, type: 3}
 --- !u!4 &2019100610 stripped
@@ -14941,6 +15031,46 @@ PrefabInstance:
         type: 3}
       propertyPath: MaxUpgrade_Level
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[1]
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[2]
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[3]
+      value: 1500
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[5]
+      value: 3000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[6]
+      value: 6000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[7]
+      value: 12000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[8]
+      value: 24000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[9]
+      value: 48000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5503c506ff95441e0b7802d16c26ae85, type: 3}
@@ -15454,7 +15584,7 @@ MonoBehaviour:
   base_MoneyPrice: 1
   add_Speed: 1
   add_Capacity: 2
-  add_MoneyPrice: 1
+  add_MoneyPrice: 2
   total_MoneyPrice: 0
   Speed_Level: 0
   Capacity_Level: 0
@@ -15664,6 +15794,51 @@ PrefabInstance:
         type: 3}
       propertyPath: MaxUpgrade_Level
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[1]
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[2]
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[3]
+      value: 1500
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[4]
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[5]
+      value: 3000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[6]
+      value: 4000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[7]
+      value: 8000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[8]
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599239417861151581, guid: 5503c506ff95441e0b7802d16c26ae85,
+        type: 3}
+      propertyPath: UpgradePrice.Array.data[9]
+      value: 20000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5503c506ff95441e0b7802d16c26ae85, type: 3}
@@ -17822,11 +17997,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2314121819391599227, guid: e6262c7e1110349c19b075e3d0f09e89,
         type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.8000001
-      objectReference: {fileID: 0}
-    - target: {fileID: 2314121819391599227, guid: e6262c7e1110349c19b075e3d0f09e89,
-        type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.08178377
       objectReference: {fileID: 0}
@@ -17879,21 +18049,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Generator
-      objectReference: {fileID: 0}
-    - target: {fileID: 2852978642413815000, guid: e6262c7e1110349c19b075e3d0f09e89,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2852978643129180576, guid: e6262c7e1110349c19b075e3d0f09e89,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2852978643742486796, guid: e6262c7e1110349c19b075e3d0f09e89,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6262c7e1110349c19b075e3d0f09e89, type: 3}

@@ -71,6 +71,7 @@ public class Generator : MonoBehaviour
 
     private void OnEnable()
     {
+
         StartCoroutine(Cor_Update());
 
     }
@@ -80,7 +81,17 @@ public class Generator : MonoBehaviour
         //WaitForSeconds _interval = new WaitForSeconds(Spawn_Interval);
         while (true)
         {
-            yield return new WaitForSeconds(Spawn_Interval); //_interval;
+            float _term;
+            try
+            {
+                _term = Spawn_Interval - Managers.Game._stagemanager._stageData.PlayerCapacity_Level * 0.3f;
+            }
+            catch
+            {
+                _term = Spawn_Interval;
+            }
+
+            yield return new WaitForSeconds(_term); //_interval;
             if (isSpawn && Num > 0 && StackPoint.ProductStack.Count < Max_Count)
             {
                 Transform _battery = Managers.Pool.Pop(Battery, StackPoint.transform).transform;

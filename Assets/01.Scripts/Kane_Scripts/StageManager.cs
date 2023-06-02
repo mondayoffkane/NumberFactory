@@ -156,7 +156,7 @@ public class StageManager : MonoBehaviour
             _human.position = HumanMovePos[0].position;
             _human.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(HumanMovePos[0].position);
             Customer _customerHuman = _human.GetComponent<Customer>();
-            _customerHuman.SetInit(this, Random.Range(Min_Count, Max_Count));
+            _customerHuman.SetInit(this, Random.Range(Min_Count + _stageData.PlayerCapacity_Level, Max_Count + _stageData.PlayerCapacity_Level));
 
             _customerHuman.SetDest(HumanMovePos[1].position + new Vector3(HumanPos_Interval * Mathf.Sin(45), 0f, -HumanPos_Interval * Mathf.Sin(45)) * List_Humans.Count);
             List_Humans.Add(_customerHuman);
@@ -506,7 +506,7 @@ public class StageManager : MonoBehaviour
         //============ Player Upgrade
         if (_stageData.PlayerSpeed_Level < 5)
         {
-            Managers.GameUI.RV_Player_Speed_Button.interactable = true;
+            //Managers.GameUI.RV_Player_Speed_Button.interactable = true;
             Managers.GameUI.PlayerSpeedPriceText.text = $"{Managers.ToCurrencyString(_playerSpeedPrice[_stageData.PlayerSpeed_Level])}";
 
             Managers.GameUI.Buy_Player_Speed_Button.interactable = _gameManager.Money >= _playerSpeedPrice[_stageData.PlayerSpeed_Level] ? true : false;
@@ -521,13 +521,13 @@ public class StageManager : MonoBehaviour
         else
         {
             Managers.GameUI.Buy_Player_Speed_Button.interactable = false;
-            Managers.GameUI.RV_Player_Speed_Button.interactable = false;
+            //Managers.GameUI.RV_Player_Speed_Button.interactable = false;
             Managers.GameUI.Buy_Player_Speed_Button.GetComponentInChildren<Text>().text = "Max";
         }
 
         if (_stageData.PlayerCapacity_Level < 5)
         {
-            Managers.GameUI.RV_Player_Capacity_Button.interactable = true;
+            //Managers.GameUI.RV_Player_Capacity_Button.interactable = true;
             Managers.GameUI.PlayerCapacityPriceText.text = $"{Managers.ToCurrencyString(_playerCapacityPrice[_stageData.PlayerCapacity_Level])}";
 
             Managers.GameUI.Buy_Player_Capacity_Button.interactable = _gameManager.Money >= _playerCapacityPrice[_stageData.PlayerCapacity_Level] ? true : false;
@@ -536,13 +536,13 @@ public class StageManager : MonoBehaviour
         else
         {
             Managers.GameUI.Buy_Player_Capacity_Button.interactable = false;
-            Managers.GameUI.RV_Player_Capacity_Button.interactable = false;
+            //Managers.GameUI.RV_Player_Capacity_Button.interactable = false;
             Managers.GameUI.Buy_Player_Capacity_Button.GetComponentInChildren<Text>().text = "Max";
         }
 
         if (_stageData.PlayerIncome_Level < 5)
         {
-            Managers.GameUI.RV_Player_Income_Button.interactable = true;
+            //Managers.GameUI.RV_Player_Income_Button.interactable = true;
             Managers.GameUI.PlayerIncomePriceText.text = $"{Managers.ToCurrencyString(_playerIncomePrice[_stageData.PlayerIncome_Level])}";
 
             Managers.GameUI.Buy_Player_Income_Button.interactable = _gameManager.Money >= _playerIncomePrice[_stageData.PlayerIncome_Level] ? true : false;
@@ -550,7 +550,7 @@ public class StageManager : MonoBehaviour
         else
         {
             Managers.GameUI.Buy_Player_Income_Button.interactable = false;
-            Managers.GameUI.RV_Player_Income_Button.interactable = false;
+            //Managers.GameUI.RV_Player_Income_Button.interactable = false;
             Managers.GameUI.Buy_Player_Income_Button.GetComponentInChildren<Text>().text = "Max";
         }
 
@@ -559,7 +559,7 @@ public class StageManager : MonoBehaviour
         if (_stageData.StaffSpeed_Level < 5)
         {
 
-            Managers.GameUI.RV_Staff_Speed_Button.interactable = true;
+            //Managers.GameUI.RV_Staff_Speed_Button.interactable = true;
             Managers.GameUI.StaffSpeedPriceText.text = $"{Managers.ToCurrencyString(_staffSpeedPrice[_stageData.StaffSpeed_Level])}";
 
             Managers.GameUI.Buy_Staff_Speed_Button.interactable = _gameManager.Money >= _staffSpeedPrice[_stageData.StaffSpeed_Level] ? true : false;
@@ -570,13 +570,13 @@ public class StageManager : MonoBehaviour
         else
         {
             Managers.GameUI.Buy_Staff_Speed_Button.interactable = false;
-            Managers.GameUI.RV_Staff_Speed_Button.interactable = false;
+            //Managers.GameUI.RV_Staff_Speed_Button.interactable = false;
             Managers.GameUI.Buy_Staff_Speed_Button.GetComponentInChildren<Text>().text = "Max";
         }
 
         if (_stageData.StaffCapacity_Level < 5)
         {
-            Managers.GameUI.RV_Staff_Capacity_Button.interactable = true;
+            //Managers.GameUI.RV_Staff_Capacity_Button.interactable = true;
             Managers.GameUI.StaffCapacityPriceText.text = $"{Managers.ToCurrencyString(_staffCapacityPrice[_stageData.StaffCapacity_Level])}";
 
             Managers.GameUI.Buy_Staff_Capacity_Button.interactable = _gameManager.Money >= _staffCapacityPrice[_stageData.StaffCapacity_Level] ? true : false;
@@ -585,13 +585,13 @@ public class StageManager : MonoBehaviour
         else
         {
             Managers.GameUI.Buy_Staff_Capacity_Button.interactable = false;
-            Managers.GameUI.RV_Staff_Capacity_Button.interactable = false;
+            //Managers.GameUI.RV_Staff_Capacity_Button.interactable = false;
             Managers.GameUI.Buy_Staff_Capacity_Button.GetComponentInChildren<Text>().text = "Max";
         }
 
         if (_stageData.StaffHire_Level < 5)
         {
-            Managers.GameUI.RV_Staff_Hire_Button.interactable = true;
+            //Managers.GameUI.RV_Staff_Hire_Button.interactable = true;
             Managers.GameUI.StaffHirePriceText.text = $"{Managers.ToCurrencyString(_staffHirePrice[_stageData.StaffHire_Level])}";
 
             Managers.GameUI.Buy_Staff_Hire_Button.interactable = _gameManager.Money >= _staffHirePrice[_stageData.StaffHire_Level] ? true : false;
@@ -606,7 +606,7 @@ public class StageManager : MonoBehaviour
         else
         {
             Managers.GameUI.Buy_Staff_Hire_Button.interactable = false;
-            Managers.GameUI.RV_Staff_Hire_Button.interactable = false;
+            //Managers.GameUI.RV_Staff_Hire_Button.interactable = false;
             Managers.GameUI.Buy_Staff_Hire_Button.GetComponentInChildren<Text>().text = "Max";
         }
 
